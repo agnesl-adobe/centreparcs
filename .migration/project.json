@@ -1,0 +1,13 @@
+{
+  "sites": {
+    "centreparcs": {
+      "previewOrg": "agnesl-adobe",
+      "previewSite": "centreparcs",
+      "contentHostUrl": "author-p179457-e1900808.adobeaemcloud.com",
+      "baseUrl": "https://www.centerparcs.co.uk/"
+    }
+  },
+  "features": [
+    "site-planning"
+  ]
+}

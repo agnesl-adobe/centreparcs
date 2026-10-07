@@ -12,13 +12,17 @@ function getStep(track) {
  * Progress fills one segment per snap position (one per slide step, plus the end),
  * matching the source slider's progress bar behaviour.
  */
-function updateControls(track, prev, next, progress) {
-  const max = Math.max(0, track.scrollWidth - track.clientWidth);
-  const step = getStep(track);
+function getPosition(track, step, max) {
   const positions = max > 1 && step > 0 ? Math.ceil((max - 1) / step) + 1 : 1;
   const index = track.scrollLeft >= max - 1
     ? positions - 1
     : Math.min(positions - 1, Math.round(track.scrollLeft / step));
+  return { positions, index };
+}
+
+function updateControls(track, prev, next, progress) {
+  const max = Math.max(0, track.scrollWidth - track.clientWidth);
+  const { positions, index } = getPosition(track, getStep(track), max);
   progress.style.setProperty('--carousel-activity-progress', (index + 1) / positions);
   prev.disabled = track.scrollLeft <= 1;
   next.disabled = track.scrollLeft >= max - 1;
@@ -84,8 +88,14 @@ export default function decorate(block) {
   buttons.append(prev, next);
   controls.append(progress, buttons);
 
-  prev.addEventListener('click', () => track.scrollBy({ left: -getStep(track), behavior: 'smooth' }));
-  next.addEventListener('click', () => track.scrollBy({ left: getStep(track), behavior: 'smooth' }));
+  const go = (dir) => {
+    const step = getStep(track);
+    const max = track.scrollWidth - track.clientWidth;
+    const { index } = getPosition(track, step, max);
+    track.scrollTo({ left: Math.max(0, Math.min(max, (index + dir) * step)), behavior: 'smooth' });
+  };
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
 
   const sync = () => updateControls(track, prev, next, progress);
   track.addEventListener('scroll', sync, { passive: true });

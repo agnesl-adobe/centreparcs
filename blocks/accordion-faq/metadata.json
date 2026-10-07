@@ -1,0 +1,17 @@
+{
+  "variantName": "accordion-faq",
+  "baseBlock": "accordion",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "One row per question (9). Cell 1: question. Cell 2: answer paragraph(s) with inline links.",
+    "notes": "hint=default-content, but typing test fails: expand/collapse Q&A requires decoration. Obvious accordion match."
+  },
+  "contentPattern": "One row per question (9). Cell 1: question. Cell 2: answer paragraph(s) with inline links.",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["accordion-faq"]
+}

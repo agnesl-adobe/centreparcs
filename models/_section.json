@@ -33,6 +33,14 @@
             {
               "name": "Highlight",
               "value": "highlight"
+            },
+            {
+              "name": "Grey",
+              "value": "grey"
+            },
+            {
+              "name": "Green",
+              "value": "green"
             }
           ]
         }
@@ -50,7 +58,18 @@
         "hero",
         "cards",
         "columns",
-        "fragment"
+        "fragment",
+        "hero-notification",
+        "columns-offer",
+        "hero-video",
+        "tabs-village",
+        "carousel-lodges",
+        "columns-intro",
+        "cards-expand",
+        "cards-feature",
+        "carousel-activity",
+        "columns-promo",
+        "accordion-faq"
       ]
     }
   ]

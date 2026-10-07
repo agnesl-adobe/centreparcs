@@ -2,36 +2,70 @@ import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scrip
 
 let carouselId = 0;
 
-function updateActiveSlide(block, slideIndex) {
-  block.dataset.activeSlide = slideIndex;
-
-  block.querySelectorAll('.carousel-lodges-slide').forEach((slide, idx) => {
-    const active = idx === slideIndex;
-    slide.setAttribute('aria-hidden', !active);
-    slide.querySelectorAll('a').forEach((link) => {
-      if (active) link.removeAttribute('tabindex');
-      else link.setAttribute('tabindex', '-1');
-    });
-  });
-
-  block.querySelectorAll('.carousel-lodges-thumb button').forEach((button, idx) => {
-    button.setAttribute('aria-current', idx === slideIndex ? 'true' : 'false');
-  });
+function getIndex(block) {
+  return parseInt(block.dataset.activeSlide || '0', 10);
 }
 
-function showSlide(block, slideIndex = 0, behavior = 'smooth') {
-  const slides = block.querySelectorAll('.carousel-lodges-slide');
+function scrollThumbIntoView(block, index) {
+  const list = block.querySelector('.carousel-lodges-thumbs');
+  const thumb = list?.children[index];
+  if (!thumb) return;
+  if (getComputedStyle(list).flexDirection === 'column') {
+    // desktop rail: list overflows the slide, shift it so the active thumb stays visible
+    const visible = list.parentElement.clientHeight - 100;
+    let shift = parseFloat(list.dataset.shift || '0');
+    const top = thumb.offsetTop;
+    const bottom = top + thumb.offsetHeight;
+    if (bottom - shift > visible) shift = bottom - visible;
+    if (top - shift < 0) shift = Math.max(0, top - 20);
+    list.dataset.shift = shift;
+    list.style.transform = shift ? `translateY(-${shift}px)` : '';
+  } else {
+    list.dataset.shift = 0;
+    list.style.transform = '';
+    const left = thumb.offsetLeft;
+    if (left < list.scrollLeft || left + thumb.offsetWidth > list.scrollLeft + list.clientWidth) {
+      list.scrollTo({ left: Math.max(0, left - 10), behavior: 'smooth' });
+    }
+  }
+}
+
+function showSlide(block, slideIndex = 0) {
+  const slides = [...block.querySelectorAll('.carousel-lodges-slide')];
   if (!slides.length) return;
-  let index = slideIndex;
-  if (index < 0) index = slides.length - 1;
-  if (index >= slides.length) index = 0;
-  const target = slides[index];
-  block.querySelector('.carousel-lodges-slides').scrollTo({
-    top: 0,
-    left: target.offsetLeft,
-    behavior,
+  const index = Math.min(Math.max(slideIndex, 0), slides.length - 1);
+  block.dataset.activeSlide = index;
+
+  slides.forEach((slide, idx) => {
+    const active = idx === index;
+    slide.classList.toggle('active', active);
+    slide.setAttribute('aria-hidden', !active);
+    if (active) slide.removeAttribute('inert');
+    else slide.setAttribute('inert', '');
   });
-  updateActiveSlide(block, index);
+
+  const thumbs = [...block.querySelectorAll('.carousel-lodges-thumb')];
+  thumbs.forEach((thumb, idx) => {
+    thumb.querySelector('button').setAttribute('aria-current', idx === index ? 'true' : 'false');
+  });
+
+  // "Click to explore" hint sits on the thumbnail after the active one
+  const hint = block.querySelector('.carousel-lodges-explore');
+  if (hint) {
+    const target = thumbs[index + 1];
+    hint.hidden = !target;
+    if (target) target.querySelector('button').append(hint);
+  }
+
+  const prev = block.querySelector('.carousel-lodges-prev');
+  const next = block.querySelector('.carousel-lodges-next');
+  if (prev) prev.disabled = index === 0;
+  if (next) next.disabled = index === slides.length - 1;
+
+  const fill = block.querySelector('.carousel-lodges-progress-fill');
+  if (fill) fill.style.transform = `scaleX(${(index + 1) / slides.length})`;
+
+  scrollThumbIntoView(block, index);
 }
 
 function bindEvents(block) {
@@ -40,20 +74,86 @@ function bindEvents(block) {
   });
 
   block.querySelector('.carousel-lodges-prev')?.addEventListener('click', () => {
-    showSlide(block, parseInt(block.dataset.activeSlide || '0', 10) - 1);
+    showSlide(block, getIndex(block) - 1);
   });
   block.querySelector('.carousel-lodges-next')?.addEventListener('click', () => {
-    showSlide(block, parseInt(block.dataset.activeSlide || '0', 10) + 1);
+    showSlide(block, getIndex(block) + 1);
   });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        updateActiveSlide(block, parseInt(entry.target.dataset.slideIndex, 10));
-      }
-    });
-  }, { root: block.querySelector('.carousel-lodges-slides'), threshold: 0.6 });
-  block.querySelectorAll('.carousel-lodges-slide').forEach((slide) => observer.observe(slide));
+  // swipe support for touch devices
+  const slides = block.querySelector('.carousel-lodges-slides');
+  let startX = null;
+  let startY = null;
+  slides.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse') return;
+    startX = e.clientX;
+    startY = e.clientY;
+  });
+  slides.addEventListener('pointerup', (e) => {
+    if (startX === null) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    startX = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      showSlide(block, getIndex(block) + (dx < 0 ? 1 : -1));
+    }
+  });
+  slides.addEventListener('pointercancel', () => { startX = null; });
+}
+
+function decorateContent(slide, id) {
+  const content = slide.querySelector('.carousel-lodges-slide-content');
+  if (!content) return;
+
+  const heading = content.querySelector('h1, h2, h3, h4, h5, h6');
+  if (heading) {
+    if (!heading.id) heading.id = `${slide.id}-title`;
+    slide.setAttribute('aria-labelledby', heading.id);
+  }
+
+  // strapline: the first plain paragraph directly after the heading
+  const strap = heading?.nextElementSibling;
+  if (strap?.tagName === 'P' && !strap.classList.contains('button-container')) {
+    strap.classList.add('carousel-lodges-strapline');
+  }
+
+  // paragraphs holding a single link are CTAs: first is primary, the rest secondary
+  const links = [...content.querySelectorAll(':scope > p')].filter((p) => {
+    const a = p.querySelector(':scope > a[href], :scope > strong > a[href], :scope > em > a[href]');
+    return a && !a.querySelector('picture, img') && p.textContent.trim() === a.textContent.trim();
+  });
+  links.forEach((p, idx) => {
+    const a = p.querySelector('a');
+    p.classList.add('button-container');
+    a.classList.remove('primary', 'secondary', 'accent');
+    a.classList.add('button', idx === 0 ? 'primary' : 'secondary');
+  });
+  if (links.length) {
+    const actions = document.createElement('div');
+    actions.className = 'carousel-lodges-actions';
+    links[0].before(actions);
+    actions.append(...links);
+  }
+
+  // everything after the heading is collapsible on small screens
+  const details = document.createElement('div');
+  details.className = 'carousel-lodges-slide-details';
+  details.id = `${slide.id}-details`;
+  [...content.children].filter((el) => el !== heading).forEach((el) => details.append(el));
+  content.append(details);
+
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'carousel-lodges-toggle';
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-controls', details.id);
+  toggle.setAttribute('aria-label', `Show details: ${heading?.textContent.trim() || `slide ${id}`}`);
+  toggle.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', !expanded);
+    content.classList.toggle('expanded', !expanded);
+  });
+  content.prepend(toggle);
 }
 
 function createSlide(row, slideIndex, id) {
@@ -61,6 +161,8 @@ function createSlide(row, slideIndex, id) {
   slide.dataset.slideIndex = slideIndex;
   slide.id = `carousel-lodges-${id}-slide-${slideIndex}`;
   slide.className = 'carousel-lodges-slide';
+  slide.setAttribute('role', 'group');
+  slide.setAttribute('aria-roledescription', 'slide');
 
   const cells = [...row.querySelectorAll(':scope > div')];
   cells.forEach((cell, idx) => {
@@ -70,30 +172,7 @@ function createSlide(row, slideIndex, id) {
     slide.append(cell);
   });
 
-  const heading = slide.querySelector('h1, h2, h3, h4, h5, h6');
-  if (heading) {
-    if (!heading.id) heading.id = `${slide.id}-title`;
-    slide.setAttribute('aria-labelledby', heading.id);
-  }
-
-  // last link in the content is a secondary action
-  const content = slide.querySelector('.carousel-lodges-slide-content');
-  if (content) {
-    const buttons = [...content.querySelectorAll('a.button')];
-    if (buttons.length > 1) {
-      buttons.slice(1).forEach((a) => {
-        a.classList.remove('primary');
-        a.classList.add('secondary');
-      });
-    }
-    const links = [...content.querySelectorAll('p.button-container')];
-    if (links.length > 1) {
-      const actions = document.createElement('div');
-      actions.className = 'carousel-lodges-actions';
-      links[0].before(actions);
-      actions.append(...links);
-    }
-  }
+  decorateContent(slide, slideIndex + 1);
   return slide;
 }
 
@@ -108,11 +187,24 @@ function createThumb(slide, idx, total) {
 
   const img = slide.querySelector('.carousel-lodges-slide-image img');
   if (img) {
-    const thumb = createOptimizedPicture(img.src, '', false, [{ width: '200' }]);
-    button.append(thumb);
+    const src = img.getAttribute('src');
+    if (/[?&]wid=\d+/.test(src)) {
+      // Dynamic Media rendition: request a small width instead of the slide size
+      const picture = document.createElement('picture');
+      const thumbImg = document.createElement('img');
+      thumbImg.src = src.replace(/([?&])wid=\d+/, '$1wid=400');
+      thumbImg.alt = '';
+      thumbImg.loading = 'lazy';
+      thumbImg.decoding = 'async';
+      picture.append(thumbImg);
+      button.append(picture);
+    } else {
+      button.append(createOptimizedPicture(img.src, '', false, [{ width: '400' }]));
+    }
   }
   const label = document.createElement('span');
   label.className = 'carousel-lodges-thumb-label';
+  label.setAttribute('aria-hidden', 'true');
   label.textContent = title;
   button.append(label);
   li.append(button);
@@ -120,8 +212,8 @@ function createThumb(slide, idx, total) {
 }
 
 /**
- * Accommodation carousel: full-bleed image slides with an overlay content card
- * and thumbnail navigation.
+ * Accommodation carousel: full-bleed fading image slides with an overlay
+ * content card and thumbnail navigation.
  * @param {Element} block The block element
  */
 export default async function decorate(block) {
@@ -155,15 +247,10 @@ export default async function decorate(block) {
   container.append(slidesWrapper);
   block.replaceChildren(container);
 
-  if (isSingleSlide) return;
-
-  const nav = document.createElement('div');
-  nav.className = 'carousel-lodges-navigation-buttons';
-  nav.innerHTML = `
-    <button type="button" class="carousel-lodges-prev" aria-label="Previous slide"></button>
-    <button type="button" class="carousel-lodges-next" aria-label="Next slide"></button>
-  `;
-  container.append(nav);
+  if (isSingleSlide) {
+    showSlide(block, 0);
+    return;
+  }
 
   const thumbsNav = document.createElement('nav');
   thumbsNav.className = 'carousel-lodges-thumbs-nav';
@@ -173,8 +260,23 @@ export default async function decorate(block) {
   const slides = [...slidesWrapper.children];
   slides.forEach((slide, idx) => thumbs.append(createThumb(slide, idx, slides.length)));
   thumbsNav.append(thumbs);
-  block.append(thumbsNav);
 
-  updateActiveSlide(block, 0);
+  const hint = document.createElement('span');
+  hint.className = 'carousel-lodges-explore';
+  hint.setAttribute('aria-hidden', 'true');
+  hint.textContent = 'Click to explore';
+
+  const controls = document.createElement('div');
+  controls.className = 'carousel-lodges-controls';
+  controls.innerHTML = `
+    <div class="carousel-lodges-progress" aria-hidden="true"><span class="carousel-lodges-progress-fill"></span></div>
+    <button type="button" class="carousel-lodges-arrow carousel-lodges-prev" aria-label="Previous slide"></button>
+    <button type="button" class="carousel-lodges-arrow carousel-lodges-next" aria-label="Next slide"></button>
+  `;
+  thumbsNav.append(controls);
+  container.append(thumbsNav);
+  thumbs.children[1].querySelector('button').append(hint);
+
+  showSlide(block, 0);
   bindEvents(block);
 }

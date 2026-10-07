@@ -1,8 +1,9 @@
 import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
- * Expandable image panels: portrait image with overlay title, text and CTA.
- * The hovered / focused / tapped panel expands; the first panel is expanded by default.
+ * Expandable image panels: portrait image with a white overlay card (title, text, CTA).
+ * Desktop: the hovered / focused panel expands and reveals its card (pure CSS).
+ * Mobile: panels stack as sticky cards with the image above the text.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
@@ -13,8 +14,19 @@ export default function decorate(block) {
     moveInstrumentation(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
-      if (div.children.length === 1 && div.querySelector('picture')) div.className = 'cards-expand-card-image';
-      else div.className = 'cards-expand-card-body';
+      if (div.children.length === 1 && div.querySelector('picture')) {
+        div.className = 'cards-expand-card-image';
+      } else {
+        div.className = 'cards-expand-card-body';
+        // a paragraph holding only a link is the panel CTA
+        div.querySelectorAll(':scope > p').forEach((p) => {
+          const a = p.querySelector('a');
+          if (a && p.children.length === 1 && p.textContent.trim() === a.textContent.trim()) {
+            p.className = 'cards-expand-card-cta';
+            a.classList.remove('button', 'primary', 'secondary', 'accent');
+          }
+        });
+      }
     });
     ul.append(li);
   });
@@ -24,17 +36,6 @@ export default function decorate(block) {
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
   });
-
-  const cards = [...ul.children];
-  const expand = (card) => {
-    cards.forEach((c) => c.classList.toggle('is-expanded', c === card));
-  };
-  cards.forEach((card) => {
-    card.addEventListener('mouseenter', () => expand(card));
-    card.addEventListener('focusin', () => expand(card));
-    card.addEventListener('click', () => expand(card));
-  });
-  if (cards.length) expand(cards[0]);
 
   block.replaceChildren(ul);
 }

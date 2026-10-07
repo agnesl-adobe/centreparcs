@@ -125,9 +125,8 @@ h6 {
   line-height: 1.4;
 }
 
-/* emphasised words inside headings are set in a heavier weight, not italic */
-:is(h1, h2, h3, h4, h5, h6) :is(em, strong, i, b) {
-  font-style: normal;
+/* emphasised words inside headings: italic, slightly heavier weight */
+:is(h1, h2, h3, h4, h5, h6) :is(strong, b) {
   font-weight: 500;
 }
 

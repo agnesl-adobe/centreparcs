@@ -14,7 +14,7 @@ export default function decorate(block) {
       // a paragraph made only of links becomes an inline link list
       col.querySelectorAll('p').forEach((p) => {
         const links = [...p.querySelectorAll('a')];
-        if (links.length < 2) return;
+        if (!links.length) return;
         const textOnly = [...p.childNodes].every((n) => n.nodeType !== Node.TEXT_NODE
           || !n.textContent.trim() || /^[|•·,\s]+$/.test(n.textContent));
         if (!textOnly) return;
@@ -22,7 +22,7 @@ export default function decorate(block) {
         links.forEach((a) => {
           a.classList.remove('button', 'primary', 'secondary');
         });
-        p.classList.remove('button-container');
+        p.classList.remove('button-container', 'button-wrapper');
       });
     });
   });

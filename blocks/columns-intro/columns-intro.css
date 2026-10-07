@@ -1,37 +1,101 @@
+/* columns-intro: large heading left, description + arrow links right
+ * values extracted from centerparcs.co.uk .teaser.teaser-text */
+
+.columns-intro {
+  padding-bottom: 25px;
+}
+
 .columns-intro > div {
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
 
 .columns-intro > div > div {
+  box-sizing: border-box;
   min-width: 0;
 }
 
-.columns-intro .columns-intro-heading > :first-child,
-.columns-intro .columns-intro-text > :first-child {
-  margin-top: 0;
+.columns-intro .columns-intro-heading {
+  margin: 0 0 30px;
 }
 
-.columns-intro .columns-intro-heading > :last-child,
-.columns-intro .columns-intro-text > :last-child {
+.columns-intro .columns-intro-heading:last-child {
   margin-bottom: 0;
 }
 
-.columns-intro .columns-intro-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
+/* heading */
+.columns-intro h2 {
+  margin: 0;
+  color: var(--heading-color);
+  font-family: var(--heading-font-family);
+  font-size: 32px;
+  font-weight: 350;
+  line-height: 40px;
+}
+
+.columns-intro h2 :is(strong, b) {
+  font-weight: 500;
+}
+
+/* description */
+.columns-intro .columns-intro-text p {
+  margin: 0 0 12px;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 26px;
+}
+
+/* arrow links */
+.columns-intro .columns-intro-text a:any-link {
+  position: relative;
+  display: inline-block;
+  margin: 0 20px 0 0;
+  border-bottom: 1px solid currentcolor;
+  color: var(--link-color);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 26px;
+  text-decoration: none;
+}
+
+.columns-intro .columns-intro-text a:any-link::after {
+  content: "";
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0 0 0 5px;
+  background-color: currentcolor;
+  mask: url("data:image/svg+xml,%3csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8.25 1.21875L13.75 6.46875C13.9062 6.625 14 6.8125 14 7.03125C14 7.21875 13.9062 7.40625 13.75 7.5625L8.25 12.8125C7.96875 13.0938 7.46875 13.0938 7.1875 12.7812C6.90625 12.5 6.90625 12 7.21875 11.7188L11.375 7.78125H0.75C0.3125 7.78125 0 7.4375 0 7.03125C0 6.59375 0.3125 6.28125 0.75 6.28125H11.375L7.21875 2.3125C6.90625 2.03125 6.90625 1.53125 7.1875 1.25C7.46875 0.9375 7.9375 0.9375 8.25 1.21875Z' fill='%23000'/%3e%3c/svg%3e") center / contain no-repeat;
+}
+
+.columns-intro .columns-intro-text a:hover {
+  color: #495c14;
+  text-decoration: none;
 }
 
 @media (width >= 900px) {
   .columns-intro > div {
     flex-direction: row;
-    align-items: flex-start;
-    gap: 48px;
   }
 
   .columns-intro > div > div {
-    flex: 1 1 0;
+    flex: 1 0 50%;
+  }
+
+  .columns-intro .columns-intro-heading {
+    margin: 0;
+    padding: 0 5vw 0 0;
+  }
+
+  .columns-intro h2 {
+    font-size: 50px;
+    line-height: 62px;
+  }
+
+  .columns-intro .columns-intro-text p {
+    font-size: 18px;
   }
 }

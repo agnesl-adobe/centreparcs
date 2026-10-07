@@ -31,5 +31,14 @@ export default function decorate(block) {
     a.closest('.button-container')?.classList.remove('button-container');
   });
 
+  // a paragraph holding only a link is the card CTA (no description padding)
+  ul.querySelectorAll('.cards-feature-card-body > p').forEach((p) => {
+    const link = p.querySelector(':scope > a:only-child');
+    if (link && p.textContent.trim() === link.textContent.trim()) {
+      p.classList.add('cards-feature-card-cta');
+      link.classList.add('cards-feature-link');
+    }
+  });
+
   block.replaceChildren(ul);
 }

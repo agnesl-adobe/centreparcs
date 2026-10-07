@@ -1,84 +1,212 @@
+/* cards-expand: expandable image panels (Center Parcs "expandable cross sell") */
+
+.cards-expand {
+  padding: 25px 0;
+  background-color: var(--light-color);
+}
+
 .cards-expand > ul {
-  display: flex;
-  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
 }
 
+/* mobile: stacked sticky cards, image above text */
 .cards-expand .cards-expand-card {
-  position: relative;
-  flex: 0 0 75%;
-  aspect-ratio: 3 / 4;
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  scroll-snap-align: start;
+  background-color: #fff;
 }
 
-.cards-expand .cards-expand-card-image,
 .cards-expand .cards-expand-card-image picture {
-  position: absolute;
-  inset: 0;
+  display: block;
 }
 
 .cards-expand .cards-expand-card-image img {
   display: block;
   width: 100%;
   height: 100%;
+  min-height: 250px;
+  max-height: 250px;
+  border-radius: 12px 12px 0 0;
   object-fit: cover;
 }
 
 .cards-expand .cards-expand-card-body {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 1;
-  padding: 16px;
+  padding: 24px;
+}
+
+.cards-expand .cards-expand-card-body h3 {
+  margin: 0;
+  color: var(--text-color);
+  font-family: var(--heading-font-family);
+  font-size: 34px;
+  font-weight: 350;
+  line-height: 40px;
+}
+
+.cards-expand .cards-expand-card-body p {
+  margin: 16px 0 10px;
+  color: #000;
+  font-family: var(--body-font-family);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.cards-expand .cards-expand-card-body p.cards-expand-card-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  text-align: center;
+}
+
+.cards-expand .cards-expand-card-cta a:any-link {
   box-sizing: border-box;
+  display: block;
+  border: 1px solid var(--brand-green);
+  border-radius: 6px;
+  padding: 9px 20px;
+  background-color: var(--brand-green);
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.cards-expand .cards-expand-card-body > * {
-  margin: 0 0 8px;
-}
-
-.cards-expand .cards-expand-card-body > :last-child {
-  margin-bottom: 0;
-}
-
-@media (width >= 600px) {
-  .cards-expand .cards-expand-card {
-    flex-basis: 45%;
-  }
+.cards-expand .cards-expand-card-cta a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
 }
 
 @media (width >= 900px) {
+  .cards-expand {
+    background-color: transparent;
+  }
+
   .cards-expand > ul {
-    overflow: visible;
-    min-height: 520px;
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
   }
 
   .cards-expand .cards-expand-card {
-    flex: 1 1 0;
-    aspect-ratio: auto;
-    min-width: 0;
-    transition: flex-grow 0.4s ease;
+    position: relative;
+    top: 0;
+    display: block;
+    flex: 0 1 auto;
+    width: 25%;
+    height: 600px;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: width 0.8s, box-shadow 0.2s;
   }
 
-  .cards-expand .cards-expand-card.is-expanded {
-    flex-grow: 2.5;
+  .cards-expand .cards-expand-card:hover,
+  .cards-expand .cards-expand-card:focus-within {
+    z-index: 5;
+    width: 200%;
+    box-shadow: rgb(0 0 0 / 20%) 0 10px 30px;
   }
 
-  /* collapsed panels show only the title; content stays focusable so keyboard users can expand */
-  .cards-expand .cards-expand-card:not(.is-expanded) .cards-expand-card-body > :not(h2, h3, h4) {
-    max-height: 0;
-    margin: 0;
-    overflow: hidden;
+  .cards-expand .cards-expand-card-image {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 12px;
+  }
+
+  .cards-expand .cards-expand-card-image picture {
+    height: 100%;
+  }
+
+  .cards-expand .cards-expand-card-image img {
+    min-height: 0;
+    max-height: none;
+    border-radius: 12px;
+  }
+
+  /* white overlay card: hidden until the panel expands */
+  .cards-expand .cards-expand-card-body {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+    z-index: 3;
+    box-sizing: border-box;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: #fff;
     opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+
+  .cards-expand .cards-expand-card:hover .cards-expand-card-body,
+  .cards-expand .cards-expand-card:focus-within .cards-expand-card-body {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.5s;
+  }
+
+  .cards-expand .cards-expand-card-body h3 {
+    margin: 0 0 16px;
+  }
+
+  .cards-expand .cards-expand-card-body p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .cards-expand .cards-expand-card-body p.cards-expand-card-cta {
+    flex-flow: row wrap;
+    gap: 12px;
+    margin: 0;
+  }
+
+  .cards-expand .cards-expand-card-cta a:any-link {
+    width: 100%;
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+@media (width >= 1024px) {
+  .cards-expand .cards-expand-card-body {
+    right: auto;
+    width: 50%;
+  }
+
+  .cards-expand .cards-expand-card-body p.cards-expand-card-cta {
+    flex-wrap: nowrap;
+  }
+}
+
+/* touch devices cannot hover: keep the cards readable */
+@media (width >= 900px) and (hover: none) and (pointer: coarse) {
+  .cards-expand .cards-expand-card {
+    box-shadow: none;
+  }
+
+  .cards-expand .cards-expand-card .cards-expand-card-body {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cards-expand .cards-expand-card {
+  .cards-expand .cards-expand-card,
+  .cards-expand .cards-expand-card-body {
     transition: none;
   }
 }

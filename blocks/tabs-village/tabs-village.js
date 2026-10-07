@@ -139,6 +139,9 @@ export default async function decorate(block) {
 
   panels.querySelectorAll('picture > img').forEach((img) => {
     const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
+    // the card image is at most ~550px wide: keep the 750px rendition only
+    // (wider Dynamic Media renditions get letterboxed when the master is smaller)
+    optimizedPic.querySelectorAll('source[media]').forEach((source) => source.remove());
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
   });

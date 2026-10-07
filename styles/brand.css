@@ -26,7 +26,7 @@
   --section-spacing: 25px;
   --radius-m: 12px;
   --radius-s: 8px;
-  --nav-height: 78px;
+  --nav-height: 80px;
 }
 
 @media (width >= 600px) {

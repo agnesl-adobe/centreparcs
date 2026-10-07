@@ -13,6 +13,11 @@ header .header {
   --header-locale-text: #111;
 }
 
+/* open mobile drawer pushes page content down (header grows) */
+header:has(.nav-wrapper[aria-expanded='true']) {
+  height: auto;
+}
+
 header .nav-wrapper {
   position: relative;
   box-sizing: border-box;
@@ -64,14 +69,14 @@ header .nav-tools {
 header .nav-tools-cta {
   display: inline-block;
   box-sizing: border-box;
-  padding: 10px 8px;
+  padding: 8px 9px;
   border: 1px solid var(--header-cta-color);
   border-radius: 12px;
   background-color: var(--background-color);
   color: var(--header-cta-color);
   font-size: 14px;
   font-weight: 600;
-  line-height: 20px;
+  line-height: 24px;
   text-decoration: none;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
@@ -87,13 +92,12 @@ header .nav-tools-cta:focus-visible {
 header .nav-hamburger {
   grid-area: hamburger;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
   box-sizing: border-box;
   width: 42px;
   height: 51px;
   margin: 20px 0 0 1px;
-  padding: 8px 6px;
+  padding: 23px 10px 14px 15px;
   border: 0;
   border-radius: 12px;
   background: none;
@@ -101,46 +105,40 @@ header .nav-hamburger {
   cursor: pointer;
 }
 
-header .nav-hamburger-icon,
-header .nav-hamburger-icon::before,
-header .nav-hamburger-icon::after {
+/* three bars, swapped (no animation) for a cross when the menu is open */
+header .nav-hamburger-icon {
   display: block;
   position: relative;
   width: 17px;
-  height: 2px;
-  border-radius: 1px;
-  background-color: currentcolor;
-  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-}
-
-header .nav-hamburger-icon::before,
-header .nav-hamburger-icon::after {
-  content: '';
-  position: absolute;
-  left: 0;
-}
-
-header .nav-hamburger-icon::before {
-  top: -6px;
-}
-
-header .nav-hamburger-icon::after {
-  top: 6px;
+  height: 14px;
+  background:
+    linear-gradient(currentcolor 0 0) 0 0 / 100% 2px no-repeat,
+    linear-gradient(currentcolor 0 0) 0 6px / 100% 2px no-repeat,
+    linear-gradient(currentcolor 0 0) 0 12px / 100% 2px no-repeat;
 }
 
 header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon {
-  background-color: transparent;
+  background: none;
 }
 
-header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::before {
-  transform: translateY(6px) rotate(45deg);
+header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::before,
+header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -1px;
+  width: 19px;
+  height: 2.5px;
+  border-radius: 1px;
+  background-color: currentcolor;
+  transform: rotate(45deg);
 }
 
 header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::after {
-  transform: translateY(-6px) rotate(-45deg);
+  transform: rotate(-45deg);
 }
 
-/* main nav (mobile drawer) */
+/* main nav (mobile drawer: pushes content, no overlay) */
 header nav.nav-main {
   grid-area: nav;
   display: none;
@@ -158,31 +156,33 @@ header .nav-list {
   background-color: var(--header-panel-bg);
 }
 
-header .nav-item {
-  border-bottom: 1px solid rgb(255 255 255 / 10%);
-}
-
-header .nav-item:last-child {
-  border-bottom: 0;
+header .nav-item-locale {
+  padding: 8px 20px 10px;
+  background-color: var(--background-color);
 }
 
 header .nav-trigger,
 header .nav-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  padding: 23px 20px;
+  display: block;
+  position: relative;
+  padding: 22px 20px;
+  border-bottom: 1px solid rgb(255 255 255 / 7.5%);
   color: #fff;
   font-size: 18px;
-  font-weight: 700;
-  line-height: 22px;
+  font-weight: 800;
+  line-height: 24px;
+  text-decoration: none;
+}
+
+header .nav-trigger:hover,
+header .nav-link:hover {
+  color: #fff;
   text-decoration: none;
 }
 
 header .nav-item-row {
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 header .nav-item-row .nav-link {
@@ -190,33 +190,46 @@ header .nav-item-row .nav-link {
 }
 
 header .nav-sub-toggle {
-  align-self: stretch;
-  padding: 0 20px;
+  position: relative;
+  width: 48px;
+  margin: 0;
+  padding: 0;
   border: 0;
+  border-bottom: 1px solid rgb(255 255 255 / 7.5%);
   background: none;
   color: #fff;
   cursor: pointer;
 }
 
 header .nav-chevron {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  margin: -6px 4px 0 12px;
+  position: absolute;
+  top: 24px;
+  right: 10px;
+  width: 22px;
+  height: 18px;
+}
+
+header .nav-chevron::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 8px;
+  height: 8px;
   border-right: 2px solid currentcolor;
   border-bottom: 2px solid currentcolor;
   transform: rotate(45deg);
-  transition: transform 0.2s ease-in-out;
 }
 
-header .nav-item[aria-expanded='true'] .nav-chevron {
-  margin-top: 6px;
+header .nav-item[aria-expanded='true'] .nav-chevron::before {
+  top: 7px;
   transform: rotate(-135deg);
 }
 
-/* megamenu panel (mobile: accordion body) */
+/* megamenu panel (mobile: full-bleed accordion body, promo first) */
 header .nav-megamenu {
   display: none;
+  margin: 0 -10px;
   color: #fff;
 }
 
@@ -225,55 +238,104 @@ header .nav-item[aria-expanded='true'] > .nav-megamenu {
 }
 
 header .nav-megamenu-inner {
-  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 header .nav-megamenu-heading {
   margin: 0;
-  padding: 10px 0 4px;
+  padding: 18px 20px 6px 22px;
   color: #fff;
   font-family: var(--heading-font-family);
-  font-size: 20px;
+  font-size: 17.5px;
   font-weight: 700;
-  line-height: 26px;
+  line-height: 40px;
 }
 
 header .nav-megamenu-links {
-  margin: 0 0 20px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
 header .nav-megamenu-links li {
-  padding-bottom: 6px;
+  border-bottom: 1px solid rgb(255 255 255 / 7.5%);
   line-height: 24px;
 }
 
 header .nav-megamenu-links a {
-  display: inline-block;
-  padding: 5px 0;
-  border-bottom: 1px solid transparent;
+  display: block;
+  padding: 12px 20px 12px 40px;
   color: #fff;
   font-size: 16px;
   font-weight: 100;
-  line-height: 22px;
+  line-height: 24px;
   text-decoration: none;
-  transition: border-color 0.2s ease-in-out;
 }
 
-header .nav-megamenu-links a:hover,
-header .nav-megamenu-links a:focus-visible {
-  border-bottom-color: rgb(255 255 255 / 75%);
-  text-decoration: none;
+header .nav-megamenu-links a:hover {
+  color: #fff;
 }
 
 header .nav-megamenu-promo {
-  display: none;
+  position: relative;
+  order: -1;
+  padding: 22px;
+}
+
+header .nav-megamenu-promo-media img {
+  display: block;
+  width: 100%;
+  height: 362px;
+  object-fit: cover;
+  object-position: center;
+}
+
+header .nav-megamenu-promo-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+header .nav-megamenu-promo-title {
+  margin: 0 17px;
+  color: #fff;
+  font-size: 21px;
+  line-height: 31.5px;
+  text-shadow: rgb(0 0 0 / 30%) 1px 2px 4px;
+}
+
+header .nav-megamenu-promo-action {
+  margin: 30px 0 0;
+}
+
+header .nav-megamenu-promo-cta {
+  display: inline-block;
+  padding: 9px 20px;
+  border-radius: 12px;
+  background-color: var(--brand-green);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+header .nav-megamenu-promo-cta:hover,
+header .nav-megamenu-promo-cta:focus-visible {
+  background-color: var(--header-promo-cta-hover);
+  color: #fff;
+  text-decoration: none;
 }
 
 /* locale switcher */
 header .nav-locale {
-  padding: 15px 30px;
+  padding: 0;
 }
 
 header .nav-locale-button {
@@ -283,7 +345,7 @@ header .nav-locale-button {
   border: 0;
   border-radius: 12px;
   background: none;
-  color: #000;
+  color: #fff;
   font-family: var(--body-font-family);
   font-size: 16px;
   font-weight: 400;
@@ -304,6 +366,7 @@ header .nav-locale-button .nav-locale-flag img {
 
 header .nav-locale-text {
   padding-left: 5px;
+  color: #000;
 }
 
 header .nav-locale-modal {
@@ -328,7 +391,7 @@ header .nav-locale-backdrop {
 header .nav-locale-dialog {
   position: relative;
   box-sizing: border-box;
-  width: calc(100% - 20px);
+  width: calc(100% - 37px);
   max-width: 452px;
   padding: 26px;
   background-color: #fff;
@@ -350,7 +413,7 @@ header .nav-locale-title {
   font-family: var(--heading-font-family);
   font-size: 30px;
   font-weight: 100;
-  line-height: 62px;
+  line-height: 40px;
 }
 
 header .nav-locale-dismiss {
@@ -493,13 +556,33 @@ header .nav-locale-continue {
    Tablet
    ========================================================================== */
 @media (width >= 600px) {
-  header .nav-wrapper {
-    padding: 0 30px;
+  header .nav-brand {
+    padding: 10px 0 10px 10px;
   }
 
   header .nav-brand img {
     width: 85px;
     height: 69px;
+  }
+
+  header .nav-tools {
+    margin-top: 24px;
+  }
+
+  header .nav-tools-cta {
+    padding: 9px 20px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  header .nav-hamburger {
+    height: 52px;
+    margin: 25px 0 0 10px;
+  }
+
+  header .nav-trigger,
+  header .nav-link {
+    padding: 21px 20px;
   }
 }
 
@@ -545,18 +628,25 @@ header .nav-locale-continue {
     justify-content: space-between;
     height: 63px;
     margin: 0;
+    color: #fff;
   }
 
   header .nav-list {
     display: flex;
-    align-items: flex-start;
+    flex: 1;
     background-color: transparent;
+    color: #fff;
   }
 
   header .nav-item {
     margin: 15px 20px;
-    border-bottom: 0;
     line-height: 24px;
+  }
+
+  header .nav-list > .nav-item-locale {
+    margin-left: auto;
+    padding: 0;
+    background-color: transparent;
   }
 
   header .nav-trigger,
@@ -564,6 +654,7 @@ header .nav-locale-continue {
   header .nav-item-row .nav-link {
     display: inline-block;
     flex: none;
+    position: static;
     margin: 0 0 -1px;
     padding: 5px 0;
     border-bottom: 2px solid transparent;
@@ -578,6 +669,7 @@ header .nav-locale-continue {
   header .nav-link:hover,
   header .nav-trigger[aria-expanded='true'] {
     border-bottom-color: var(--header-nav-color);
+    color: var(--header-nav-color);
     text-decoration: none;
   }
 
@@ -599,6 +691,7 @@ header .nav-locale-continue {
     left: 0;
     z-index: 9999;
     width: 100%;
+    margin: 0;
     background-color: var(--header-panel-bg);
     animation: none;
   }
@@ -619,79 +712,62 @@ header .nav-locale-continue {
 
   header .nav-megamenu-heading {
     padding: 10px 0 4px;
+    font-size: 20px;
+    line-height: 26px;
   }
 
   header h2.nav-megamenu-heading {
     padding: 26px 0 10px;
   }
 
-  header .nav-megamenu-links {
-    margin: 0;
+  header .nav-megamenu-links li {
+    padding-bottom: 6px;
+    border-bottom: 0;
   }
 
   header .nav-megamenu-column > .nav-megamenu-links:first-child {
     padding-top: 36px;
   }
 
+  header .nav-megamenu-links a {
+    display: inline-block;
+    padding: 5px 0;
+    border-bottom: 1px solid transparent;
+    line-height: 22px;
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  header .nav-megamenu-links a:hover,
+  header .nav-megamenu-links a:focus-visible {
+    border-bottom-color: rgb(255 255 255 / 75%);
+    text-decoration: none;
+  }
+
   header .nav-megamenu-promo {
-    display: block;
-    position: relative;
+    order: 0;
     padding: 0 14px;
   }
 
   header .nav-megamenu-promo-media img {
-    display: block;
-    width: 100%;
     height: 450px;
-    object-fit: cover;
-    object-position: center;
   }
 
   header .nav-megamenu-promo-content {
-    position: absolute;
     inset: 0 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
   }
 
   header .nav-megamenu-promo-title {
     margin: 0 32px;
-    color: #fff;
     font-size: 24px;
     line-height: 36px;
-    text-shadow: rgb(0 0 0 / 30%) 1px 2px 4px;
-  }
-
-  header .nav-megamenu-promo-action {
-    margin: 30px 0 0;
   }
 
   header .nav-megamenu-promo-cta {
-    display: inline-block;
-    padding: 9px 20px;
-    border-radius: 12px;
-    background-color: var(--brand-green);
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
     line-height: 22px;
-    text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
   }
 
-  header .nav-megamenu-promo-cta:hover,
-  header .nav-megamenu-promo-cta:focus-visible {
-    background-color: var(--header-promo-cta-hover);
-    color: #fff;
-    text-decoration: none;
-  }
-
-  header .nav-locale {
-    margin: 15px 20px 0 0;
-    padding: 0;
+  header .nav-locale-title {
+    line-height: 62px;
   }
 
   header .nav-locale-dialog-footer {

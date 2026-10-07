@@ -130,7 +130,7 @@ function closeAllDrops(nav, except = null) {
   nav.querySelectorAll('.nav-item[aria-expanded="true"]').forEach((item) => {
     if (item === except) return;
     item.setAttribute('aria-expanded', 'false');
-    const trigger = item.querySelector(':scope > .nav-trigger, :scope > .nav-item-row > .nav-sub-toggle');
+    const trigger = item.querySelector(':scope > .nav-trigger');
     if (trigger) trigger.setAttribute('aria-expanded', 'false');
   });
 }
@@ -149,9 +149,9 @@ function toggleItem(nav, item, trigger, force = null) {
 /**
  * Builds the primary navigation list.
  * Authoring contract: each top-level <li> starts with a label <p>.
- *  - plain-text label + nested <ul>  -> megamenu trigger (click to toggle)
- *  - link label (+ optional nested <ul>) -> navigates; nested list only shown
- *    as an accordion on mobile
+ *  - plain-text label + nested <ul> -> megamenu trigger (click to toggle;
+ *    full-width panel on desktop, in-place accordion on mobile)
+ *  - link label -> plain navigation link
  */
 function buildSections(section, nav) {
   const list = section.querySelector('ul');
@@ -189,23 +189,10 @@ function buildSections(section, nav) {
       });
       item.append(trigger, buildMegamenu(subList, panelId));
     } else if (labelLink) {
+      // plain link item (decorative chevron shown on mobile only)
       labelLink.classList.add('nav-link');
-      if (subList) {
-        // link on desktop; accordion with toggle on mobile
-        item.classList.add('nav-drop', 'nav-drop-mobile');
-        item.setAttribute('aria-expanded', 'false');
-        const toggle = el('button', 'nav-sub-toggle');
-        toggle.type = 'button';
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-controls', panelId);
-        toggle.setAttribute('aria-label', labelLink.textContent.trim());
-        toggle.append(el('span', 'nav-chevron'));
-        toggle.addEventListener('click', () => toggleItem(nav, item, toggle));
-        const row = el('div', 'nav-item-row', labelLink, toggle);
-        item.append(row, buildMegamenu(subList, panelId));
-      } else {
-        item.append(labelLink);
-      }
+      labelLink.append(el('span', 'nav-chevron'));
+      item.append(labelLink);
     } else if (label) {
       item.append(label);
     }
@@ -307,13 +294,10 @@ function buildLocale(section) {
 
   const close = () => {
     modal.hidden = true;
-    button.setAttribute('aria-expanded', 'false');
     button.focus();
   };
-  button.setAttribute('aria-expanded', 'false');
   button.addEventListener('click', () => {
     modal.hidden = false;
-    button.setAttribute('aria-expanded', 'true');
     dismiss.focus();
   });
   dismiss.addEventListener('click', close);
@@ -371,8 +355,9 @@ export default async function decorate(block) {
   if (brandSection) wrapper.append(buildBrand(brandSection));
   if (toolsSection) wrapper.append(buildTools(toolsSection));
   wrapper.append(hamburger);
-  if (navSection) nav.append(buildSections(navSection, nav));
-  if (localeSection) nav.append(buildLocale(localeSection));
+  const navList = navSection ? buildSections(navSection, nav) : el('ul', 'nav-list');
+  if (localeSection) navList.append(el('li', 'nav-item nav-item-locale', buildLocale(localeSection)));
+  nav.append(navList);
   wrapper.append(nav);
   block.append(wrapper);
 

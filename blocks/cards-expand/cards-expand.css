@@ -1,0 +1,84 @@
+.cards-expand > ul {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.cards-expand .cards-expand-card {
+  position: relative;
+  flex: 0 0 75%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+.cards-expand .cards-expand-card-image,
+.cards-expand .cards-expand-card-image picture {
+  position: absolute;
+  inset: 0;
+}
+
+.cards-expand .cards-expand-card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cards-expand .cards-expand-card-body {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.cards-expand .cards-expand-card-body > * {
+  margin: 0 0 8px;
+}
+
+.cards-expand .cards-expand-card-body > :last-child {
+  margin-bottom: 0;
+}
+
+@media (width >= 600px) {
+  .cards-expand .cards-expand-card {
+    flex-basis: 45%;
+  }
+}
+
+@media (width >= 900px) {
+  .cards-expand > ul {
+    overflow: visible;
+    min-height: 520px;
+  }
+
+  .cards-expand .cards-expand-card {
+    flex: 1 1 0;
+    aspect-ratio: auto;
+    min-width: 0;
+    transition: flex-grow 0.4s ease;
+  }
+
+  .cards-expand .cards-expand-card.is-expanded {
+    flex-grow: 2.5;
+  }
+
+  /* collapsed panels show only the title; content stays focusable so keyboard users can expand */
+  .cards-expand .cards-expand-card:not(.is-expanded) .cards-expand-card-body > :not(h2, h3, h4) {
+    max-height: 0;
+    margin: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cards-expand .cards-expand-card {
+    transition: none;
+  }
+}

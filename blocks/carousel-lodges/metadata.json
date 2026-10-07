@@ -1,0 +1,17 @@
+{
+  "variantName": "carousel-lodges",
+  "baseBlock": "carousel",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "One row per accommodation type (7). Cell 1: background image. Cell 2: H2 name, subtitle paragraph, bulleted list of amenities (icon + label), description paragraph, primary link (type name), secondary link \"View all accommodation\".",
+    "notes": "hint=block. Rotating slides with image + overlay text + thumbnail navigation; obvious carousel match."
+  },
+  "contentPattern": "One row per accommodation type (7). Cell 1: background image. Cell 2: H2 name, subtitle paragraph, bulleted list of amenities (icon + label), description paragraph, primary link (type name), secondary link \"View all accommodation\".",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["carousel-lodges"]
+}

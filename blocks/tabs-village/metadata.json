@@ -1,0 +1,17 @@
+{
+  "variantName": "tabs-village",
+  "baseBlock": "tabs",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "One row per village (6). Cell 1 (label): village name + location (e.g. \"Sherwood Forest / Nottinghamshire, UK\"). Cell 2 (panel): image, H3 village name, location paragraph, description, CTA link \"Discover Sherwood Forest\".",
+    "notes": "Interactive selector: choosing a village pin on the map swaps the visible village card. Equivalent to labelled switchable panels - tabs is the closest library match (one tab per village). The map illustration is a decorative background handled in CSS. Section style: green."
+  },
+  "contentPattern": "One row per village (6). Cell 1 (label): village name + location (e.g. \"Sherwood Forest / Nottinghamshire, UK\"). Cell 2 (panel): image, H3 village name, location paragraph, description, CTA link \"Discover Sherwood Forest\".",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["tabs-village"]
+}

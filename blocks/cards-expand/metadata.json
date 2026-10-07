@@ -1,0 +1,17 @@
+{
+  "variantName": "cards-expand",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "One row per panel (4). Cell 1: portrait image. Cell 2: H3, description, CTA link.",
+    "notes": "hint=block. 4 repeating image items with title, text, CTA; expand-on-hover is decoration. Cards is the obvious match."
+  },
+  "contentPattern": "One row per panel (4). Cell 1: portrait image. Cell 2: H3, description, CTA link.",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["cards-expand"]
+}

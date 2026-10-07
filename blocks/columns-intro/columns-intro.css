@@ -1,0 +1,37 @@
+.columns-intro > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.columns-intro > div > div {
+  min-width: 0;
+}
+
+.columns-intro .columns-intro-heading > :first-child,
+.columns-intro .columns-intro-text > :first-child {
+  margin-top: 0;
+}
+
+.columns-intro .columns-intro-heading > :last-child,
+.columns-intro .columns-intro-text > :last-child {
+  margin-bottom: 0;
+}
+
+.columns-intro .columns-intro-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+@media (width >= 900px) {
+  .columns-intro > div {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 48px;
+  }
+
+  .columns-intro > div > div {
+    flex: 1 1 0;
+  }
+}

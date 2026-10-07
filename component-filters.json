@@ -19,9 +19,39 @@
     ]
   },
   {
+    "id": "cards-expand",
+    "components": [
+      "cards-expand-card"
+    ]
+  },
+  {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "carousel-lodges",
+    "components": [
+      "carousel-lodges-item"
+    ]
+  },
+  {
+    "id": "columns-intro",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "columns-offer",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "columns-promo",
+    "components": [
+      "column"
     ]
   },
   {
@@ -37,6 +67,12 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "tabs-village",
+    "components": [
+      "tabs-village-item"
     ]
   }
 ]

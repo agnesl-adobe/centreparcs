@@ -1,0 +1,92 @@
+.columns-offer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.columns-offer .columns-offer-headline,
+.columns-offer .columns-offer-card {
+  min-width: 0;
+}
+
+.columns-offer .columns-offer-headline h1,
+.columns-offer .columns-offer-headline h2 {
+  margin-top: 0;
+}
+
+.columns-offer .columns-offer-card {
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.columns-offer .columns-offer-card > :first-child {
+  margin-top: 0;
+}
+
+.columns-offer .columns-offer-img-col img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* countdown */
+.columns-offer .columns-offer-countdown {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 16px 0;
+}
+
+.columns-offer .columns-offer-countdown-label {
+  margin: 0;
+}
+
+.columns-offer .columns-offer-countdown-units {
+  display: flex;
+  gap: 16px;
+}
+
+.columns-offer .columns-offer-countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 3ch;
+}
+
+.columns-offer .columns-offer-countdown-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.columns-offer .columns-offer-card .button-container {
+  margin: 16px 0 8px;
+}
+
+.columns-offer .columns-offer-card .button-container .button {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+@media (width >= 600px) {
+  .columns-offer .columns-offer-countdown {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (width >= 900px) {
+  .columns-offer > div {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 48px;
+  }
+
+  .columns-offer > div > div {
+    flex: 1 1 0;
+  }
+
+  .columns-offer .columns-offer-headline {
+    align-self: center;
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "variantName": "hero-video",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "Row 1: poster image (CP_WF_Nature_36, alt \"Treetop view of lodges nestled in the heart of the forest.\"). Row 2: link to the background video (Scene7 MP4) plus optional visually-hidden heading \"Book your short break\".",
+    "notes": "hint=default-content, but typing test fails: full-width background video with poster image and pause control requires block decoration. Hero is the obvious match."
+  },
+  "contentPattern": "Row 1: poster image (CP_WF_Nature_36, alt \"Treetop view of lodges nestled in the heart of the forest.\"). Row 2: link to the background video (Scene7 MP4) plus optional visually-hidden heading \"Book your short break\".",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["hero-video"]
+}

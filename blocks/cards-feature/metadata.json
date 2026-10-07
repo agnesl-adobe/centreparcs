@@ -1,0 +1,17 @@
+{
+  "variantName": "cards-feature",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "One row per card (3). Cell 1: image. Cell 2: H3, paragraph, link.",
+    "notes": "hint=block. 3 repeating image + heading + text + link items; visually identical to 7.2 (seasonal breaks and Discover more sections)."
+  },
+  "contentPattern": "One row per card (3). Cell 1: image. Cell 2: H3, paragraph, link.",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 2,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["cards-feature"]
+}

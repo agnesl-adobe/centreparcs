@@ -1,0 +1,53 @@
+.cards-feature > ul {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cards-feature .cards-feature-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cards-feature .cards-feature-card-image {
+  line-height: 0;
+}
+
+.cards-feature .cards-feature-card-image img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.cards-feature .cards-feature-card-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding-top: 16px;
+}
+
+.cards-feature .cards-feature-card-body > * {
+  margin: 0 0 12px;
+}
+
+/* push the CTA to the bottom so links align across a row */
+.cards-feature .cards-feature-card-body > p:last-child:has(a) {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+@media (width >= 600px) {
+  .cards-feature > ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 900px) {
+  .cards-feature > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "variantName": "hero-notification",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "Single row/cell: paragraph \"<strong>Breaks now available up to 17th April 2028!</strong> <a>Secure your ideal dates and accommodation today.</a>\"",
+    "notes": "hint=block. Dismissible full-width notice bar with icon, bold message, link and close control; needs decoration (dismiss) and distinct banner styling. Single-cell banner model: text paragraph with bold lead and a link."
+  },
+  "contentPattern": "Single row/cell: paragraph \"<strong>Breaks now available up to 17th April 2028!</strong> <a>Secure your ideal dates and accommodation today.</a>\"",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["hero-notification"]
+}

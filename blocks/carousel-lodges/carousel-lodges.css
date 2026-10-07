@@ -1,0 +1,229 @@
+.carousel-lodges {
+  position: relative;
+}
+
+.carousel-lodges .carousel-lodges-slides-container {
+  position: relative;
+}
+
+.carousel-lodges .carousel-lodges-slides,
+.carousel-lodges .carousel-lodges-thumbs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-lodges .carousel-lodges-slides {
+  display: flex;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overflow: scroll clip;
+  scrollbar-width: none;
+}
+
+.carousel-lodges .carousel-lodges-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-lodges .carousel-lodges-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+
+.carousel-lodges .carousel-lodges-slide-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.carousel-lodges .carousel-lodges-slide-image picture {
+  position: absolute;
+  inset: 0;
+}
+
+.carousel-lodges .carousel-lodges-slide-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-lodges .carousel-lodges-slide-content {
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.carousel-lodges .carousel-lodges-slide-content > :first-child {
+  margin-top: 0;
+}
+
+.carousel-lodges .carousel-lodges-slide-content ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.carousel-lodges .carousel-lodges-slide-content li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.carousel-lodges .carousel-lodges-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.carousel-lodges .carousel-lodges-actions .button-container {
+  margin: 0;
+}
+
+/* prev / next */
+.carousel-lodges .carousel-lodges-navigation-buttons {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  aspect-ratio: 4 / 3;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.carousel-lodges .carousel-lodges-navigation-buttons button {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(0 0 0 / 30%);
+  color: inherit;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.carousel-lodges .carousel-lodges-navigation-buttons button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 2px);
+  width: 10px;
+  height: 10px;
+  border: 2px solid;
+  border-bottom: 0;
+  border-left: 0;
+  transform: translate(-50%, -50%) rotate(-135deg);
+}
+
+.carousel-lodges .carousel-lodges-navigation-buttons .carousel-lodges-next::after {
+  left: calc(50% - 2px);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* thumbnails */
+.carousel-lodges .carousel-lodges-thumbs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 0;
+  overflow-x: auto;
+}
+
+.carousel-lodges .carousel-lodges-thumb {
+  flex: 0 0 auto;
+}
+
+.carousel-lodges .carousel-lodges-thumb button {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid transparent;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.carousel-lodges .carousel-lodges-thumb button[aria-current='true'] {
+  border-color: currentcolor;
+}
+
+.carousel-lodges .carousel-lodges-thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.carousel-lodges .carousel-lodges-thumb-label {
+  padding: 4px;
+  font-size: 0.75em;
+}
+
+@media (width >= 600px) {
+  .carousel-lodges .carousel-lodges-slide-image,
+  .carousel-lodges .carousel-lodges-navigation-buttons {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (width >= 900px) {
+  .carousel-lodges .carousel-lodges-slide {
+    justify-content: flex-end;
+    min-height: 600px;
+  }
+
+  .carousel-lodges .carousel-lodges-slide-image {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+  }
+
+  .carousel-lodges .carousel-lodges-slide-content {
+    width: min(480px, 40%);
+    margin: 0 0 48px 48px;
+  }
+
+  .carousel-lodges .carousel-lodges-navigation-buttons {
+    inset: 0 200px 0 0;
+    aspect-ratio: auto;
+    padding: 0 24px;
+  }
+
+  .carousel-lodges .carousel-lodges-thumbs-nav {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 176px;
+    padding: 12px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .carousel-lodges .carousel-lodges-thumbs {
+    flex-direction: column;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .carousel-lodges .carousel-lodges-thumb button {
+    width: 100%;
+  }
+}

@@ -83,6 +83,36 @@
       "id": "blocks",
       "components": [
         {
+          "title": "Cards Expand",
+          "id": "cards-expand",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Cards Expand",
+                  "filter": "cards-expand"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Cards Expand Card",
+          "id": "cards-expand-card",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Cards Expand Card",
+                  "model": "cards-expand-card"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Cards",
           "id": "cards",
           "plugins": {
@@ -107,6 +137,84 @@
                 "template": {
                   "name": "Card",
                   "model": "card"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Carousel Lodges",
+          "id": "carousel-lodges",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Carousel Lodges",
+                  "filter": "carousel-lodges"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Carousel Lodges Slide",
+          "id": "carousel-lodges-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Carousel Lodges Slide",
+                  "model": "carousel-lodges-item"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Columns Intro",
+          "id": "columns-intro",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/columns/v1/columns",
+                "template": {
+                  "name": "Columns Intro",
+                  "columns": "2",
+                  "rows": "1"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Columns Offer",
+          "id": "columns-offer",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/columns/v1/columns",
+                "template": {
+                  "name": "Columns Offer",
+                  "columns": "2",
+                  "rows": "1"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Columns Promo",
+          "id": "columns-promo",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/columns/v1/columns",
+                "template": {
+                  "name": "Columns Promo",
+                  "columns": "3",
+                  "rows": "1"
                 }
               }
             }
@@ -143,6 +251,36 @@
           }
         },
         {
+          "title": "Hero Notification",
+          "id": "hero-notification",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Hero Notification",
+                  "model": "hero-notification"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Hero Video",
+          "id": "hero-video",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Hero Video",
+                  "model": "hero-video"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Hero",
           "id": "hero",
           "plugins": {
@@ -152,6 +290,37 @@
                 "template": {
                   "name": "Hero",
                   "model": "hero"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Tabs Village",
+          "id": "tabs-village",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Tabs Village",
+                  "filter": "tabs-village"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Village",
+          "id": "tabs-village-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Village",
+                  "model": "tabs-village-item",
+                  "content_headingType": "h3"
                 }
               }
             }

@@ -10,7 +10,8 @@
  * - <ul> of image-only links    -> social icon row
  * - <p><strong>text</strong></p> -> newsletter label
  * - <p>text</p> (no link)       -> email field placeholder
- * - first <p><a></a></p>        -> sign-up action (href = destination)
+ * - first <p><a></a></p>        -> sign-up action link (href = destination,
+ *                                 followed only when an email is entered)
  * - further <p><a></a></p>      -> secondary form links (hidden, logged-in state)
  */
 
@@ -91,7 +92,9 @@ function buildLinkGroup(heading, list) {
 }
 
 /**
- * Turns an image-only link list into an icon row.
+ * Turns an image-only link list into an icon row. The authored image is
+ * painted as a CSS background (like the source icon font) and its alt text
+ * becomes the accessible name of the link.
  * @param {Element} list list element
  * @returns {Element}
  */
@@ -99,11 +102,13 @@ function decorateIconList(list) {
   list.classList.add('footer-social');
   list.querySelectorAll('a').forEach((link) => {
     const img = link.querySelector('img');
-    if (img && img.alt) link.setAttribute('aria-label', img.alt);
-    if (img) {
-      img.loading = 'lazy';
-      img.alt = '';
-    }
+    if (!img) return;
+    if (img.alt) link.setAttribute('aria-label', img.alt);
+    const icon = document.createElement('span');
+    icon.className = 'footer-social-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.style.setProperty('--footer-icon', `url("${img.src}")`);
+    img.replaceWith(icon);
   });
   return list;
 }
@@ -147,19 +152,23 @@ function buildForm(paragraphs) {
   row.append(input);
 
   if (action) {
-    const actionLink = action.querySelector('a');
-    const button = document.createElement('button');
-    button.type = 'submit';
-    button.className = 'footer-newsletter-submit';
-    button.textContent = actionLink.textContent.trim();
-    row.append(button);
+    const submit = action.querySelector('a');
+    submit.className = 'footer-newsletter-submit';
+    row.append(submit);
+    const guardEmpty = (e) => {
+      if (!input.value.trim()) {
+        e.preventDefault();
+        input.focus();
+      }
+    };
+    submit.addEventListener('click', guardEmpty);
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       if (!input.value.trim()) {
         input.focus();
         return;
       }
-      window.location.href = actionLink.href;
+      window.location.href = submit.href;
     });
   }
   form.append(row);

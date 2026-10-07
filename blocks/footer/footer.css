@@ -200,4 +200,7 @@ footer .footer-newsletter-secondary {
 }
 
 @media (width >= 1200px) {
-  footer .footer-band
+  footer .footer-band {
+    padding: 30px 0;
+  }
+}

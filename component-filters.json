@@ -25,9 +25,21 @@
     ]
   },
   {
+    "id": "cards-feature",
+    "components": [
+      "cards-feature-card"
+    ]
+  },
+  {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "carousel-activity",
+    "components": [
+      "carousel-activity-item"
     ]
   },
   {

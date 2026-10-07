@@ -1,0 +1,74 @@
+.columns-promo .columns-promo-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.columns-promo .columns-promo-panel > div {
+  min-width: 0;
+}
+
+.columns-promo .columns-promo-heading-col,
+.columns-promo .columns-promo-text-col {
+  padding: 0 24px;
+}
+
+.columns-promo .columns-promo-panel > div:last-child {
+  padding-bottom: 24px;
+}
+
+.columns-promo .columns-promo-heading-col > :first-child,
+.columns-promo .columns-promo-text-col > :first-child {
+  margin-top: 0;
+}
+
+.columns-promo .columns-promo-heading-col > :last-child,
+.columns-promo .columns-promo-text-col > :last-child {
+  margin-bottom: 0;
+}
+
+.columns-promo .columns-promo-img-col {
+  line-height: 0;
+}
+
+.columns-promo .columns-promo-img-col img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+@media (width >= 900px) {
+  .columns-promo .columns-promo-panel {
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .columns-promo .columns-promo-panel > div {
+    flex: 1 1 0;
+  }
+
+  .columns-promo .columns-promo-panel > div:last-child {
+    padding-bottom: 0;
+    padding-right: 32px;
+  }
+
+  .columns-promo .columns-promo-heading-col,
+  .columns-promo .columns-promo-text-col {
+    padding: 24px 0;
+  }
+
+  .columns-promo .columns-promo-img-col {
+    align-self: stretch;
+    flex: 0 0 25%;
+  }
+
+  .columns-promo .columns-promo-img-col img {
+    aspect-ratio: auto;
+    min-height: 200px;
+  }
+}

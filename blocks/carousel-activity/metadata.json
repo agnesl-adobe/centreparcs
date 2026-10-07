@@ -1,0 +1,17 @@
+{
+  "variantName": "carousel-activity",
+  "baseBlock": "carousel",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "structure": "One row per tile (6). Cell 1: portrait image. Cell 2: link (label shown as overlay button).",
+    "notes": "hint=block. Horizontal slider of image tiles with prev/next arrows and progress bar."
+  },
+  "contentPattern": "One row per tile (6). Cell 1: portrait image. Cell 2: link (label shown as overlay button).",
+  "usage": {
+    "pagesUsing": ["https://www.centerparcs.co.uk/"],
+    "reuseCount": 1,
+    "lastUsed": "2026-10-07"
+  },
+  "options": [],
+  "memberVariantIds": ["carousel-activity"]
+}

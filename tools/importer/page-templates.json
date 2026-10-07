@@ -1,0 +1,14 @@
+{
+  "templates": [
+    {
+      "name": "home",
+      "urls": [
+        "https://www.centerparcs.co.uk/"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/",
+      "description": "",
+      "blocks": [],
+      "urlPattern": "/"
+    }
+  ]
+}

@@ -1,10 +1,13 @@
 {
+  "type": "xwalk",
   "sites": {
     "centreparcs": {
       "previewOrg": "agnesl-adobe",
       "previewSite": "centreparcs",
       "contentHostUrl": "author-p179457-e1900808.adobeaemcloud.com",
-      "baseUrl": "https://www.centerparcs.co.uk/"
+      "baseUrl": "https://www.centerparcs.co.uk/",
+      "botProtected": true,
+      "libraryUrl": "https://main--sta-xwalk-boilerplate--aemysites.aem.page/tools/sidekick/library.json"
     }
   },
   "features": [

@@ -1,109 +1,495 @@
+/* tabs-village: village explorer (map with village pins + village card)
+ * Values extracted from https://www.centerparcs.co.uk/ (.cmp-village-location).
+ * The intro heading/text/link and the "Not sure where you want to go?" hint are
+ * default content in the same section; they are laid out around the map at the
+ * end of this file (section-level rules).
+ */
+
+/* ========== block (mobile first) ========== */
 .tabs-village {
   display: flex;
   flex-direction: column-reverse;
-  gap: 24px;
-  position: relative;
+  gap: 16px;
 }
 
-/* tab list (village pins) */
+/* map with village pins */
 .tabs-village .tabs-village-list {
-  display: flex;
-  gap: 8px;
-  max-width: 100%;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 886 / 896;
+  background: url('map.svg') center / cover no-repeat;
 }
 
-.tabs-village .tabs-village-list button {
+.tabs-village .tabs-village-list .tabs-village-tab {
+  position: absolute;
+  top: var(--pin-y, 0);
+  left: var(--pin-x, 0);
   display: flex;
-  flex: 0 0 auto;
-  align-items: flex-start;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 32px;
+  height: 40px;
   margin: 0;
-  padding: 8px 12px;
-  border: 1px solid currentcolor;
-  border-radius: 4px;
-  background: none;
-  color: inherit;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background-color: rgb(83 105 23);
+  color: #fff;
   font: inherit;
-  line-height: 1.3;
-  text-align: start;
+  text-align: left;
   white-space: normal;
   cursor: pointer;
-  scroll-snap-align: start;
+  z-index: 5;
 }
 
-.tabs-village .tabs-village-list button[aria-selected='true'] {
+.tabs-village .tabs-village-list .tabs-village-tab[aria-selected='true'] {
+  width: 44px;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #fff;
   cursor: default;
+  z-index: 7;
+}
+
+/* pin positions (left/top of the map, per village order) - mobile */
+.tabs-village .tabs-village-list .tabs-village-tab:nth-child(1) {
+  --pin-x: 60.1619%;
+  --pin-y: 13.7518%;
+}
+
+.tabs-village .tabs-village-list .tabs-village-tab:nth-child(2) {
+  --pin-x: 74.4101%;
+  --pin-y: 37.3122%;
+}
+
+.tabs-village .tabs-village-list .tabs-village-tab:nth-child(3) {
+  --pin-x: 64.0781%;
+  --pin-y: 68.9623%;
+}
+
+.tabs-village .tabs-village-list .tabs-village-tab:nth-child(4) {
+  --pin-x: 89.481%;
+  --pin-y: 49.7387%;
+}
+
+.tabs-village .tabs-village-list .tabs-village-tab:nth-child(5) {
+  --pin-x: 79.0828%;
+  --pin-y: 55.5581%;
+}
+
+.tabs-village .tabs-village-list .tabs-village-tab:nth-child(6) {
+  --pin-x: 15.7721%;
+  --pin-y: 31.135%;
+}
+
+.tabs-village .tabs-village-list .tabs-village-tab:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .tabs-village .tabs-village-pin {
   flex: 0 0 auto;
-  width: 12px;
-  height: 12px;
-  margin-top: 0.2em;
-  border: 2px solid currentcolor;
-  border-radius: 50% 50% 50% 0;
-  box-sizing: border-box;
-  transform: rotate(-45deg);
+  width: 24px;
+  height: 24px;
+  background: url('bird.svg') center / contain no-repeat;
 }
 
+.tabs-village .tabs-village-tab[aria-selected='true'] .tabs-village-pin {
+  background-image: url('bird-active.svg');
+}
+
+/* pin label: visually hidden on mobile (icon-only pins), still read by AT */
 .tabs-village .tabs-village-tab-text {
-  display: flex;
-  flex-direction: column;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .tabs-village .tabs-village-tab-name {
-  font-weight: bold;
+  display: block;
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
 }
 
-/* panels (village card) */
+.tabs-village .tabs-village-tab-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.tabs-village .tabs-village-tab-location::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 8px;
+  height: 12px;
+  background-color: currentcolor;
+  mask: url('location.svg') center / contain no-repeat;
+}
+
+.tabs-village .tabs-village-tab[aria-selected='true'] .tabs-village-tab-name {
+  color: rgb(44 46 51);
+}
+
+.tabs-village .tabs-village-tab[aria-selected='true'] .tabs-village-tab-location {
+  color: var(--brand-green);
+}
+
+/* village card */
 .tabs-village .tabs-village-panel[aria-hidden='true'] {
   display: none;
 }
 
-.tabs-village .tabs-village-panel-content {
+main .section .tabs-village .tabs-village-panel-content {
   display: flex;
   flex-direction: column;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #fff;
+  color: var(--text-color);
+  overflow: hidden;
 }
 
-.tabs-village .tabs-village-panel-content > * {
-  margin: 0 0 12px;
-}
-
-.tabs-village .tabs-village-panel-content picture {
-  display: block;
-  margin: 0 0 16px;
+/* source hides the card image on mobile */
+.tabs-village .tabs-village-panel-content > picture {
+  display: none;
 }
 
 .tabs-village .tabs-village-panel-content img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
+  height: 150px;
+  border-radius: 10px;
   object-fit: cover;
 }
 
+main .section .tabs-village .tabs-village-panel-content > :is(h1, h2, h3, h4, h5, h6) {
+  margin: 8px 0;
+  color: var(--text-color);
+  font-family: var(--heading-font-family);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 32px;
+}
+
+main .section .tabs-village .tabs-village-panel-content > p {
+  margin: 0;
+  padding: 16px 0;
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+main .section .tabs-village .tabs-village-panel-content > p.tabs-village-card-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  color: var(--brand-green);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.tabs-village .tabs-village-card-location::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 11px;
+  height: 17px;
+  background-color: currentcolor;
+  mask: url('location.svg') center / contain no-repeat;
+}
+
+main .section .tabs-village .tabs-village-panel-content > p.tabs-village-card-cta {
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta > a:any-link {
+  display: block;
+  box-sizing: border-box;
+  padding: 9px 20px;
+  border: 1px solid var(--brand-green);
+  border-radius: var(--radius-m);
+  background-color: var(--brand-green);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta > a:any-link:hover,
+main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta > a:any-link:focus-visible {
+  border-color: #4f6415;
+  background-color: #4f6415;
+  color: #fff;
+}
+
 @media (width >= 900px) {
-  .tabs-village {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    align-items: end;
-    min-height: 480px;
-  }
-
-  .tabs-village .tabs-village-panels {
-    grid-column: 1;
-    grid-row: 1;
-    max-width: 480px;
-  }
-
+  /* map: right column, full height, overlapping the left column slightly */
   .tabs-village .tabs-village-list {
-    grid-column: 2;
-    grid-row: 1;
-    flex-flow: column wrap;
-    align-items: flex-end;
-    align-self: center;
+    grid-column: 3;
+    grid-row: 1 / span 5;
+    align-self: start;
+    width: 105.47%;
+    max-width: 810px;
+    margin: -45px 0 0 -11.72%;
+    aspect-ratio: 810 / 819;
+    z-index: 0;
+  }
+
+  .tabs-village .tabs-village-list .tabs-village-tab {
+    width: 200px;
+    height: auto;
+    padding: 10px 20px;
+    border-radius: 10px;
+  }
+
+  .tabs-village .tabs-village-list .tabs-village-tab[aria-selected='true'] {
+    width: 200px;
+    padding: 10px;
+    border-radius: 6px;
+  }
+
+  /* pin positions - desktop */
+  .tabs-village .tabs-village-list .tabs-village-tab:nth-child(1) {
+    --pin-x: 53.6679%;
+    --pin-y: 28.1265%;
+  }
+
+  .tabs-village .tabs-village-list .tabs-village-tab:nth-child(2) {
+    --pin-x: 63.4988%;
+    --pin-y: 47.7601%;
+  }
+
+  .tabs-village .tabs-village-list .tabs-village-tab:nth-child(3) {
+    --pin-x: 56.37%;
+    --pin-y: 74.1353%;
+  }
+
+  .tabs-village .tabs-village-list .tabs-village-tab:nth-child(4) {
+    --pin-x: 73.8972%;
+    --pin-y: 58.1156%;
+  }
+
+  .tabs-village .tabs-village-list .tabs-village-tab:nth-child(5) {
+    --pin-x: 66.7228%;
+    --pin-y: 62.9651%;
+  }
+
+  .tabs-village .tabs-village-list .tabs-village-tab:nth-child(6) {
+    --pin-x: 23.0403%;
+    --pin-y: 42.6125%;
+  }
+
+  .tabs-village .tabs-village-pin {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tabs-village .tabs-village-tab-text {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: auto;
+    height: auto;
     overflow: visible;
+    clip-path: none;
+  }
+
+  /* card: bottom of the left column */
+  .tabs-village .tabs-village-panels {
+    position: relative;
+    grid-column: 2;
+    grid-row: 5;
+    align-self: end;
+    max-width: 547px;
+    margin-top: 20px;
+    z-index: 2;
+  }
+
+  .tabs-village .tabs-village-panel-content > picture {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  main .section .tabs-village .tabs-village-panel-content > :is(h1, h2, h3, h4, h5, h6) {
+    font-size: 24px;
+    font-weight: 350;
+  }
+
+  main .section .tabs-village .tabs-village-panel-content > p {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  main .section .tabs-village .tabs-village-panel-content > p.tabs-village-card-location {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta > a:any-link {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+/* ========== section-level layout (intro default content around the block) ========== */
+
+/* "Explore all villages": white outline button with arrow */
+main .section.tabs-village-container .default-content-wrapper > p > a:any-link:only-child:not(.button) {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  border: 1px solid #fff;
+  border-radius: var(--radius-m);
+  background-color: transparent;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+main .section.tabs-village-container .default-content-wrapper > p > a:any-link:only-child:not(.button)::after {
+  content: '';
+  width: 12px;
+  height: 22px;
+  background-color: currentcolor;
+  mask: url('arrow.svg') center / contain no-repeat;
+}
+
+main .section.tabs-village-container .default-content-wrapper > p > a:any-link:only-child:not(.button):hover,
+main .section.tabs-village-container .default-content-wrapper > p > a:any-link:only-child:not(.button):focus-visible {
+  background-color: #fff;
+  color: var(--brand-green);
+}
+
+@media (width >= 900px) {
+  /* section becomes a grid: intro + card on the left, map (with hint) on the right */
+  main > .section.tabs-village-container {
+    display: grid;
+    grid-template-columns:
+      minmax(var(--content-gutter), 1fr)
+      minmax(0, 576px)
+      minmax(0, calc(var(--content-max-width) - 576px))
+      minmax(var(--content-gutter), 1fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    padding: 45px 0;
+    overflow: hidden;
+  }
+
+  main > .section.tabs-village-container > .default-content-wrapper,
+  main > .section.tabs-village-container > .tabs-village-wrapper,
+  main > .section.tabs-village-container .tabs-village {
+    display: contents;
+  }
+
+  main .section.tabs-village-container .default-content-wrapper > * {
+    position: relative;
+    grid-column: 2;
+    z-index: 1;
+  }
+
+  main .section.tabs-village-container .default-content-wrapper > h2 {
+    grid-row: 1 / span 2;
+    margin: 0;
+  }
+
+  main .section.tabs-village-container .default-content-wrapper > p {
+    grid-row: 3;
+    margin: 20px 0 0;
+    line-height: 26px;
+  }
+
+  main .section.tabs-village-container .default-content-wrapper > p:has(> a:only-child) {
+    grid-row: 4;
+    line-height: 22px;
+  }
+}
+
+/* hint title ("Not sure where you want to go?"): hidden on mobile like the source */
+main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) {
+  display: none;
+}
+
+@media (width >= 900px) {
+  /* hint box (title + text), top right over the map */
+  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    box-sizing: border-box;
+    width: 420px;
+    max-width: 100%;
+    margin: 0;
+    padding: 20px 20px 8px;
+    border-radius: 12px 12px 0 0;
+    background-color: rgb(83 105 23);
+    color: #fff;
+    font-family: var(--heading-font-family);
+    font-size: 24px;
+    font-weight: 350;
+    line-height: 32px;
+    z-index: 10;
+  }
+
+  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) > strong {
+    font-weight: inherit;
+  }
+
+  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child)::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    background: url('tree.svg') center / 20px no-repeat;
+  }
+}
+
+/* hint text: hidden on mobile like the source */
+main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) + p {
+  display: none;
+}
+
+@media (width >= 900px) {
+  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) + p {
+    grid-column: 3;
+    grid-row: 2;
+    place-self: stretch end;
+    display: block;
+    box-sizing: border-box;
+    width: 420px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 20px 20px;
+    border-radius: 0 0 12px 12px;
+    background-color: rgb(83 105 23);
+    color: #fff;
+    font-size: 16px;
+    line-height: 20px;
+    z-index: 10;
   }
 }

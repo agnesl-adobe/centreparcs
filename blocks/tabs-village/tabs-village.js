@@ -17,6 +17,36 @@ function selectTab(block, tablist, button, tabpanel, focus = false) {
   if (focus) button.focus();
 }
 
+const BLOCK_TAGS = ['PICTURE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'UL', 'OL'];
+
+/**
+ * Village card: image, heading, location line, description and CTA link.
+ * aem.js wrapTextNodes() wraps a cell that starts with a <picture> (followed by
+ * more content) in a single <p>; unwrap it so the card keeps a flat structure.
+ * @param {Element} cell The panel content cell
+ */
+function decorateCard(cell) {
+  cell.classList.add('tabs-village-panel-content');
+  const only = cell.children.length === 1 ? cell.firstElementChild : null;
+  if (only && only.tagName === 'P' && [...only.children].some((el) => BLOCK_TAGS.includes(el.tagName))) {
+    moveInstrumentation(only, cell);
+    only.replaceWith(...only.childNodes);
+  }
+
+  const heading = cell.querySelector(':scope > :is(h1, h2, h3, h4, h5, h6)');
+  const paragraphs = [...cell.querySelectorAll(':scope > p')];
+  paragraphs.forEach((p) => {
+    const link = p.querySelector(':scope > a:only-child');
+    if (link && p.textContent.trim() === link.textContent.trim()) p.classList.add('tabs-village-card-cta');
+  });
+  // first plain paragraph right after the heading is the location line
+  const next = heading?.nextElementSibling;
+  if (next && next.tagName === 'P' && !next.classList.contains('tabs-village-card-cta')
+    && paragraphs.filter((p) => !p.classList.contains('tabs-village-card-cta')).length > 1) {
+    next.classList.add('tabs-village-card-location');
+  }
+}
+
 /**
  * Village selector: one tab ("pin") per village, each revealing a village card.
  * Row = [label cell (village name + location), panel cell (image, heading, text, CTA)].
@@ -49,7 +79,7 @@ export default async function decorate(block) {
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
     [...tabpanel.children].forEach((cell, idx) => {
-      if (idx > 0) cell.classList.add('tabs-village-panel-content');
+      if (idx > 0) decorateCard(cell);
     });
 
     // tab button: first text line is the village name, the rest is its location

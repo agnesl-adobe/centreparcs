@@ -26,11 +26,18 @@
   --section-spacing: 25px;
   --radius-m: 12px;
   --radius-s: 8px;
-  --nav-height: 63px;
+  --nav-height: 78px;
+}
+
+@media (width >= 600px) {
+  :root {
+    --nav-height: 90px;
+  }
 }
 
 @media (width >= 900px) {
   :root {
     --content-gutter: 48px;
+    --nav-height: 147px;
   }
 }

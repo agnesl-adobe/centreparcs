@@ -1,20 +1,203 @@
+/* Footer — mobile-first; desktop layout from 900px */
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  padding: 26px calc(10% - 3.2px);
+  background-color: var(--brand-charcoal);
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: 24px;
 }
 
-footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+footer .footer-band {
+  display: block;
+  padding: 18px 0;
 }
 
-footer .footer p {
+/* link groups */
+footer .footer-group-title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+footer .footer-group-toggle {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+footer .footer-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+footer .footer-links li {
+  margin: 0 0 5px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+footer .footer-links a:any-link {
+  border-bottom: 0 solid #fff;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+}
+
+footer .footer-links a:hover {
+  border-bottom-width: 1px;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* social icons */
+footer .footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+footer .footer-social li {
+  box-sizing: border-box;
+  height: 70.5px;
+  padding-top: 9px;
+}
+
+footer .footer-social a:any-link {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+}
+
+footer .footer-social a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+footer .footer-social img {
+  display: block;
+  width: 47px;
+  height: 47px;
+}
+
+/* newsletter form */
+footer .footer-newsletter-form {
   margin: 0;
 }
 
+footer .footer-newsletter-label {
+  display: block;
+  margin-bottom: 8.75px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+}
+
+footer .footer-newsletter-row {
+  display: flex;
+}
+
+footer .footer-newsletter-row input {
+  box-sizing: border-box;
+  width: 60%;
+  height: 40px;
+  margin: 0;
+  padding: 2px 10px;
+  border: 0;
+  border-radius: 6px 0 0 6px;
+  background-color: #fff;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  transition: border 0.1s ease-in;
+}
+
+footer .footer-newsletter-row input::placeholder {
+  color: #757575;
+}
+
+footer .footer-newsletter-row input:focus {
+  outline: 1px solid #5b9dd9;
+}
+
+footer .footer-newsletter-submit {
+  box-sizing: border-box;
+  height: 40px;
+  margin: 0 0 0 -4px;
+  padding: 6.8px 20px 10px;
+  border: 0;
+  border-radius: 0 6px 6px 0;
+  background-color: var(--brand-green);
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+footer .footer-newsletter-submit:hover {
+  background-color: #495c14;
+  opacity: 0.92;
+}
+
+/* logged-in only links (e.g. communication preferences) */
+footer .footer-newsletter-secondary {
+  display: none;
+}
+
 @media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+  footer {
+    padding: 30px calc(10% - 9.6px);
+  }
+
+  footer .footer-band {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 4fr);
+    column-gap: 0;
+    align-items: start;
+    padding: 20px 0;
+  }
+
+  footer .footer-group {
+    padding: 40px 0;
+  }
+
+  footer .footer-group-title {
+    margin-bottom: 5px;
+  }
+
+  footer .footer-group-toggle {
+    display: inline-block;
+    width: auto;
+    cursor: auto;
+  }
+
+  footer .footer-newsletter-form {
+    margin-bottom: 120px;
   }
 }
+
+@media (width >= 1200px) {
+  footer .footer-band

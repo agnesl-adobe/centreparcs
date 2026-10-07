@@ -2,11 +2,24 @@ import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scrip
 
 let carouselId = 0;
 
+function getStep(track) {
+  const tile = track.querySelector('.carousel-activity-tile');
+  const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+  return tile ? tile.getBoundingClientRect().width + gap : track.clientWidth;
+}
+
+/**
+ * Progress fills one segment per snap position (one per slide step, plus the end),
+ * matching the source slider's progress bar behaviour.
+ */
 function updateControls(track, prev, next, progress) {
-  const max = track.scrollWidth - track.clientWidth;
-  const ratio = max > 0 ? track.scrollLeft / max : 1;
-  const visible = track.scrollWidth > 0 ? track.clientWidth / track.scrollWidth : 1;
-  progress.style.setProperty('--carousel-activity-progress', Math.min(1, visible + ((1 - visible) * ratio)));
+  const max = Math.max(0, track.scrollWidth - track.clientWidth);
+  const step = getStep(track);
+  const positions = max > 1 && step > 0 ? Math.ceil((max - 1) / step) + 1 : 1;
+  const index = track.scrollLeft >= max - 1
+    ? positions - 1
+    : Math.min(positions - 1, Math.round(track.scrollLeft / step));
+  progress.style.setProperty('--carousel-activity-progress', (index + 1) / positions);
   prev.disabled = track.scrollLeft <= 1;
   next.disabled = track.scrollLeft >= max - 1;
 }
@@ -71,13 +84,8 @@ export default function decorate(block) {
   buttons.append(prev, next);
   controls.append(progress, buttons);
 
-  const step = () => {
-    const tile = track.querySelector('.carousel-activity-tile');
-    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-    return tile ? tile.getBoundingClientRect().width + gap : track.clientWidth;
-  };
-  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+  prev.addEventListener('click', () => track.scrollBy({ left: -getStep(track), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left: getStep(track), behavior: 'smooth' }));
 
   const sync = () => updateControls(track, prev, next, progress);
   track.addEventListener('scroll', sync, { passive: true });

@@ -126,6 +126,7 @@
   align-items: center;
   height: 40px;
   margin-top: 24px;
+  padding: 0 40px 0 16px;
 }
 
 .carousel-activity .carousel-activity-progress {
@@ -173,14 +174,14 @@
   transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-.carousel-activity .carousel-activity-buttons button:hover:not(:disabled) {
-  background-color: rgb(248 250 252);
-  box-shadow: rgb(0 0 0 / 10%) 0 4px 6px 0;
-}
-
 .carousel-activity .carousel-activity-buttons button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.carousel-activity .carousel-activity-buttons button:hover:not(:disabled) {
+  background-color: rgb(248 250 252);
+  box-shadow: rgb(0 0 0 / 10%) 0 4px 6px 0;
 }
 
 .carousel-activity .carousel-activity-buttons button::after {
@@ -204,6 +205,10 @@
   .carousel-activity {
     --carousel-activity-gap: 24px;
     --carousel-activity-per-view: 3;
+  }
+
+  .carousel-activity .carousel-activity-controls {
+    padding: 0;
   }
 }
 

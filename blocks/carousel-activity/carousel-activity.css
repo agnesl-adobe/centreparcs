@@ -8,15 +8,16 @@
   color: var(--text-color);
 }
 
-/* track: tiles bleed into the right-hand page gutter, like the source */
+/* track: tiles bleed into the page gutters on both sides, like the source */
 .carousel-activity .carousel-activity-track {
   display: flex;
   gap: var(--carousel-activity-gap);
-  margin: 0 calc(-1 * var(--content-gutter)) 0 0;
-  padding: 0 var(--content-gutter) 0 0;
+  margin: 0 calc(-1 * var(--content-gutter));
+  padding: 0 var(--content-gutter);
   list-style: none;
   overflow-x: auto;
   scroll-behavior: smooth;
+  scroll-padding-inline: var(--content-gutter);
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }

@@ -5,43 +5,55 @@ const UNITS = [
   { key: 'minutes', label: 'Minutes', ms: 60000 },
   { key: 'seconds', label: 'Seconds', ms: 1000 },
 ];
+const CLOCK_ICON = '<svg class="columns-offer-countdown-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+  + '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>'
+  + '<path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+  + '</svg>';
 
 /**
- * Builds the live countdown timer that replaces an authored end-date paragraph.
- * @param {Element} p paragraph holding "Offer ends <ISO date>"
+ * Builds the live countdown panel that replaces an authored end-date paragraph.
+ * @param {Element} p paragraph holding "Offer ends in <ISO date>"
  * @param {Date} end countdown end date
  */
 function buildCountdown(p, end) {
-  const label = p.textContent.replace(DATE_PATTERN, '').trim();
-  const timer = document.createElement('div');
-  timer.className = 'columns-offer-countdown';
+  const labelText = p.textContent.replace(DATE_PATTERN, '').trim() || 'Offer ends in';
 
-  const title = document.createElement('p');
-  title.className = 'columns-offer-countdown-label';
-  title.textContent = label || 'Offer ends in';
+  const panel = document.createElement('div');
+  panel.className = 'columns-offer-countdown';
+  panel.dataset.end = end.toISOString();
 
-  const units = document.createElement('div');
+  const label = document.createElement('p');
+  label.className = 'columns-offer-countdown-label';
+  label.innerHTML = CLOCK_ICON;
+  const labelSpan = document.createElement('span');
+  labelSpan.textContent = labelText;
+  label.append(labelSpan);
+
+  const units = document.createElement('ul');
   units.className = 'columns-offer-countdown-units';
   units.setAttribute('role', 'timer');
   units.setAttribute('aria-live', 'off');
+  units.setAttribute('aria-label', labelText);
 
   const values = {};
   UNITS.forEach(({ key, label: unitLabel }) => {
-    const unit = document.createElement('span');
+    const unit = document.createElement('li');
     unit.className = `columns-offer-countdown-unit columns-offer-countdown-${key}`;
+    const digits = document.createElement('span');
+    digits.className = 'columns-offer-countdown-digits';
     const value = document.createElement('span');
     value.className = 'columns-offer-countdown-value';
     value.textContent = '0';
     const name = document.createElement('span');
     name.className = 'columns-offer-countdown-name';
     name.textContent = unitLabel;
-    unit.append(value, name);
+    digits.append(value, name);
+    unit.append(digits);
     units.append(unit);
     values[key] = value;
   });
 
-  timer.append(title, units);
-  timer.dataset.end = end.toISOString();
+  panel.append(label, units);
 
   let interval;
   const tick = () => {
@@ -52,14 +64,14 @@ function buildCountdown(p, end) {
       values[key].textContent = key === 'days' ? String(amount) : String(amount).padStart(2, '0');
     });
     if (end.getTime() <= Date.now()) {
-      timer.classList.add('columns-offer-countdown-expired');
+      panel.classList.add('columns-offer-countdown-expired');
       clearInterval(interval);
     }
   };
   tick();
   interval = setInterval(tick, 1000);
 
-  p.replaceWith(timer);
+  p.replaceWith(panel);
 }
 
 /**
@@ -76,8 +88,14 @@ export default function decorate(block) {
     [...row.children].forEach((col, idx) => {
       col.classList.add(idx === 0 ? 'columns-offer-headline' : 'columns-offer-card');
 
-      const pic = col.querySelector('picture');
-      if (pic && col.children.length === 1) col.classList.add('columns-offer-img-col');
+      // wrap the card title so its spacing to the copy follows the source title box
+      const title = idx > 0 && col.querySelector(':scope > :is(h2, h3, h4, h5, h6)');
+      if (title) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'columns-offer-title';
+        title.replaceWith(wrapper);
+        wrapper.append(title);
+      }
 
       // decorate an authored end date into a live countdown timer
       col.querySelectorAll('p').forEach((p) => {
@@ -89,12 +107,22 @@ export default function decorate(block) {
         buildCountdown(p, end);
       });
 
-      // a trailing short link (e.g. "*T&Cs") is rendered as a plain text link, not a button
-      [...col.querySelectorAll('a')].forEach((a) => {
-        if (a.textContent.trim().startsWith('*')) {
-          a.classList.add('columns-offer-terms');
-          a.classList.remove('button', 'primary', 'secondary');
-          a.closest('.button-container')?.classList.remove('button-container');
+      [...col.querySelectorAll('p > a[href]')].forEach((a) => {
+        const p = a.parentElement;
+        const text = a.textContent.trim();
+        if (p.textContent.trim() !== text) return;
+
+        // a short link starting with "*" (e.g. "*T&Cs") is a plain text link, not a button
+        if (text.startsWith('*')) {
+          a.classList.remove('button', 'primary', 'secondary', 'accent');
+          p.className = 'columns-offer-terms';
+          return;
+        }
+
+        // the offer CTA in the card renders as a full-width primary button
+        if (idx > 0 && !a.classList.contains('button')) {
+          p.className = 'button-wrapper';
+          a.className = 'button primary';
         }
       });
     });

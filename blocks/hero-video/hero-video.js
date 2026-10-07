@@ -26,7 +26,6 @@ function buildToggle(video) {
   const sync = () => {
     const playing = !video.paused;
     button.setAttribute('aria-label', playing ? 'Pause background video' : 'Play background video');
-    button.setAttribute('aria-pressed', String(!playing));
     button.classList.toggle('is-paused', !playing);
   };
 

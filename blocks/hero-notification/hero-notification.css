@@ -1,10 +1,24 @@
+/* hero-notification: full-bleed dismissible info bar (source: .notifications .notification.tip) */
+
+/* full-bleed: drop the section content max-width and gutter */
 .hero-notification-container .hero-notification-wrapper {
   max-width: unset;
   padding: 0;
 }
 
 .hero-notification {
+  position: relative;
+  box-sizing: border-box;
   width: 100%;
+  margin: 0 0 20px;
+  padding: 10px 15px 10px 10px;
+  border: 2px solid #497c98;
+  border-radius: var(--radius-m);
+  background-color: var(--brand-blue);
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .hero-notification[hidden] {
@@ -12,76 +26,131 @@
 }
 
 .hero-notification .hero-notification-inner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 8px 16px;
-  box-sizing: border-box;
+  display: block;
 }
 
+/* info icon (source asset: white 64x64 png, drawn at 16px) */
 .hero-notification .hero-notification-icon {
-  flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
-  border: 2px solid currentcolor;
-  border-radius: 50%;
-  box-sizing: border-box;
-  position: relative;
-}
-
-.hero-notification .hero-notification-icon::after {
-  content: '!';
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  line-height: 1;
+  top: 9px;
+  left: 10px;
+  display: block;
+  box-sizing: border-box;
+  width: 16px;
+  height: 24px;
+  margin-top: 5px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQySURBVHgB3ZuLcdswDIbhXAdwJ6g2SDaoNsgI9QZ2J4g6QdIJ7A3aTCB3AjcT0JnA3uAvUVKp6hP4kEhJzncHy6cHSUAk+IIWlBkAhT6UWm61FFaW9tjmqOVsjy9afrMsFosjXRta6VLLoxaF4Ry0bDlNmjO6gEstD1pOyIfSsoKpVfNgJMW7DPEwuSF0AdYjK95liBWNDVteS435UKNnbVhQJDqjtT5UZDx5KOzRf9kjC3v7s/bw51a6BZme4c7KrT2Gwml91WnuKBcwnj3mrWy0xBjqMj+uaez0VHi2eKDUwDi6bWABamTosmC61h+BZdhSKqzyh4BMa4zQV1tDqIDypDEC/G+ee4ENjYzOs/LbYKARYPpaF0pLjKNKCoyPUJ4y9vMJMH28C24WvR1cKgKN8KVPoqe5K98Av59iXYqYBNW1KN8QYIQ6NKGVIxGFOU1ELoC/OWyGJlBQAvBvKH2ysk2Y9p2j/JzX0vWwa6RXUQIg+xeV0AibaD3gdnyKEgH3uCKsnYblI/mD7loAd9svKBFwc6JEwIwYJaquB5Rwc7pxtcnHuX5ACYE8ZT9c3uiyVkkJgXsdIbWxw/SC3C4PlBgYL91VC+IGK+H51YJuT+2blHDTijKA/1eUThiwohOQl9QjqHZhJAq6cnz63ZC87HSdmxIXWB2OwuXSaQB6PzwL5+/YALfCxRd6P0gv828TKCIfigZmpvYI2fs/Ul4kXT65eoCCEoGw1eSKMuFwhGrBv10PaecRvWfgKAAPcX1rCLxP8JEyADP27xxm39B8yLbI0t6AuWQsAzzTTPlA49CsxNxTxjfdizGcYEeenVAmXE6Qm4DUPma38DmAQjh/ZgMchYuTbXhkQNLllQ3wGvnQNVII549sAGmU9JneD5Iue990MYsfGNMJwjcd9kwXV3T9lML5I+veDISkgco9XT9r4fz+7R8yLorCPROUSDJDjNILcgEHbVYgLq7okooGAHmxV3XdXCHUWnGFGBJH2HujBG7nt+p6YIkMtQDTGUA50i2a+95mg3bK+F1Ij9tS3zigITPBn9QDmLCYQri8Exd7PbWg18aFTXOHeCf4hB7jELirvvLqALcvUJhhdEgDhgZItBIaHmoyMvCHyIRv8UPev2tIuok5FKQOkrKJuqIsgPmEyYVEsvZz4DCOyIUCpts/hKmpylPGioYA/3cBU4XKruHvWXY0FIQHS/M9BWUGZnxfB5YnTRO1RgjJlNkiQ/xwhOLMDjn8E/w+oU2NgV94wRh+g7jPc55i8ujzyUylD7ER2Lzstiez/sj/j+3hqH1bjTSfy5QU/8nMN51ulAF6gbAI7TGpMUVvBDNsVpiOSXqgSyNwbdhhXFhxNv585iXWEOywFPIxP8W7gOmydomMoWB6n5IykCwIQgLGObE3L4lDUsI+n296i33uSLU/ZpZficAs1dYAAAAASUVORK5CYII=");
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .hero-notification .hero-notification-content {
-  flex: 1 1 auto;
-  min-width: 0;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 80%;
+  margin: 0 0 5px 30px;
+  font-size: 14px;
+  line-height: 21px;
 }
 
 .hero-notification .hero-notification-content p {
   margin: 0;
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
 }
 
-.hero-notification .hero-notification-close {
-  flex: 0 0 auto;
-  position: relative;
-  width: 32px;
-  height: 32px;
+.hero-notification .hero-notification-content a:any-link {
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 700;
+
+  /* source sets 20px/22px, but the 24px paragraph strut always wins in standards
+     mode; inheriting keeps that result in quirks-mode previews too */
+  line-height: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 1px;
+}
+
+/* in case the link was auto-decorated as a button */
+.hero-notification .hero-notification-content a.button:any-link {
+  display: inline;
   margin: 0;
   padding: 0;
   border: 0;
+  border-radius: 0;
   background: none;
-  color: inherit;
+  white-space: normal;
+}
+
+.hero-notification .button-container {
+  display: inline;
+  margin: 0;
+}
+
+/* dismiss control */
+.hero-notification .hero-notification-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 31px;
+  height: 28px;
+  margin: 0;
+  padding: 1px 6px;
+  border: 0;
+  border-radius: var(--radius-m);
+  background-color: #efefef;
+  color: #1a1a1a;
   cursor: pointer;
 }
 
-.hero-notification .hero-notification-close::before,
-.hero-notification .hero-notification-close::after {
+/* bold close cross (source renders an icon-font glyph, ~14px ink, #1a1a1a) */
+.hero-notification .hero-notification-close::before {
   content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 2px;
-  background-color: currentcolor;
-  transform: translate(-50%, -50%) rotate(45deg);
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2 2l10 10M12 2 2 12' stroke='%231a1a1a' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
-.hero-notification .hero-notification-close::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
+.hero-notification .hero-notification-close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 @media (width >= 900px) {
-  .hero-notification .hero-notification-inner {
-    padding: 8px 32px;
+  .hero-notification {
+    padding-left: 48px;
+  }
+
+  .hero-notification .hero-notification-icon {
+    left: 48px;
+  }
+
+  .hero-notification .hero-notification-content {
+    width: auto;
+    margin-right: 20px;
+  }
+
+  .hero-notification .hero-notification-content p {
+    font-size: 16px;
+  }
+
+  .hero-notification .hero-notification-content a:any-link {
+    font-size: 16px;
+  }
+
+  .hero-notification .hero-notification-close {
+    width: 34px;
+    height: 32px;
   }
 }

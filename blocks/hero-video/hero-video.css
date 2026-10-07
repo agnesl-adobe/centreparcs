@@ -1,13 +1,11 @@
-.hero-video-container .hero-video-wrapper {
-  max-width: unset;
-  padding: 0;
-}
-
+/* hero-video: rounded background-video hero sitting inside the content width
+ * (source: .cmp-reservation-hero, height 80vh capped at 800px, media radius 12px) */
 .hero-video {
   position: relative;
-  min-height: 300px;
-  aspect-ratio: 4 / 3;
+  height: 80vh;
+  max-height: 800px;
   overflow: hidden;
+  border-radius: var(--radius-m);
 }
 
 .hero-video .hero-video-media {
@@ -24,6 +22,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 50% 50%;
 }
 
 .hero-video .hero-video-video {
@@ -48,70 +47,77 @@
   border: 0;
 }
 
+/* play / pause control (source: .discover-btn + icon-font glyph) */
 .hero-video .hero-video-toggle {
   position: absolute;
   z-index: 1;
   top: 16px;
   right: 16px;
-  width: 44px;
-  height: 44px;
+  box-sizing: border-box;
+  width: 1em;
+  height: 1em;
   margin: 0;
   padding: 0;
-  border: 2px solid currentcolor;
+  border: 0;
   border-radius: 50%;
-  background: none;
-  color: inherit;
+  background-color: var(--brand-green);
+  box-shadow: inset 0 0 0 0.09em #fff;
+  color: #fff;
+  font-size: 40px;
+  line-height: 1;
   cursor: pointer;
+  filter: drop-shadow(rgb(0 0 0 / 30%) 0 2px 4px);
+  opacity: 0.9;
+  transition: transform 0.2s, opacity 0.2s;
 }
 
-/* pause icon */
-.hero-video .hero-video-toggle::before,
-.hero-video .hero-video-toggle::after {
+.hero-video .hero-video-toggle:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.hero-video .hero-video-toggle:active {
+  transform: scale(0.95);
+}
+
+.hero-video .hero-video-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* pause glyph: two bars */
+.hero-video .hero-video-toggle::before {
   content: '';
   position: absolute;
   top: 50%;
-  width: 4px;
-  height: 14px;
-  background-color: currentcolor;
-  transform: translateY(-50%);
+  left: 50%;
+  box-sizing: border-box;
+  width: 0.375em;
+  height: 0.375em;
+  border-right: 0.125em solid currentcolor;
+  border-left: 0.125em solid currentcolor;
+  transform: translate(-50%, -50%);
 }
 
-.hero-video .hero-video-toggle::before {
-  left: calc(50% - 6px);
-}
-
-.hero-video .hero-video-toggle::after {
-  left: calc(50% + 2px);
-}
-
-/* play icon */
+/* play glyph: triangle */
 .hero-video .hero-video-toggle.is-paused::before {
-  left: calc(50% - 4px);
+  left: calc(50% + 0.0625em);
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 8px 0 8px 12px;
+  border-width: 0.215em 0 0.215em 0.375em;
   border-color: transparent transparent transparent currentcolor;
-  background: none;
-}
-
-.hero-video .hero-video-toggle.is-paused::after {
-  display: none;
 }
 
 @media (width >= 600px) {
-  .hero-video {
-    aspect-ratio: 16 / 9;
+  .hero-video .hero-video-toggle {
+    font-size: 48px;
   }
 }
 
-@media (width >= 900px) {
-  .hero-video {
-    aspect-ratio: 21 / 9;
-  }
-
+@media (prefers-reduced-motion: reduce) {
+  .hero-video .hero-video-video,
   .hero-video .hero-video-toggle {
-    top: 24px;
-    right: 32px;
+    transition: none;
   }
 }

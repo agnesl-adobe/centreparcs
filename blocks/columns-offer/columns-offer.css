@@ -1,92 +1,243 @@
+/* columns-offer: headline column + grey offer card with countdown panel */
+
 .columns-offer > div {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
-.columns-offer .columns-offer-headline,
-.columns-offer .columns-offer-card {
+.columns-offer > div > div {
   min-width: 0;
-}
-
-.columns-offer .columns-offer-headline h1,
-.columns-offer .columns-offer-headline h2 {
-  margin-top: 0;
-}
-
-.columns-offer .columns-offer-card {
-  padding: 24px;
   box-sizing: border-box;
 }
 
-.columns-offer .columns-offer-card > :first-child {
-  margin-top: 0;
+/* headline column */
+.columns-offer .columns-offer-headline h1 {
+  margin: 0;
+  color: var(--heading-color);
+  font-size: 40px;
+  font-weight: 350;
+  line-height: 52px;
 }
 
-.columns-offer .columns-offer-img-col img {
-  display: block;
-  width: 100%;
-  height: auto;
+.columns-offer .columns-offer-headline h1 :is(em, i),
+.columns-offer .columns-offer-headline h1 :is(em, i) :is(strong, b) {
+  font-style: italic;
+  font-weight: 500;
 }
 
-/* countdown */
+/* offer card */
+.columns-offer .columns-offer-card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 26px;
+  border-radius: var(--radius-s);
+  background-color: var(--brand-grey);
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  line-height: 1.5;
+}
+
+.columns-offer .columns-offer-card > :last-child {
+  margin-bottom: 0;
+}
+
+.columns-offer .columns-offer-title,
+.columns-offer .columns-offer-card p {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* inline-block title + trailing spacer: a wrapped title gains one extra text line below */
+.columns-offer .columns-offer-card .columns-offer-title {
+  margin: 12px 0;
+}
+
+.columns-offer .columns-offer-title::after {
+  content: '\00a0';
+  display: inline-block;
+}
+
+.columns-offer .columns-offer-title :is(h2, h3, h4, h5, h6) {
+  display: inline-block;
+  margin: 0;
+  color: var(--text-color);
+  font-size: 34px;
+  font-weight: 350;
+  line-height: 40px;
+}
+
+.columns-offer .columns-offer-card p strong {
+  font-weight: 700;
+}
+
+/* countdown panel */
 .columns-offer .columns-offer-countdown {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 16px;
+  flex-direction: column;
   margin: 16px 0;
+  border: 1px solid #efefef;
+  border-radius: var(--radius-m);
+  background-color: #fff;
 }
 
-.columns-offer .columns-offer-countdown-label {
+.columns-offer .columns-offer-card .columns-offer-countdown-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
   margin: 0;
+  padding: 0.75em 1.25em;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.columns-offer .columns-offer-countdown-icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 27px;
+  height: 27px;
+  color: var(--dark-color);
 }
 
 .columns-offer .columns-offer-countdown-units {
   display: flex;
-  gap: 16px;
+  flex: 1 1 0%;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  gap: 1.25em;
+  margin: 0;
+  padding: 0.75em 1.25em;
+  border-top: 1px solid #efefef;
+  list-style: none;
 }
 
 .columns-offer .columns-offer-countdown-unit {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  min-width: 3ch;
-}
-
-.columns-offer .columns-offer-countdown-value {
-  font-variant-numeric: tabular-nums;
-}
-
-.columns-offer .columns-offer-card .button-container {
-  margin: 16px 0 8px;
-}
-
-.columns-offer .columns-offer-card .button-container .button {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
+  min-width: 2.5em;
+  margin: 0 0 5px;
   text-align: center;
 }
 
+.columns-offer .columns-offer-countdown-unit + .columns-offer-countdown-unit::before {
+  content: '';
+  position: relative;
+  left: -0.75em;
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--dark-color);
+}
+
+.columns-offer .columns-offer-countdown-digits {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-offer .columns-offer-countdown-value {
+  display: block;
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.columns-offer .columns-offer-countdown-name {
+  display: block;
+  font-size: 0.75em;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* CTA button */
+.columns-offer .columns-offer-card p.button-wrapper {
+  margin: 0;
+}
+
+main .columns-offer a.button:any-link {
+  display: flex;
+  width: 100%;
+  line-height: 24px;
+}
+
+/* T&Cs text link */
+.columns-offer .columns-offer-card p.columns-offer-terms {
+  margin: 8px 0 0;
+  line-height: 22px;
+}
+
+.columns-offer .columns-offer-terms a:any-link {
+  display: block;
+  color: var(--text-color);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 22px;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.columns-offer .columns-offer-terms a:hover {
+  color: var(--link-hover-color);
+}
+
 @media (width >= 600px) {
-  .columns-offer .columns-offer-countdown {
-    flex-wrap: nowrap;
+  .columns-offer .columns-offer-card {
+    font-size: var(--body-font-size-m);
+  }
+
+  .columns-offer .columns-offer-title,
+  .columns-offer .columns-offer-card p {
+    font-size: var(--body-font-size-m);
+    line-height: 24px;
+  }
+
+  .columns-offer .columns-offer-headline {
+    padding-right: 5vw;
+  }
+
+  main .columns-offer a.button:any-link {
+    line-height: 22px;
   }
 }
 
 @media (width >= 900px) {
-  .columns-offer > div {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 48px;
+  .columns-offer .columns-offer-headline h1 {
+    font-size: 68px;
+    line-height: 75px;
   }
 
-  .columns-offer > div > div {
-    flex: 1 1 0;
+  .columns-offer .columns-offer-countdown {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px 24px;
+  }
+
+  .columns-offer .columns-offer-countdown-units {
+    border-top: 0;
+    border-left: 1px solid #efefef;
+  }
+}
+
+@media (width >= 1200px) {
+  .columns-offer > div {
+    flex-direction: row;
+    gap: 0;
   }
 
   .columns-offer .columns-offer-headline {
-    align-self: center;
+    flex: 1 0 50%;
+  }
+
+  .columns-offer .columns-offer-card {
+    flex: 0 1 auto;
+    width: 600px;
+    max-width: 600px;
   }
 }

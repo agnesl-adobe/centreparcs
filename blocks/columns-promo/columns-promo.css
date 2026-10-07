@@ -1,8 +1,16 @@
+/* columns-promo: image | heading | text + link on a rounded olive panel */
+
+/* source teaser keeps 25px between it and the preceding block in the section */
+:not(:first-child) > .columns-promo {
+  margin-top: var(--section-spacing);
+}
+
 .columns-promo .columns-promo-panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  border-radius: 16px;
+  border-radius: var(--radius-m);
+  background-color: rgb(94 100 74);
+  color: #fff;
   overflow: hidden;
 }
 
@@ -10,13 +18,12 @@
   min-width: 0;
 }
 
-.columns-promo .columns-promo-heading-col,
-.columns-promo .columns-promo-text-col {
-  padding: 0 24px;
+.columns-promo .columns-promo-heading-col {
+  padding: 30px 30px 0;
 }
 
-.columns-promo .columns-promo-panel > div:last-child {
-  padding-bottom: 24px;
+.columns-promo .columns-promo-text-col {
+  padding: 20px 30px 30px;
 }
 
 .columns-promo .columns-promo-heading-col > :first-child,
@@ -29,15 +36,80 @@
   margin-bottom: 0;
 }
 
+/* heading */
+.columns-promo h2 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-size: 32px;
+  font-weight: 350;
+  line-height: 45px;
+}
+
+.columns-promo h2 :is(em, i) {
+  font-style: italic;
+}
+
+.columns-promo h2 :is(strong, b) {
+  font-weight: 500;
+}
+
+/* text */
+.columns-promo p {
+  margin: 0;
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* CTA: white underlined text link with arrow */
+.columns-promo a:any-link {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.columns-promo a.columns-promo-link:any-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 25px;
+  border-bottom: 1px solid #fff;
+  padding: 0 0 5px;
+  line-height: 24px;
+  transition: 0.2s ease-in-out;
+}
+
+.columns-promo a.columns-promo-link::after {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+  background: url("data:image/svg+xml,%3csvg width='14' height='13' viewBox='0 0 14 13' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8.25 0.28125L13.75 5.53125C13.9062 5.6875 14 5.875 14 6.09375C14 6.28125 13.9062 6.46875 13.75 6.625L8.25 11.875C7.96875 12.1562 7.46875 12.1562 7.1875 11.8438C6.90625 11.5625 6.90625 11.0625 7.21875 10.7812L11.375 6.84375H0.75C0.3125 6.84375 0 6.5 0 6.09375C0 5.65625 0.3125 5.34375 0.75 5.34375H11.375L7.21875 1.375C6.90625 1.09375 6.90625 0.59375 7.1875 0.3125C7.46875 0 7.9375 0 8.25 0.28125Z' fill='white'/%3e%3c/svg%3e") no-repeat center / contain;
+}
+
+.columns-promo a.columns-promo-link:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* image */
 .columns-promo .columns-promo-img-col {
   line-height: 0;
+}
+
+.columns-promo .columns-promo-img-col picture {
+  display: block;
+  height: 100%;
 }
 
 .columns-promo .columns-promo-img-col img {
   display: block;
   width: 100%;
   height: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
 }
 
@@ -45,30 +117,39 @@
   .columns-promo .columns-promo-panel {
     flex-direction: row;
     align-items: center;
-    gap: 32px;
-  }
-
-  .columns-promo .columns-promo-panel > div {
-    flex: 1 1 0;
-  }
-
-  .columns-promo .columns-promo-panel > div:last-child {
-    padding-bottom: 0;
-    padding-right: 32px;
-  }
-
-  .columns-promo .columns-promo-heading-col,
-  .columns-promo .columns-promo-text-col {
-    padding: 24px 0;
   }
 
   .columns-promo .columns-promo-img-col {
+    flex: 0 0 280px;
     align-self: stretch;
-    flex: 0 0 25%;
   }
 
   .columns-promo .columns-promo-img-col img {
     aspect-ratio: auto;
-    min-height: 200px;
+  }
+
+  .columns-promo .columns-promo-heading-col {
+    flex: 0 1 auto;
+    padding: 0 0 0 48px;
+  }
+
+  .columns-promo .columns-promo-text-col {
+    flex: 0 1 auto;
+    margin-left: 60px;
+    padding: 48px 48px 48px 0;
+  }
+
+  .columns-promo h2 {
+    font-size: 38px;
+    line-height: 45.6px;
+  }
+
+  .columns-promo p {
+    font-size: 18px;
+    line-height: 27px;
+  }
+
+  .columns-promo a.columns-promo-link:any-link {
+    line-height: 22px;
   }
 }

@@ -29,10 +29,13 @@ export default function decorate(block) {
     });
   });
 
-  // promo CTA renders as a text link
-  block.querySelectorAll('.columns-promo-text-col a.button').forEach((a) => {
-    a.classList.remove('button', 'primary', 'secondary');
+  // promo CTA (a link alone in its paragraph) renders as an underlined text link with arrow
+  block.querySelectorAll('.columns-promo-text-col p > a').forEach((a) => {
+    const p = a.parentElement;
+    if (p.textContent.trim() !== a.textContent.trim()) return;
+    a.classList.remove('button', 'primary', 'secondary', 'accent');
     a.classList.add('columns-promo-link');
-    a.closest('.button-container')?.classList.remove('button-container');
+    p.classList.remove('button-container', 'button-wrapper');
+    p.classList.add('columns-promo-link-wrapper');
   });
 }

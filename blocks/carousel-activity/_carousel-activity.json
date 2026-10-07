@@ -36,7 +36,7 @@
       "id": "carousel-activity-item",
       "fields": [
         {
-          "component": "reference",
+          "component": "richtext",
           "valueType": "string",
           "name": "image",
           "label": "Image",

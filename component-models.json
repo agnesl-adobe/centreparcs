@@ -172,7 +172,7 @@
     "id": "cards-expand-card",
     "fields": [
       {
-        "component": "reference",
+        "component": "richtext",
         "valueType": "string",
         "name": "image",
         "label": "Image",
@@ -198,7 +198,7 @@
     "id": "cards-feature-card",
     "fields": [
       {
-        "component": "reference",
+        "component": "richtext",
         "valueType": "string",
         "name": "image",
         "label": "Image",
@@ -243,7 +243,7 @@
     "id": "carousel-activity-item",
     "fields": [
       {
-        "component": "reference",
+        "component": "richtext",
         "valueType": "string",
         "name": "image",
         "label": "Image",
@@ -275,7 +275,7 @@
     "id": "carousel-lodges-item",
     "fields": [
       {
-        "component": "reference",
+        "component": "richtext",
         "valueType": "string",
         "name": "media_image",
         "label": "Background Image",
@@ -399,7 +399,7 @@
     "id": "hero-video",
     "fields": [
       {
-        "component": "reference",
+        "component": "richtext",
         "valueType": "string",
         "name": "image",
         "label": "Poster Image",
@@ -464,7 +464,7 @@
         "label": "Tab Label (village name and location)"
       },
       {
-        "component": "reference",
+        "component": "richtext",
         "valueType": "string",
         "name": "content_image",
         "label": "Image",

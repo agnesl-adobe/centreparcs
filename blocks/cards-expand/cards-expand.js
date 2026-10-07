@@ -1,5 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
  * Expandable image panels: portrait image with overlay title, text and CTA.

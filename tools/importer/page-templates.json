@@ -6,9 +6,225 @@
         "https://www.centerparcs.co.uk/"
       ],
       "representativeUrl": "https://www.centerparcs.co.uk/",
-      "description": "",
-      "blocks": [],
-      "urlPattern": "/"
+      "description": "Center Parcs UK homepage",
+      "blocks": [
+        {
+          "name": "hero-notification",
+          "instances": [
+            ".notifications .notification"
+          ]
+        },
+        {
+          "name": "columns-offer",
+          "instances": [
+            ".teaser.cmp-teaser--extras-enabled"
+          ]
+        },
+        {
+          "name": "hero-video",
+          "instances": [
+            ".cmp-reservation-hero"
+          ]
+        },
+        {
+          "name": "tabs-village",
+          "instances": [
+            ".village-location .cmp-village-location"
+          ]
+        },
+        {
+          "name": "carousel-lodges",
+          "instances": [
+            ".accommodation-gallery-carousel"
+          ]
+        },
+        {
+          "name": "columns-intro",
+          "instances": [
+            ".teaser.teaser-text:not(.cmp-teaser--extras-enabled):has(.cmp-teaser__description)"
+          ]
+        },
+        {
+          "name": "cards-expand",
+          "instances": [
+            ".expandable-cross-sell"
+          ]
+        },
+        {
+          "name": "cards-feature",
+          "instances": [
+            ".layout-container.cmp-centralized"
+          ]
+        },
+        {
+          "name": "carousel-activity",
+          "instances": [
+            ".cp-carousel-v2"
+          ]
+        },
+        {
+          "name": "columns-promo",
+          "instances": [
+            ".teaser.teaser-offer-block"
+          ]
+        },
+        {
+          "name": "accordion-faq",
+          "instances": [
+            ".tabs-container"
+          ]
+        }
+      ],
+      "urlPattern": "/",
+      "sections": [
+        {
+          "id": "1",
+          "name": "Notification bar",
+          "selector": [
+            ".notifications"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-notification"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "2",
+          "name": "Page intro + time-limited offer",
+          "selector": [
+            ".teaser.cmp-teaser--extras-enabled"
+          ],
+          "style": "grey",
+          "blocks": [
+            "columns-offer"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "3",
+          "name": "Video hero with booking search",
+          "selector": [
+            ".cmp-reservation-hero"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-video"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "4",
+          "name": "Villages map",
+          "selector": [
+            ".village-location"
+          ],
+          "style": "green",
+          "blocks": [
+            "tabs-village"
+          ],
+          "defaultContent": [
+            ".village-location__content"
+          ]
+        },
+        {
+          "id": "5",
+          "name": "Accommodation gallery",
+          "selector": [
+            ".accommodation-gallery-carousel"
+          ],
+          "style": null,
+          "blocks": [
+            "carousel-lodges"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "6",
+          "name": "Things to do",
+          "selector": [
+            ".teaser.teaser-text:has(+ .expandable-cross-sell)"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-intro",
+            "cards-expand"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "7",
+          "name": "Seasonal breaks",
+          "selector": [
+            ".teaser.teaser-text:has(.cmp-teaser__description):has(+ .cmp-centralized)"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-intro",
+            "cards-feature"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "8",
+          "name": "Activities",
+          "selector": [
+            ".teaser.teaser-text:has(+ .cp-carousel-v2)"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-intro",
+            "carousel-activity",
+            "columns-promo"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "9",
+          "name": "Discover more",
+          "selector": [
+            ".teaser.teaser-text:not(.cmp-teaser--extras-enabled):not(:has(.cmp-teaser__description))"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-feature"
+          ],
+          "defaultContent": [
+            ".teaser.teaser-text:not(.cmp-teaser--extras-enabled):not(:has(.cmp-teaser__description)) .cmp-teaser__title"
+          ]
+        },
+        {
+          "id": "10",
+          "name": "FAQ",
+          "selector": [
+            ".cmp-container > .layout-container.responsivegrid:not(.aem-GridColumn):has(.tabs-container)"
+          ],
+          "style": null,
+          "blocks": [
+            "accordion-faq"
+          ],
+          "defaultContent": [
+            ".cmp-container > .layout-container.responsivegrid:not(.aem-GridColumn):has(.tabs-container) .text-core h2"
+          ]
+        },
+        {
+          "id": "11",
+          "name": "Terms & Conditions",
+          "selector": [
+            ".aem-GridColumn > .cmp-container > .text-core.text:has(+ .tabs-container)"
+          ],
+          "style": null,
+          "blocks": [
+            "accordion-faq"
+          ],
+          "defaultContent": [
+            ".aem-GridColumn > .cmp-container > .text-core.text:has(+ .tabs-container) .cmp-text"
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "metadata": {
+    "projectType": "xwalk"
+  }
 }

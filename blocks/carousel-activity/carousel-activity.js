@@ -1,5 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scripts.js';
 
 let carouselId = 0;
 

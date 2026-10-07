@@ -1,5 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scripts.js';
 
 const VIDEO_EXT = /\.(mp4|webm|m4v|mov)(\?|#|$)/i;
 

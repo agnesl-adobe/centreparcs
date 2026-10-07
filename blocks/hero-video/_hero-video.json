@@ -21,7 +21,7 @@
       "id": "hero-video",
       "fields": [
         {
-          "component": "reference",
+          "component": "richtext",
           "valueType": "string",
           "name": "image",
           "label": "Poster Image",

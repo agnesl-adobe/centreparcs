@@ -44,7 +44,7 @@
           "label": "Tab Label (village name and location)"
         },
         {
-          "component": "reference",
+          "component": "richtext",
           "valueType": "string",
           "name": "content_image",
           "label": "Image",

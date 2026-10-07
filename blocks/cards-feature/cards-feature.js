@@ -1,5 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
  * Feature cards: image on top, heading, paragraph and a text link below.

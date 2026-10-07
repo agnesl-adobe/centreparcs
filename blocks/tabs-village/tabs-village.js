@@ -1,5 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { createOptimizedPicture, moveInstrumentation } from '../../scripts/scripts.js';
 
 // keep track globally of the number of tab blocks on the page
 let tabBlockCnt = 0;

@@ -1,0 +1,25 @@
+{
+  "status": "success",
+  "url": "https://www.centerparcs.co.uk/",
+  "path": "index",
+  "timestamp": "2026-10-07T13:35:25.564Z",
+  "title": "UK short breaks, designed to bring families together | Center Parcs",
+  "template": "home",
+  "blocks": [
+    "hero-notification",
+    "columns-offer",
+    "hero-video",
+    "tabs-village",
+    "carousel-lodges",
+    "columns-intro",
+    "columns-intro",
+    "columns-intro",
+    "cards-expand",
+    "cards-feature",
+    "cards-feature",
+    "carousel-activity",
+    "columns-promo",
+    "accordion-faq",
+    "accordion-faq"
+  ]
+}

@@ -425,12 +425,13 @@ var CustomImportScript = (() => {
           const icon = t.querySelector("img.cmp-teaser__tags-icon, img.cp-feature-icons__img, img");
           const iconSrc = icon && (icon.getAttribute("src") || icon.getAttribute("data-src"));
           if (iconSrc) {
-            const iconImg = document2.createElement("img");
-            iconImg.src = iconSrc;
-            iconImg.alt = label;
-            li.append(iconImg, " ");
+            const iconLink = document2.createElement("a");
+            iconLink.href = iconSrc;
+            iconLink.textContent = label;
+            li.append(iconLink);
+          } else {
+            li.append(label);
           }
-          li.append(label);
           ul.append(li);
         });
         if (ul.children.length) content.push(ul);

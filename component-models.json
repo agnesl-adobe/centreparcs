@@ -488,7 +488,7 @@
         "component": "select",
         "valueType": "string",
         "name": "content_headingType",
-        "value": "h3",
+        "value": "h4",
         "label": "Heading Type",
         "options": [
           {

@@ -111,6 +111,20 @@ function decorateContent(slide, id) {
     slide.setAttribute('aria-labelledby', heading.id);
   }
 
+  // amenity icons are authored as <li><a href="ICON-URL">label</a></li> (richtext can't
+  // hold inline images): rebuild them as a decorative icon followed by the plain label
+  content.querySelectorAll('li > a[href*="/is/content/"]:only-child').forEach((a) => {
+    const li = a.parentElement;
+    const label = a.textContent.trim();
+    if (li.textContent.trim() !== label) return;
+    const img = document.createElement('img');
+    img.src = a.href;
+    img.alt = '';
+    img.width = 20;
+    img.height = 20;
+    li.replaceChildren(img, ` ${label}`);
+  });
+
   // amenity icons sit next to a text label: mark redundant alt text as decorative
   content.querySelectorAll('li img').forEach((img) => {
     const label = img.closest('li').textContent.trim().toLowerCase();

@@ -156,6 +156,13 @@ var CustomImportScript = (() => {
       const extras = element.querySelector(".cmp-teaser__extras");
       if (extras) col2.push(...Array.from(extras.querySelectorAll("h2, h3, h4, p, a[href]")).filter((e) => !isBlank(e) && !e.closest("p")));
     }
+    col2.forEach((e, i) => {
+      if (/^H[3-6]$/.test(e.tagName)) {
+        const h2 = document2.createElement("h2");
+        h2.innerHTML = e.innerHTML;
+        col2[i] = h2;
+      }
+    });
     if (!col1.length && !col2.length) {
       element.replaceWith(...element.childNodes);
       return;
@@ -293,15 +300,15 @@ var CustomImportScript = (() => {
     if (note) {
       const title = note.querySelector(".village-location__notification-title, h3, h4, h5");
       if (title && clean(title.textContent)) {
-        const h4 = document2.createElement("h4");
-        h4.textContent = clean(title.textContent);
-        nodes.push(h4);
+        const h3 = document2.createElement("h3");
+        h3.textContent = clean(title.textContent);
+        nodes.push(h3);
       }
       Array.from(note.querySelectorAll("p")).filter((p) => !isBlank2(p) && !p.matches(".village-location__notification-title")).forEach((p) => nodes.push(p));
     } else if (wrapper && wrapper.getAttribute("data-block-notification-label")) {
-      const h4 = document2.createElement("h4");
-      h4.textContent = clean(wrapper.getAttribute("data-block-notification-label"));
-      nodes.push(h4);
+      const h3 = document2.createElement("h3");
+      h3.textContent = clean(wrapper.getAttribute("data-block-notification-label"));
+      nodes.push(h3);
       const desc = wrapper.getAttribute("data-block-notification-description");
       if (desc) nodes.push(...htmlToNodes(document2, desc).filter((n) => n.nodeType === 1 && !isBlank2(n)));
     }
@@ -339,10 +346,10 @@ var CustomImportScript = (() => {
         panelCell.appendChild(image);
       }
       if (name) {
-        const h4 = document2.createElement("h4");
-        h4.textContent = name;
+        const h3 = document2.createElement("h3");
+        h3.textContent = name;
         panelCell.appendChild(document2.createComment(" field:content_heading "));
-        panelCell.appendChild(h4);
+        panelCell.appendChild(h3);
       }
       const rich = [];
       if (location) {

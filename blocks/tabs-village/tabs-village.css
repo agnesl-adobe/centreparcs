@@ -550,16 +550,16 @@ main .section.tabs-village-container .default-content-wrapper > h2 + p {
   }
 }
 
-/* hint box ("Not sure where you want to go?" h4 + its text paragraph):
+/* hint box ("Not sure where you want to go?" h3 + its text paragraph):
  * hidden up to 1280px like the source (.village-location__notification) */
-main .section.tabs-village-container .default-content-wrapper > h4,
-main .section.tabs-village-container .default-content-wrapper > h4 + p {
+main .section.tabs-village-container .default-content-wrapper > h3,
+main .section.tabs-village-container .default-content-wrapper > h3 + p {
   display: none;
 }
 
 @media (width > 1280px) {
   /* hint title, top right over the map */
-  main .section.tabs-village-container .default-content-wrapper > h4 {
+  main .section.tabs-village-container .default-content-wrapper > h3 {
     grid-column: 3;
     grid-row: 1;
     place-self: end end;
@@ -580,11 +580,11 @@ main .section.tabs-village-container .default-content-wrapper > h4 + p {
     z-index: 10;
   }
 
-  main .section.tabs-village-container .default-content-wrapper > h4 :is(strong, b) {
+  main .section.tabs-village-container .default-content-wrapper > h3 :is(strong, b) {
     font-weight: inherit;
   }
 
-  main .section.tabs-village-container .default-content-wrapper > h4::before {
+  main .section.tabs-village-container .default-content-wrapper > h3::before {
     content: '';
     flex: 0 0 auto;
     width: 24px;
@@ -594,7 +594,7 @@ main .section.tabs-village-container .default-content-wrapper > h4 + p {
 
   /* hint text, directly under the title (title sits at the bottom of row 1 and the
    * text at the top of row 2, so the two halves read as one 420px box) */
-  main .section.tabs-village-container .default-content-wrapper > h4 + p {
+  main .section.tabs-village-container .default-content-wrapper > h3 + p {
     grid-column: 3;
     grid-row: 2;
     place-self: start end;

@@ -585,3 +585,13 @@ main .carousel-lodges .carousel-lodges-actions a.button.secondary:focus-visible 
     transform: rotate(90deg);
   }
 }
+
+/* screen-reader-only text (thumbnail button names) */
+.carousel-lodges .carousel-lodges-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

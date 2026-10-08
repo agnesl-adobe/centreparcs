@@ -203,9 +203,20 @@ a:hover {
   text-decoration: underline;
 }
 
-a:focus-visible {
+/* focus indicator for every focusable control; light ring on dark/green backgrounds
+   (the brand blue is below 3:1 against #333 and the brand green) */
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--brand-blue);
   outline-offset: 2px;
+}
+
+:is(footer, main .section.green) :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline-color: #fff;
+}
+
+/* skip-link target: receives focus programmatically only */
+main:focus {
+  outline: none;
 }
 
 /* long URLs in running text may wrap; buttons and block CTAs keep whole words */

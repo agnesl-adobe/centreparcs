@@ -8,7 +8,7 @@
  *   title | content_image (+Alt collapsed), content_heading (+Type collapsed), content_richtext
  * Output: 2 columns, one row per village:
  *   [ <!-- field:title --> name + location ,
- *     <!-- field:content_image --> img <!-- field:content_heading --> h4 <!-- field:content_richtext --> location, description, CTA ]
+ *     <!-- field:content_image --> img <!-- field:content_heading --> h3 <!-- field:content_richtext --> location, description, CTA ]
  *
  * Section default content (.village-location__content: H2, paragraph, "Explore all villages"
  * link) and the map hint (.village-location__notification: H4 + paragraph) live INSIDE the block element;
@@ -107,20 +107,20 @@ function buildIntro(element, document) {
     nodes.push(p);
   }
 
-  // Map hint ("Not sure where you want to go?" <h4> + description), as on the source
+  // Map hint ("Not sure where you want to go?" heading + description); h3 for heading order
   const note = element.querySelector('.village-location__notification');
   if (note) {
     const title = note.querySelector('.village-location__notification-title, h3, h4, h5');
     if (title && clean(title.textContent)) {
-      const h4 = document.createElement('h4');
-      h4.textContent = clean(title.textContent);
-      nodes.push(h4);
+      const h3 = document.createElement('h3');
+      h3.textContent = clean(title.textContent);
+      nodes.push(h3);
     }
     Array.from(note.querySelectorAll('p')).filter((p) => !isBlank(p) && !p.matches('.village-location__notification-title')).forEach((p) => nodes.push(p));
   } else if (wrapper && wrapper.getAttribute('data-block-notification-label')) {
-    const h4 = document.createElement('h4');
-    h4.textContent = clean(wrapper.getAttribute('data-block-notification-label'));
-    nodes.push(h4);
+    const h3 = document.createElement('h3');
+    h3.textContent = clean(wrapper.getAttribute('data-block-notification-label'));
+    nodes.push(h3);
     const desc = wrapper.getAttribute('data-block-notification-description');
     if (desc) nodes.push(...htmlToNodes(document, desc).filter((n) => n.nodeType === 1 && !isBlank(n)));
   }
@@ -167,11 +167,11 @@ export default function parse(element, { document }) {
       panelCell.appendChild(image);
     }
     if (name) {
-      // Source card title is <h4 class="cmp-teaser__title">; model content_headingType allows h4
-      const h4 = document.createElement('h4');
-      h4.textContent = name;
+      // Source card title is <h4>; emitted as h3 so it follows the section h2 (heading order)
+      const h3 = document.createElement('h3');
+      h3.textContent = name;
       panelCell.appendChild(document.createComment(' field:content_heading '));
-      panelCell.appendChild(h4);
+      panelCell.appendChild(h3);
     }
     const rich = [];
     if (location) {

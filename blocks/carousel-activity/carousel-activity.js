@@ -29,14 +29,40 @@ function updateControls(track, prev, next, progress) {
 }
 
 /**
+ * Finds the nearest heading before the block in its section (labels the carousel).
+ */
+function findSectionHeading(block) {
+  const section = block.closest('.section');
+  if (!section) return null;
+  const sequence = [...section.querySelectorAll('h1, h2, h3, h4, h5, h6, .block')];
+  return sequence.slice(0, sequence.indexOf(block)).reverse()
+    .find((el) => /^H[1-6]$/.test(el.tagName)) || null;
+}
+
+/**
+ * Carousel container: a labelled region when the section has a heading, otherwise an
+ * unlabelled group (avoids anonymous duplicate landmarks).
+ */
+function labelCarousel(block) {
+  const heading = findSectionHeading(block);
+  block.setAttribute('aria-roledescription', 'carousel');
+  if (heading) {
+    if (!heading.id) heading.id = `${block.id || 'carousel'}-heading`;
+    block.setAttribute('role', 'region');
+    block.setAttribute('aria-labelledby', heading.id);
+  } else {
+    block.setAttribute('role', 'group');
+  }
+}
+
+/**
  * Horizontal slider of portrait image tiles, each with an overlay link button,
  * prev / next arrows and a scroll progress bar.
  * @param {Element} block The block element
  */
 export default function decorate(block) {
   carouselId += 1;
-  block.setAttribute('role', 'region');
-  block.setAttribute('aria-roledescription', 'Carousel');
+  labelCarousel(block);
 
   const track = document.createElement('ul');
   track.className = 'carousel-activity-track';

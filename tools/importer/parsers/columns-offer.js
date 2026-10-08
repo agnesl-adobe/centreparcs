@@ -5,7 +5,7 @@
  * Source: https://www.centerparcs.co.uk/ (.teaser.cmp-teaser--extras-enabled)
  * Output: 2 columns, 1 row (columns block -> no field hints).
  *   Col 1 (headline): teaser title heading (h1).
- *   Col 2 (offer card): countdown title (h3), description, "Offer ends in YYYY-MM-DDTHH:MM"
+ *   Col 2 (offer card): countdown title (h2), description, "Offer ends in YYYY-MM-DDTHH:MM"
  *         paragraph (decorated into a live timer by blocks/columns-offer/columns-offer.js),
  *         primary CTA and "*T&Cs" link.
  * End date comes from .cmp-countdown[data-target-date] (e.g. "2026-10-13 23:59:00+01:00");
@@ -91,6 +91,15 @@ export default function parse(element, { document }) {
     const extras = element.querySelector('.cmp-teaser__extras');
     if (extras) col2.push(...Array.from(extras.querySelectorAll('h2, h3, h4, p, a[href]')).filter((e) => !isBlank(e) && !e.closest('p')));
   }
+
+  // card title follows the page h1: emit it as h2 (heading order)
+  col2.forEach((e, i) => {
+    if (/^H[3-6]$/.test(e.tagName)) {
+      const h2 = document.createElement('h2');
+      h2.innerHTML = e.innerHTML;
+      col2[i] = h2;
+    }
+  });
 
   if (!col1.length && !col2.length) {
     element.replaceWith(...element.childNodes);

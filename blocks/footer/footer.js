@@ -36,6 +36,14 @@ async function fetchFooterFragment() {
   container.querySelectorAll('img[src]').forEach((img) => {
     img.src = new URL(img.getAttribute('src'), resp.url).href;
   });
+  container.querySelectorAll('source[srcset]').forEach((source) => {
+    source.srcset = source.getAttribute('srcset').split(',')
+      .map((candidate) => {
+        const [url, ...descriptor] = candidate.trim().split(/\s+/);
+        return [new URL(url, resp.url).href, ...descriptor].join(' ');
+      })
+      .join(', ');
+  });
   return container;
 }
 

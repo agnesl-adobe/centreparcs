@@ -17,13 +17,25 @@ async function fetchNavFragment() {
   const html = await resp.text();
   const doc = document.createElement('div');
   doc.innerHTML = html;
-  // resolve relative image paths against the fragment location, not the page
+  // resolve relative image paths (img src and picture source srcset, e.g. AEM's
+  // "./media_..." renditions) against the fragment location, not the current page
+  const resolve = (url) => {
+    if (!url || /^(https?:|data:|\/)/.test(url)) return url;
+    const abs = new URL(url, resp.url);
+    return `${abs.pathname}${abs.search}`;
+  };
   doc.querySelectorAll('img[src]').forEach((img) => {
-    const src = img.getAttribute('src');
-    if (src && !/^(https?:|data:|\/)/.test(src)) {
-      img.src = new URL(src, resp.url).pathname;
-    }
+    img.setAttribute('src', resolve(img.getAttribute('src')));
     img.loading = 'lazy';
+  });
+  doc.querySelectorAll('source[srcset]').forEach((source) => {
+    const srcset = source.getAttribute('srcset').split(',')
+      .map((candidate) => {
+        const [url, ...descriptor] = candidate.trim().split(/\s+/);
+        return [resolve(url), ...descriptor].join(' ');
+      })
+      .join(', ');
+    source.setAttribute('srcset', srcset);
   });
   return { doc, baseUrl: resp.url };
 }

@@ -145,9 +145,9 @@ function buildMegamenu(subList, id) {
  * Closes every open megamenu in the nav (optionally except one item).
  */
 function closeAllDrops(nav, except = null) {
-  nav.querySelectorAll('.nav-item[aria-expanded="true"]').forEach((item) => {
+  nav.querySelectorAll('.nav-item[data-expanded="true"]').forEach((item) => {
     if (item === except) return;
-    item.setAttribute('aria-expanded', 'false');
+    item.dataset.expanded = 'false';
     const trigger = item.querySelector(':scope > .nav-trigger, :scope > .nav-item-row > .nav-sub-toggle');
     if (trigger) trigger.setAttribute('aria-expanded', 'false');
   });
@@ -157,10 +157,10 @@ function closeAllDrops(nav, except = null) {
  * Toggles a nav item (megamenu on desktop, accordion on mobile).
  */
 function toggleItem(nav, item, trigger, force = null) {
-  const expanded = item.getAttribute('aria-expanded') === 'true';
+  const expanded = item.dataset.expanded === 'true';
   const next = force !== null ? force : !expanded;
   closeAllDrops(nav, item);
-  item.setAttribute('aria-expanded', next ? 'true' : 'false');
+  item.dataset.expanded = next ? 'true' : 'false';
   trigger.setAttribute('aria-expanded', next ? 'true' : 'false');
 }
 
@@ -187,11 +187,10 @@ function buildSections(section, nav) {
     if (subList && !labelLink) {
       // megamenu trigger
       item.classList.add('nav-drop');
-      item.setAttribute('aria-expanded', 'false');
+      item.dataset.expanded = 'false';
       const trigger = el('a', 'nav-trigger');
       trigger.href = '#';
       trigger.setAttribute('role', 'button');
-      trigger.setAttribute('aria-haspopup', 'true');
       trigger.setAttribute('aria-expanded', 'false');
       trigger.setAttribute('aria-controls', panelId);
       trigger.textContent = label.textContent.trim();
@@ -211,7 +210,7 @@ function buildSections(section, nav) {
       labelLink.classList.add('nav-link');
       if (subList) {
         item.classList.add('nav-drop', 'nav-drop-mobile');
-        item.setAttribute('aria-expanded', 'false');
+        item.dataset.expanded = 'false';
         const toggle = el('button', 'nav-sub-toggle');
         toggle.type = 'button';
         toggle.setAttribute('aria-expanded', 'false');
@@ -268,12 +267,9 @@ function buildLocale(section) {
 
   if (!options.length) return wrap;
 
-  const modal = el('div', 'nav-locale-modal');
-  modal.hidden = true;
-  const backdrop = el('div', 'nav-locale-backdrop');
-  const dialog = el('div', 'nav-locale-dialog');
-  dialog.setAttribute('role', 'dialog');
-  dialog.setAttribute('aria-modal', 'true');
+  // native modal dialog: showModal() makes the rest of the page inert, handles Escape
+  // and draws the backdrop (::backdrop)
+  const dialog = el('dialog', 'nav-locale-dialog');
   const titleId = 'nav-locale-title';
   dialog.setAttribute('aria-labelledby', titleId);
 
@@ -330,15 +326,12 @@ function buildLocale(section) {
   footer.append(closeBtn, continueBtn);
 
   dialog.append(dialogHeader, body, footer);
-  modal.append(backdrop, dialog);
-  wrap.append(modal);
+  wrap.append(dialog);
 
-  const close = () => {
-    modal.hidden = true;
-    button.focus();
-  };
+  const close = () => dialog.close();
+  dialog.addEventListener('close', () => button.focus());
   button.addEventListener('click', () => {
-    modal.hidden = false;
+    dialog.showModal();
     dismiss.focus();
   });
   dismiss.addEventListener('click', close);
@@ -359,9 +352,9 @@ function buildLocale(section) {
  * Opens / closes the mobile menu.
  */
 function toggleMenu(header, hamburger, force = null) {
-  const expanded = header.getAttribute('aria-expanded') === 'true';
+  const expanded = header.dataset.expanded === 'true';
   const next = force !== null ? force : !expanded;
-  header.setAttribute('aria-expanded', next ? 'true' : 'false');
+  header.dataset.expanded = next ? 'true' : 'false';
   hamburger.setAttribute('aria-expanded', next ? 'true' : 'false');
   hamburger.setAttribute('aria-label', next ? 'Close navigation' : 'Open navigation');
 }
@@ -370,16 +363,31 @@ function toggleMenu(header, hamburger, force = null) {
  * loads and decorates the header
  * @param {Element} block The header block element
  */
+/**
+ * Adds a "skip to main content" link as the first focusable element of the page.
+ */
+function buildSkipLink() {
+  const main = document.querySelector('main');
+  if (!main) return null;
+  if (!main.id) main.id = 'main';
+  main.setAttribute('tabindex', '-1');
+  const skip = el('a', 'nav-skip-link', document.createTextNode('Skip to main content'));
+  skip.href = `#${main.id}`;
+  return skip;
+}
+
 export default async function decorate(block) {
   const fragment = await fetchNavFragment();
   block.textContent = '';
   if (!fragment) return;
+  const skipLink = buildSkipLink();
+  if (skipLink) block.append(skipLink);
 
   const sections = [...fragment.doc.children].filter((c) => c.tagName === 'DIV');
   const [brandSection, toolsSection, navSection, localeSection] = sections;
 
   const wrapper = el('div', 'nav-wrapper');
-  wrapper.setAttribute('aria-expanded', 'false');
+  wrapper.dataset.expanded = 'false';
 
   const nav = el('nav', 'nav-main');
   nav.id = 'nav';
@@ -405,7 +413,7 @@ export default async function decorate(block) {
   // Escape closes open megamenu / locale dialog
   document.addEventListener('keydown', (e) => {
     if (e.code !== 'Escape') return;
-    const open = nav.querySelector('.nav-item[aria-expanded="true"]');
+    const open = nav.querySelector('.nav-item[data-expanded="true"]');
     if (open && isDesktop.matches) {
       closeAllDrops(nav);
       const trigger = open.querySelector('.nav-trigger');

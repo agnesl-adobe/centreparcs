@@ -14,7 +14,7 @@ header .header {
 }
 
 /* open mobile drawer pushes page content down (header grows) */
-header:has(.nav-wrapper[aria-expanded='true']) {
+header:has(.nav-wrapper[data-expanded='true']) {
   height: auto;
 }
 
@@ -40,6 +40,28 @@ header .nav-visually-hidden {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* skip link: visually hidden until it receives keyboard focus */
+header .nav-skip-link:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+header .nav-skip-link:focus {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10001;
+  padding: 9px 20px;
+  border-radius: var(--radius-m);
+  background-color: var(--brand-green);
+  color: #fff;
+  font-weight: 600;
 }
 
 /* brand */
@@ -117,12 +139,12 @@ header .nav-hamburger-icon {
     linear-gradient(currentcolor 0 0) 0 12px / 100% 2px no-repeat;
 }
 
-header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon {
+header .nav-wrapper[data-expanded='true'] .nav-hamburger-icon {
   background: none;
 }
 
-header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::before,
-header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::after {
+header .nav-wrapper[data-expanded='true'] .nav-hamburger-icon::before,
+header .nav-wrapper[data-expanded='true'] .nav-hamburger-icon::after {
   content: '';
   position: absolute;
   top: 6px;
@@ -134,7 +156,7 @@ header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::after {
   transform: rotate(45deg);
 }
 
-header .nav-wrapper[aria-expanded='true'] .nav-hamburger-icon::after {
+header .nav-wrapper[data-expanded='true'] .nav-hamburger-icon::after {
   transform: rotate(-45deg);
 }
 
@@ -145,7 +167,7 @@ header nav.nav-main {
   margin: 0 -10px;
 }
 
-header .nav-wrapper[aria-expanded='true'] nav.nav-main {
+header .nav-wrapper[data-expanded='true'] nav.nav-main {
   display: block;
 }
 
@@ -159,6 +181,13 @@ header .nav-list {
 header .nav-item-locale {
   padding: 8px 20px 10px;
   background-color: var(--background-color);
+}
+
+/* light focus ring on the dark olive mobile drawer and megamenu panels */
+header .nav-list > .nav-item:not(.nav-item-locale) :focus-visible,
+header .nav-megamenu :focus-visible {
+  outline-color: #fff;
+  outline-offset: -2px;
 }
 
 header .nav-trigger,
@@ -221,7 +250,7 @@ header .nav-chevron::before {
   transform: rotate(45deg);
 }
 
-header .nav-item[aria-expanded='true'] .nav-chevron::before {
+header .nav-item[data-expanded='true'] .nav-chevron::before {
   top: 7px;
   transform: rotate(-135deg);
 }
@@ -233,7 +262,7 @@ header .nav-megamenu {
   color: #fff;
 }
 
-header .nav-item[aria-expanded='true'] > .nav-megamenu {
+header .nav-item[data-expanded='true'] > .nav-megamenu {
   display: block;
 }
 
@@ -369,28 +398,9 @@ header .nav-locale-text {
   color: #000;
 }
 
-header .nav-locale-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-header .nav-locale-modal[hidden] {
-  display: none;
-}
-
-header .nav-locale-backdrop {
-  position: absolute;
-  inset: 0;
-  background-color: rgb(0 0 0 / 50%);
-}
-
 header .nav-locale-dialog {
-  position: relative;
   box-sizing: border-box;
+  border: 0;
   width: calc(100% - 37px);
   max-width: 452px;
   padding: 26px;
@@ -398,6 +408,10 @@ header .nav-locale-dialog {
   color: var(--header-locale-text);
   font-size: 16px;
   line-height: 24px;
+}
+
+header .nav-locale-dialog::backdrop {
+  background-color: rgb(0 0 0 / 50%);
 }
 
 header .nav-locale-dialog-header {
@@ -622,7 +636,7 @@ header .nav-locale-continue {
   }
 
   header nav.nav-main,
-  header .nav-wrapper[aria-expanded='true'] nav.nav-main {
+  header .nav-wrapper[data-expanded='true'] nav.nav-main {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -636,6 +650,13 @@ header .nav-locale-continue {
     flex: 1;
     background-color: transparent;
     color: #fff;
+  }
+
+  /* top-level links sit on white on desktop: back to the brand-blue ring */
+  header .nav-list > .nav-item:not(.nav-item-locale) > :is(.nav-trigger, .nav-link):focus-visible,
+  header .nav-list > .nav-item:not(.nav-item-locale) > .nav-item-row :focus-visible {
+    outline-color: var(--brand-blue);
+    outline-offset: 2px;
   }
 
   header .nav-item {
@@ -684,7 +705,7 @@ header .nav-locale-continue {
 
   /* desktop megamenu: full-width click-toggled panel below the header */
   header .nav-megamenu,
-  header .nav-item[aria-expanded='true'] > .nav-megamenu {
+  header .nav-item[data-expanded='true'] > .nav-megamenu {
     display: none;
     position: absolute;
     top: calc(100% + 1px);
@@ -696,7 +717,7 @@ header .nav-locale-continue {
     animation: none;
   }
 
-  header .nav-drop:not(.nav-drop-mobile)[aria-expanded='true'] > .nav-megamenu {
+  header .nav-drop:not(.nav-drop-mobile)[data-expanded='true'] > .nav-megamenu {
     display: block;
   }
 

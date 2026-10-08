@@ -15,6 +15,8 @@ const CLOCK_ICON = '<svg class="columns-offer-countdown-icon" viewBox="0 0 24 24
  * @param {Element} p paragraph holding "Offer ends in <ISO date>"
  * @param {Date} end countdown end date
  */
+let timerCounter = 0;
+
 function buildCountdown(p, end) {
   const labelText = p.textContent.replace(DATE_PATTERN, '').trim() || 'Offer ends in';
 
@@ -29,11 +31,15 @@ function buildCountdown(p, end) {
   labelSpan.textContent = labelText;
   label.append(labelSpan);
 
+  // the panel is the timer (silent: not announced every second); the units stay a list
+  timerCounter += 1;
+  labelSpan.id = `columns-offer-countdown-label-${timerCounter}`;
+  panel.setAttribute('role', 'timer');
+  panel.setAttribute('aria-live', 'off');
+  panel.setAttribute('aria-labelledby', labelSpan.id);
+
   const units = document.createElement('ul');
   units.className = 'columns-offer-countdown-units';
-  units.setAttribute('role', 'timer');
-  units.setAttribute('aria-live', 'off');
-  units.setAttribute('aria-label', labelText);
 
   const values = {};
   UNITS.forEach(({ key, label: unitLabel }) => {

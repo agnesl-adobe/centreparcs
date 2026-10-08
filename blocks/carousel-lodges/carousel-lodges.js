@@ -180,7 +180,7 @@ function decorateContent(slide, id) {
 }
 
 function createSlide(row, slideIndex, id) {
-  const slide = document.createElement('li');
+  const slide = document.createElement('div');
   slide.dataset.slideIndex = slideIndex;
   slide.id = `carousel-lodges-${id}-slide-${slideIndex}`;
   slide.className = 'carousel-lodges-slide';
@@ -206,7 +206,10 @@ function createThumb(slide, idx, total) {
   button.type = 'button';
   button.setAttribute('aria-controls', slide.id);
   const title = slide.querySelector('h1, h2, h3, h4, h5, h6')?.textContent.trim() || `Slide ${idx + 1}`;
-  button.setAttribute('aria-label', `Show ${title} (${idx + 1} of ${total})`);
+  // accessible name from (visually hidden) content, so it contains the visible label
+  const name = document.createElement('span');
+  name.className = 'carousel-lodges-sr';
+  name.textContent = `Show ${title} (${idx + 1} of ${total})`;
 
   const img = slide.querySelector('.carousel-lodges-slide-image img');
   if (img) {
@@ -229,9 +232,36 @@ function createThumb(slide, idx, total) {
   label.className = 'carousel-lodges-thumb-label';
   label.setAttribute('aria-hidden', 'true');
   label.textContent = title;
-  button.append(label);
+  button.append(label, name);
   li.append(button);
   return li;
+}
+
+/**
+ * Finds the nearest heading before the block in its section (labels the carousel).
+ */
+function findSectionHeading(block) {
+  const section = block.closest('.section');
+  if (!section) return null;
+  const sequence = [...section.querySelectorAll('h1, h2, h3, h4, h5, h6, .block')];
+  return sequence.slice(0, sequence.indexOf(block)).reverse()
+    .find((el) => /^H[1-6]$/.test(el.tagName)) || null;
+}
+
+/**
+ * Carousel container: a labelled region when the section has a heading, otherwise an
+ * unlabelled group (avoids anonymous duplicate landmarks).
+ */
+function labelCarousel(block) {
+  const heading = findSectionHeading(block);
+  block.setAttribute('aria-roledescription', 'carousel');
+  if (heading) {
+    if (!heading.id) heading.id = `${block.id || 'carousel'}-heading`;
+    block.setAttribute('role', 'region');
+    block.setAttribute('aria-labelledby', heading.id);
+  } else {
+    block.setAttribute('role', 'group');
+  }
 }
 
 /**
@@ -245,13 +275,12 @@ export default async function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
   const isSingleSlide = rows.length < 2;
 
-  block.setAttribute('role', 'region');
-  block.setAttribute('aria-roledescription', 'Carousel');
+  labelCarousel(block);
 
   const container = document.createElement('div');
   container.className = 'carousel-lodges-slides-container';
 
-  const slidesWrapper = document.createElement('ul');
+  const slidesWrapper = document.createElement('div');
   slidesWrapper.className = 'carousel-lodges-slides';
 
   rows.forEach((row, idx) => {

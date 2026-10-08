@@ -1,8 +1,8 @@
 /* Center Parcs UK brand tokens (extracted from https://www.centerparcs.co.uk/) */
 :root {
   /* fonts (Adobe Fonts kit nip2bez) */
-  --heading-font-family: ff-tisa-sans-web-pro, tisa-fallback, arial, sans-serif;
-  --body-font-family: open-sans, "Open Sans", open-sans-fallback, arial, sans-serif;
+  --heading-font-family: ff-tisa-sans-web-pro, tisa-fallback, tisa-fallback-dejavu, arial, sans-serif;
+  --body-font-family: open-sans, "Open Sans", open-sans-fallback, open-sans-fallback-dejavu, arial, sans-serif;
 
   /* colors */
   --background-color: #fff;

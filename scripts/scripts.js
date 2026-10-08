@@ -12,16 +12,6 @@ import {
   createOptimizedPicture as createOptimizedPictureBase,
 } from './aem.js';
 
-// Adobe Fonts faces used above the fold (requested up front, see loadEager)
-const BRAND_FONTS = [
-  '350 1em ff-tisa-sans-web-pro',
-  '500 1em ff-tisa-sans-web-pro',
-  '400 1em open-sans',
-  '700 1em open-sans',
-];
-// longest the first paint waits for the brand fonts
-const FONT_WAIT_MS = 1000;
-
 // --- BEGIN DM/Scene7 auto-block (excat-generated) ---
 
 const DM_BREAKPOINTS = [
@@ -377,31 +367,23 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
-  // brand fonts: start loading right away (non-blocking) and give them a short head start
-  // before the first paint, so text renders in the brand fonts instead of swapping later
-  // and shifting the layout; never wait longer than FONT_WAIT_MS
-  const fontsReady = loadFonts()
-    .then(() => Promise.all(BRAND_FONTS.map((font) => document.fonts.load(font))))
-    .catch(() => {});
+  // brand fonts: start loading right away on every viewport (non-blocking); the
+  // size-adjusted fallbacks in styles.css keep the later swap from shifting the layout
+  loadFonts().catch(() => {});
 
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+    document.body.classList.add('appear');
     // load eagerly up to the section holding the page heading (max. 2 sections), so a
     // short first section (e.g. a notification bar) doesn't push the LCP into lazy loading
     const sections = [...main.querySelectorAll(':scope > .section')];
     const headingIndex = sections.findIndex((section) => section.querySelector('h1'));
     const eagerCount = Math.min(Math.max(headingIndex + 1, 1), 2);
-    const eagerSections = (async () => {
-      for (let i = 0; i < eagerCount; i += 1) {
-        // eslint-disable-next-line no-await-in-loop
-        await loadSection(sections[i], waitForFirstImage);
-      }
-    })();
-    const fontTimeout = new Promise((resolve) => { setTimeout(resolve, FONT_WAIT_MS); });
-    await Promise.race([fontsReady, fontTimeout]);
-    document.body.classList.add('appear');
-    await eagerSections;
+    for (let i = 0; i < eagerCount; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await loadSection(sections[i], waitForFirstImage);
+    }
   }
 }
 

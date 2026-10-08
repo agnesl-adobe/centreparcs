@@ -60,7 +60,11 @@ function buildBrand(section) {
   const link = section.querySelector('a');
   if (link) {
     link.classList.add('nav-brand-link');
+    // AEM authoring stores the logo as a separate image next to the home link
+    const logo = section.querySelector('picture') || section.querySelector('img');
+    if (logo && !link.contains(logo)) link.prepend(logo);
     hideTextNodes(link);
+    if (!link.textContent.trim() && link.title) link.setAttribute('aria-label', link.title);
     brand.append(link);
   } else {
     brand.append(...section.childNodes);
@@ -227,9 +231,18 @@ function buildLocale(section) {
   const current = paragraphs.find((p) => p.querySelector('img')) || paragraphs[0];
   const heading = section.querySelector('h1, h2, h3, h4, h5, h6');
   const options = [...section.querySelectorAll(':scope > ul > li')];
-  const textPs = paragraphs.filter((p) => p !== current);
+  // AEM authoring splits "flag + label" into an image paragraph and a text paragraph
+  const kids = [...section.children];
+  const beforeHeading = (p) => !heading || kids.indexOf(p) < kids.indexOf(heading);
+  const isLabel = (p) => p?.tagName === 'P' && !p.querySelector('img') && p.textContent.trim();
+  let currentLabelP = null;
+  if (current && !current.textContent.trim()) {
+    const siblings = [current.previousElementSibling, current.nextElementSibling];
+    currentLabelP = siblings.find((p) => isLabel(p) && beforeHeading(p)) || null;
+  }
+  const textPs = paragraphs.filter((p) => p !== current && p !== currentLabelP);
   const [infoP, closeP, continueP] = textPs;
-  const currentLabel = current ? current.textContent.trim() : '';
+  const currentLabel = (currentLabelP || current)?.textContent.trim() || '';
 
   const button = el('button', 'nav-locale-button');
   button.type = 'button';

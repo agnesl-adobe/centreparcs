@@ -130,7 +130,7 @@ function closeAllDrops(nav, except = null) {
   nav.querySelectorAll('.nav-item[aria-expanded="true"]').forEach((item) => {
     if (item === except) return;
     item.setAttribute('aria-expanded', 'false');
-    const trigger = item.querySelector(':scope > .nav-trigger');
+    const trigger = item.querySelector(':scope > .nav-trigger, :scope > .nav-item-row > .nav-sub-toggle');
     if (trigger) trigger.setAttribute('aria-expanded', 'false');
   });
 }
@@ -151,7 +151,8 @@ function toggleItem(nav, item, trigger, force = null) {
  * Authoring contract: each top-level <li> starts with a label <p>.
  *  - plain-text label + nested <ul> -> megamenu trigger (click to toggle;
  *    full-width panel on desktop, in-place accordion on mobile)
- *  - link label -> plain navigation link
+ *  - link label + nested <ul> -> navigation link with a separate mobile submenu toggle
+ *  - link label without nested <ul> -> plain navigation link
  */
 function buildSections(section, nav) {
   const list = section.querySelector('ul');
@@ -189,10 +190,23 @@ function buildSections(section, nav) {
       });
       item.append(trigger, buildMegamenu(subList, panelId));
     } else if (labelLink) {
-      // plain link item (decorative chevron shown on mobile only)
       labelLink.classList.add('nav-link');
-      labelLink.append(el('span', 'nav-chevron'));
-      item.append(labelLink);
+      if (subList) {
+        item.classList.add('nav-drop', 'nav-drop-mobile');
+        item.setAttribute('aria-expanded', 'false');
+        const toggle = el('button', 'nav-sub-toggle');
+        toggle.type = 'button';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', panelId);
+        toggle.setAttribute('aria-label', labelLink.textContent.trim());
+        toggle.append(el('span', 'nav-chevron'));
+        toggle.addEventListener('click', () => toggleItem(nav, item, toggle));
+        const row = el('div', 'nav-item-row', labelLink, toggle);
+        item.append(row, buildMegamenu(subList, panelId));
+      } else {
+        labelLink.append(el('span', 'nav-chevron'));
+        item.append(labelLink);
+      }
     } else if (label) {
       item.append(label);
     }

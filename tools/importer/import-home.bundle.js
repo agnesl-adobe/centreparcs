@@ -225,6 +225,21 @@ var CustomImportScript = (() => {
   function clean(text) {
     return (text || "").replace(/\s+/g, " ").trim();
   }
+  var SITE_ORIGIN = "https://www.centerparcs.co.uk";
+  var JCR_PREFIX = "/content/centerparcs/uk/en";
+  function publicUrl(href) {
+    if (!href) return href;
+    let url;
+    try {
+      url = new URL(href, SITE_ORIGIN);
+    } catch (e) {
+      return href;
+    }
+    if (!url.pathname.startsWith(`${JCR_PREFIX}/`) && url.pathname !== JCR_PREFIX) return href;
+    let path = url.pathname.slice(JCR_PREFIX.length) || "/";
+    if (path !== "/" && !/\.[a-z0-9]+$/i.test(path)) path = `${path.replace(/\/$/, "")}.html`;
+    return `${SITE_ORIGIN}${path}${url.search}${url.hash}`;
+  }
   function isBlank2(el) {
     return !el.querySelector("img, a[href]") && clean(el.textContent.replace(/ /g, " ")) === "";
   }
@@ -268,7 +283,7 @@ var CustomImportScript = (() => {
     }
     if (cta) {
       const a = document2.createElement("a");
-      a.href = cta.getAttribute("href");
+      a.href = publicUrl(cta.getAttribute("href"));
       a.textContent = clean(cta.textContent);
       const p = document2.createElement("p");
       p.append(a);
@@ -278,19 +293,15 @@ var CustomImportScript = (() => {
     if (note) {
       const title = note.querySelector(".village-location__notification-title, h3, h4, h5");
       if (title && clean(title.textContent)) {
-        const p = document2.createElement("p");
-        const strong = document2.createElement("strong");
-        strong.textContent = clean(title.textContent);
-        p.append(strong);
-        nodes.push(p);
+        const h4 = document2.createElement("h4");
+        h4.textContent = clean(title.textContent);
+        nodes.push(h4);
       }
       Array.from(note.querySelectorAll("p")).filter((p) => !isBlank2(p) && !p.matches(".village-location__notification-title")).forEach((p) => nodes.push(p));
     } else if (wrapper && wrapper.getAttribute("data-block-notification-label")) {
-      const p = document2.createElement("p");
-      const strong = document2.createElement("strong");
-      strong.textContent = clean(wrapper.getAttribute("data-block-notification-label"));
-      p.append(strong);
-      nodes.push(p);
+      const h4 = document2.createElement("h4");
+      h4.textContent = clean(wrapper.getAttribute("data-block-notification-label"));
+      nodes.push(h4);
       const desc = wrapper.getAttribute("data-block-notification-description");
       if (desc) nodes.push(...htmlToNodes(document2, desc).filter((n) => n.nodeType === 1 && !isBlank2(n)));
     }
@@ -328,10 +339,10 @@ var CustomImportScript = (() => {
         panelCell.appendChild(image);
       }
       if (name) {
-        const h3 = document2.createElement("h3");
-        h3.textContent = name;
+        const h4 = document2.createElement("h4");
+        h4.textContent = name;
         panelCell.appendChild(document2.createComment(" field:content_heading "));
-        panelCell.appendChild(h3);
+        panelCell.appendChild(h4);
       }
       const rich = [];
       if (location) {
@@ -346,7 +357,7 @@ var CustomImportScript = (() => {
       }
       if (cta) {
         const a = document2.createElement("a");
-        a.href = cta.getAttribute("href");
+        a.href = publicUrl(cta.getAttribute("href"));
         a.textContent = clean(cta.textContent);
         const p = document2.createElement("p");
         p.append(a);
@@ -411,7 +422,15 @@ var CustomImportScript = (() => {
           const label = clean2((t.querySelector(".cmp-teaser__tags-title, .cp-feature-icons__title") || t).textContent);
           if (!label) return;
           const li = document2.createElement("li");
-          li.textContent = label;
+          const icon = t.querySelector("img.cmp-teaser__tags-icon, img.cp-feature-icons__img, img");
+          const iconSrc = icon && (icon.getAttribute("src") || icon.getAttribute("data-src"));
+          if (iconSrc) {
+            const iconImg = document2.createElement("img");
+            iconImg.src = iconSrc;
+            iconImg.alt = label;
+            li.append(iconImg, " ");
+          }
+          li.append(label);
           ul.append(li);
         });
         if (ul.children.length) content.push(ul);
@@ -767,8 +786,31 @@ var CustomImportScript = (() => {
     if (el.querySelector("img, picture, video, iframe, a[href], table")) return false;
     return el.textContent.replace(/[\s ]+/g, "") === "";
   }
+  var TRACKING_PIXEL_PATTERN = /(bidr\.io|bat\.bing\.com|bing\.com\/action|doubleclick\.net|googleadservices\.com|google\.[a-z.]+\/pagead|googlesyndication\.com|google-analytics\.com|googletagmanager\.com|analytics\.google\.com|facebook\.com\/tr|facebook\.net|connect\.facebook|linkedin\.com\/px|px\.ads\.linkedin|ads\.linkedin|t\.co\/i\/adsct|analytics\.twitter\.com|ads-twitter\.com|analytics\.tiktok\.com|pinterest\.com\/v3|ct\.pinterest|adsrvr\.org|criteo\.(com|net)|taboola\.com|outbrain\.com|quantserve\.com|scorecardresearch\.com|demdex\.net|everesttech\.net|omtrdc\.net|2o7\.net|adnxs\.com|rlcdn\.com|clarity\.ms|hotjar\.com|snapchat\.com|sc-static\.net|yahoo\.com\/(p|sync)|\/pixel(\.gif|\.png)?([/?]|$)|\/beacon([/?.]|$))/i;
+  function isTrackingPixel(img) {
+    const src = img.getAttribute("src") || img.getAttribute("data-src") || "";
+    if (TRACKING_PIXEL_PATTERN.test(src)) return true;
+    const w = (img.getAttribute("width") || "").trim();
+    const h = (img.getAttribute("height") || "").trim();
+    const isTiny = /^[01](px)?$/.test(w) && /^[01](px)?$/.test(h);
+    const style = (img.getAttribute("style") || "").replace(/\s+/g, "").toLowerCase();
+    const isHidden = style.includes("display:none") || style.includes("visibility:hidden");
+    const styleTiny = /(^|;)width:[01]px/.test(style) && /(^|;)height:[01]px/.test(style);
+    return isTiny || styleTiny || isHidden && /^https?:/i.test(src) && !/scene7\.com|centerparcs\.co\.uk/i.test(src);
+  }
+  function removeTrackingPixels(element) {
+    element.querySelectorAll("img").forEach((img) => {
+      if (!isTrackingPixel(img)) return;
+      const parent = img.parentElement;
+      img.remove();
+      if (parent && parent !== element && /^(A|SPAN|P|NOSCRIPT|PICTURE)$/.test(parent.tagName) && !parent.children.length && parent.textContent.trim() === "") {
+        parent.remove();
+      }
+    });
+  }
   function transform(hookName, element, payload) {
     if (hookName === TransformHook.beforeTransform) {
+      removeTrackingPixels(element);
       WebImporter.DOMUtils.remove(element, [
         // OneTrust cookie consent banner + preference centre: <div id="onetrust-consent-sdk">
         "#onetrust-consent-sdk",
@@ -819,6 +861,7 @@ var CustomImportScript = (() => {
         "script",
         "style"
       ]);
+      removeTrackingPixels(element);
       element.querySelectorAll(".text-core").forEach((tc) => {
         if (isBlank8(tc)) tc.remove();
       });

@@ -1,5 +1,7 @@
 /* hero-video: rounded background-video hero sitting inside the content width
- * (source: .cmp-reservation-hero, height 80vh capped at 800px, media radius 12px) */
+ * (source: .cmp-reservation-hero, height 80vh capped at 800px, media radius 12px).
+ * The 8px radius on .cmp-reservation-hero itself is not rendered (transparent, overflow visible);
+ * the visible clip is .s7smartcropvideoplayer at 12px on both mobile and desktop. */
 .hero-video {
   position: relative;
   height: 80vh;

@@ -9,7 +9,6 @@
 .tabs-village {
   display: flex;
   flex-direction: column-reverse;
-  gap: 16px;
 }
 
 /* map with village pins */
@@ -146,9 +145,43 @@
   color: var(--brand-green);
 }
 
-/* village card */
-.tabs-village .tabs-village-panel[aria-hidden='true'] {
+/* village cards - mobile: centred swipe row (scroll-snap), neighbours peeking.
+ * Source (swiper): card 75% of the row, 10px apart, active card scale(1.1),
+ * others scale(0.9) at 50% opacity, transform/opacity 0.4s. The row bleeds into
+ * the green card's 10px side padding; block padding absorbs the 1.1 scale. */
+.tabs-village .tabs-village-panels {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -16px -10px;
+  padding: 16px calc(12.5% + 10px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.tabs-village .tabs-village-panels::-webkit-scrollbar {
   display: none;
+}
+
+.tabs-village .tabs-village-panel {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  opacity: 0.5;
+  transform: scale(0.9);
+}
+
+.tabs-village .tabs-village-panel[aria-hidden='false'] {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tabs-village .tabs-village-panel {
+    transition: transform 0.4s, opacity 0.4s;
+  }
 }
 
 main .section .tabs-village .tabs-village-panel-content {
@@ -233,6 +266,12 @@ main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta >
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
+/* "Explore all villages" (cloned from the intro by JS): green outline button, mobile only */
+main .section .tabs-village .tabs-village-panel-content .tabs-village-card-explore > a:any-link {
+  background-color: transparent;
+  color: var(--brand-green);
+}
+
 main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta > a:any-link:hover,
 main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta > a:any-link:focus-visible {
   border-color: #4f6415;
@@ -241,6 +280,18 @@ main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta >
 }
 
 @media (width >= 900px) {
+  .tabs-village .tabs-village-panel,
+  .tabs-village .tabs-village-panel[aria-hidden='false'] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .tabs-village .tabs-village-panel[aria-hidden='true'],
+  main .section .tabs-village .tabs-village-panel-content > p.tabs-village-card-explore {
+    display: none;
+  }
+
   /* map: right column, full height, overlapping the left column slightly */
   .tabs-village .tabs-village-list {
     grid-column: 3;
@@ -313,14 +364,18 @@ main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta >
     clip-path: none;
   }
 
-  /* card: bottom of the left column */
+  /* card: bottom of the left column (no swipe row) */
   .tabs-village .tabs-village-panels {
     position: relative;
+    display: block;
+    overflow: visible;
+    scroll-snap-type: none;
     grid-column: 2;
     grid-row: 5;
     align-self: end;
     max-width: 547px;
-    margin-top: 20px;
+    margin: 20px 0 0;
+    padding: 0;
     z-index: 2;
   }
 
@@ -352,6 +407,44 @@ main .section .tabs-village .tabs-village-panel-content .tabs-village-card-cta >
 }
 
 /* ========== section-level layout (intro default content around the block) ========== */
+
+/* mobile: the green band is an inset rounded card (source .cmp-village-location:
+ * 12px radius, 40px 10px padding, 20px below the previous block) */
+main > .section.green.tabs-village-container {
+  margin: 20px var(--content-gutter) 0;
+  padding: 40px 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+main > .section.green.tabs-village-container > div {
+  padding: 0 10px;
+}
+
+main .section.tabs-village-container .default-content-wrapper > h2 {
+  margin: 0;
+}
+
+/* the intro link moves into each village card on mobile (see JS) */
+main .section.tabs-village-container .default-content-wrapper > p.tabs-village-explore {
+  display: none;
+}
+
+@media (width >= 900px) {
+  main > .section.green.tabs-village-container {
+    margin: 0;
+    padding: 45px 0;
+    border-radius: 0;
+  }
+
+  main > .section.green.tabs-village-container > div {
+    padding: 0;
+  }
+
+  main .section.tabs-village-container .default-content-wrapper > p.tabs-village-explore {
+    display: block;
+  }
+}
 
 /* "Explore all villages": white outline button with arrow */
 main .section.tabs-village-container .default-content-wrapper > p > a:any-link:only-child:not(.button) {
@@ -418,7 +511,6 @@ main .section.tabs-village-container .default-content-wrapper > p > a:any-link:o
   main .section.tabs-village-container .default-content-wrapper > p {
     grid-row: 3;
     margin: 20px 0 0;
-    line-height: 26px;
   }
 
   main .section.tabs-village-container .default-content-wrapper > p:has(> a:only-child) {
@@ -427,20 +519,52 @@ main .section.tabs-village-container .default-content-wrapper > p > a:any-link:o
   }
 }
 
-/* hint title ("Not sure where you want to go?"): hidden below 1200px like the source */
-main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) {
+/* intro paragraph ("The best time together..."): source .village-location__description.
+ * The source wrapper computes 14px / 16px / 18px, but the text sits in an inner <p>
+ * that renders at 15px / 16px / 16px - the rendered (inner) values are used here, with
+ * the wrapper's line-height (26px / 24px / 26px). At 18px the text wraps to 4 lines
+ * instead of the source's 3. Mobile margins: 20px top/bottom padding + 15px gap
+ * above the map. */
+main .section.tabs-village-container .default-content-wrapper > h2 + p {
+  margin: 20px 0 35px;
+  font-size: 15px;
+  line-height: 26px;
+}
+
+@media (width >= 768px) {
+  main .section.tabs-village-container .default-content-wrapper > h2 + p {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+@media (width >= 900px) {
+  main .section.tabs-village-container .default-content-wrapper > h2 + p {
+    margin: 20px 0 0;
+  }
+}
+
+@media (width > 1280px) {
+  main .section.tabs-village-container .default-content-wrapper > h2 + p {
+    line-height: 26px;
+  }
+}
+
+/* hint box ("Not sure where you want to go?" h4 + its text paragraph):
+ * hidden up to 1280px like the source (.village-location__notification) */
+main .section.tabs-village-container .default-content-wrapper > h4,
+main .section.tabs-village-container .default-content-wrapper > h4 + p {
   display: none;
 }
 
-@media (width >= 1200px) {
-  /* hint box (title + text), top right over the map */
-  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) {
+@media (width > 1280px) {
+  /* hint title, top right over the map */
+  main .section.tabs-village-container .default-content-wrapper > h4 {
     grid-column: 3;
     grid-row: 1;
-    justify-self: end;
+    place-self: end end;
     display: flex;
     align-items: flex-start;
-    gap: 4px;
     box-sizing: border-box;
     width: 420px;
     max-width: 100%;
@@ -456,29 +580,24 @@ main .section.tabs-village-container .default-content-wrapper > p:has(> strong:o
     z-index: 10;
   }
 
-  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) > strong {
+  main .section.tabs-village-container .default-content-wrapper > h4 :is(strong, b) {
     font-weight: inherit;
   }
 
-  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child)::before {
+  main .section.tabs-village-container .default-content-wrapper > h4::before {
     content: '';
     flex: 0 0 auto;
     width: 24px;
     height: 24px;
     background: url('tree.svg') center / 20px no-repeat;
   }
-}
 
-/* hint text: hidden below 1200px like the source */
-main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) + p {
-  display: none;
-}
-
-@media (width >= 1200px) {
-  main .section.tabs-village-container .default-content-wrapper > p:has(> strong:only-child) + p {
+  /* hint text, directly under the title (title sits at the bottom of row 1 and the
+   * text at the top of row 2, so the two halves read as one 420px box) */
+  main .section.tabs-village-container .default-content-wrapper > h4 + p {
     grid-column: 3;
     grid-row: 2;
-    place-self: stretch end;
+    place-self: start end;
     display: block;
     box-sizing: border-box;
     width: 420px;

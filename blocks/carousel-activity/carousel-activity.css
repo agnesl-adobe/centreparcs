@@ -89,14 +89,16 @@
   font-weight: 600;
   line-height: 22px;
   text-decoration: none;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
 }
 
+/* source: .cp-carousel-v2 .cmp-teaser__action-link:hover (pill grows 5% + deeper shadow) */
 .carousel-activity .carousel-activity-tile-content a:hover,
 .carousel-activity .carousel-activity-tile-content a:focus-visible {
   box-shadow: rgb(0 0 0 / 10%) 0 4px 8px 0;
   color: var(--heading-color);
   text-decoration: none;
+  transform: scale(1.05);
 }
 
 .carousel-activity .carousel-activity-tile-content a::after {

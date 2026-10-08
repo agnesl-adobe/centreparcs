@@ -28,17 +28,16 @@
   --heading-font-size-xs: 16px;
 }
 
-/* fallback fonts: size-adjust measured against Arial so text reflows as little as
-   possible when the Adobe Fonts faces swap in (tisa ~85%, open sans ~92% of Arial width) */
+/* fallback fonts (Arial, size-adjusted to the Adobe Fonts faces) */
 @font-face {
   font-family: tisa-fallback;
-  size-adjust: 85%;
+  size-adjust: 96%;
   src: local('Arial');
 }
 
 @font-face {
   font-family: open-sans-fallback;
-  size-adjust: 92%;
+  size-adjust: 105%;
   src: local('Arial');
 }
 

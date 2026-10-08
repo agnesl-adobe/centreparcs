@@ -1,32 +1,33 @@
-.columns > div {
+/* default columns layout; style options (offer, intro, promo) bring their own CSS */
+.columns:not(.offer, .intro, .promo) > div {
   display: flex;
   flex-direction: column;
 }
 
-.columns img {
+.columns:not(.offer, .intro, .promo) img {
   width: 100%;
 }
 
-.columns > div > div {
+.columns:not(.offer, .intro, .promo) > div > div {
   order: 1;
 }
 
-.columns > div > .columns-img-col {
+.columns:not(.offer, .intro, .promo) > div > .columns-img-col {
   order: 0;
 }
 
-.columns > div > .columns-img-col img {
+.columns:not(.offer, .intro, .promo) > div > .columns-img-col img {
   display: block;
 }
 
 @media (width >= 900px) {
-  .columns > div {
+  .columns:not(.offer, .intro, .promo) > div {
     align-items: center;
     flex-direction: unset;
     gap: 24px;
   }
 
-  .columns > div > div {
+  .columns:not(.offer, .intro, .promo) > div > div {
     flex: 1;
     order: unset;
   }

@@ -53,6 +53,7 @@ export default function parse(element, { document }) {
   }
 
   const cells = [[col1, col2]];
-  const block = WebImporter.Blocks.createBlock(document, { name: 'columns-intro', cells });
+  // Columns block with the "intro" style option -> "Columns (intro)"
+  const block = WebImporter.Blocks.createBlock(document, { name: 'Columns', variants: ['intro'], cells });
   element.replaceWith(block);
 }

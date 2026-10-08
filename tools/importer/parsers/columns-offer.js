@@ -98,6 +98,7 @@ export default function parse(element, { document }) {
   }
 
   const cells = [[col1, col2]];
-  const block = WebImporter.Blocks.createBlock(document, { name: 'columns-offer', cells });
+  // Columns block with the "offer" style option -> "Columns (offer)"
+  const block = WebImporter.Blocks.createBlock(document, { name: 'Columns', variants: ['offer'], cells });
   element.replaceWith(block);
 }

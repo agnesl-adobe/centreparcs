@@ -305,6 +305,19 @@ main .carousel-lodges .carousel-lodges-actions a.button.secondary:focus-visible 
   object-fit: cover;
 }
 
+/* amenity icons: Scene7 /is/content/ SVGs, optionally wrapped in <picture> */
+.carousel-lodges .carousel-lodges-slide-content li picture {
+  display: contents;
+}
+
+.carousel-lodges .carousel-lodges-slide-content li img {
+  display: block;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin: 0 6px 0 0;
+}
+
 .carousel-lodges .carousel-lodges-thumb-label,
 .carousel-lodges .carousel-lodges-explore {
   display: none;
@@ -399,7 +412,7 @@ main .carousel-lodges .carousel-lodges-actions a.button.secondary:focus-visible 
     width: 100vw;
     height: 100vh;
     min-height: 600px;
-    margin: 25px calc(50% - 50vw);
+    margin: 0 calc(50% - 50vw);
     border-radius: 0;
     background-color: transparent;
   }

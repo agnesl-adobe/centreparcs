@@ -111,6 +111,14 @@ function decorateContent(slide, id) {
     slide.setAttribute('aria-labelledby', heading.id);
   }
 
+  // amenity icons sit next to a text label: mark redundant alt text as decorative
+  content.querySelectorAll('li img').forEach((img) => {
+    const label = img.closest('li').textContent.trim().toLowerCase();
+    if (!img.alt || label.includes(img.alt.trim().toLowerCase())) img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+  });
+
   // strapline: the first plain paragraph directly after the heading
   const strap = heading?.nextElementSibling;
   if (strap?.tagName === 'P' && !strap.classList.contains('button-container')) {

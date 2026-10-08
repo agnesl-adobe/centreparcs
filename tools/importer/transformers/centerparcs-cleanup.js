@@ -13,8 +13,41 @@ function isBlank(el) {
   return el.textContent.replace(/[\s ]+/g, '') === '';
 }
 
+// Tracking / beacon hosts and paths (runtime-injected pixels, e.g. segment.prod.bidr.io, bat.bing.com).
+const TRACKING_PIXEL_PATTERN = /(bidr\.io|bat\.bing\.com|bing\.com\/action|doubleclick\.net|googleadservices\.com|google\.[a-z.]+\/pagead|googlesyndication\.com|google-analytics\.com|googletagmanager\.com|analytics\.google\.com|facebook\.com\/tr|facebook\.net|connect\.facebook|linkedin\.com\/px|px\.ads\.linkedin|ads\.linkedin|t\.co\/i\/adsct|analytics\.twitter\.com|ads-twitter\.com|analytics\.tiktok\.com|pinterest\.com\/v3|ct\.pinterest|adsrvr\.org|criteo\.(com|net)|taboola\.com|outbrain\.com|quantserve\.com|scorecardresearch\.com|demdex\.net|everesttech\.net|omtrdc\.net|2o7\.net|adnxs\.com|rlcdn\.com|clarity\.ms|hotjar\.com|snapchat\.com|sc-static\.net|yahoo\.com\/(p|sync)|\/pixel(\.gif|\.png)?([/?]|$)|\/beacon([/?.]|$))/i;
+
+// 1x1 / hidden beacon images (attribute-based so real content images are untouched).
+function isTrackingPixel(img) {
+  const src = img.getAttribute('src') || img.getAttribute('data-src') || '';
+  if (TRACKING_PIXEL_PATTERN.test(src)) return true;
+  const w = (img.getAttribute('width') || '').trim();
+  const h = (img.getAttribute('height') || '').trim();
+  const isTiny = /^[01](px)?$/.test(w) && /^[01](px)?$/.test(h);
+  const style = (img.getAttribute('style') || '').replace(/\s+/g, '').toLowerCase();
+  const isHidden = style.includes('display:none') || style.includes('visibility:hidden');
+  const styleTiny = /(^|;)width:[01]px/.test(style) && /(^|;)height:[01]px/.test(style);
+  return isTiny || styleTiny || (isHidden && /^https?:/i.test(src) && !/scene7\.com|centerparcs\.co\.uk/i.test(src));
+}
+
+function removeTrackingPixels(element) {
+  element.querySelectorAll('img').forEach((img) => {
+    if (!isTrackingPixel(img)) return;
+    const parent = img.parentElement;
+    img.remove();
+    // Drop a now-empty inline wrapper (e.g. <a>/<span>/<p>/<noscript> around the pixel).
+    if (parent && parent !== element && /^(A|SPAN|P|NOSCRIPT|PICTURE)$/.test(parent.tagName)
+      && !parent.children.length && parent.textContent.trim() === '') {
+      parent.remove();
+    }
+  });
+}
+
 export default function transform(hookName, element, payload) {
   if (hookName === TransformHook.beforeTransform) {
+    // Tracking pixels (bidr.io, bat.bing.com, doubleclick, facebook.com/tr, etc.) and 1x1 beacons.
+    // Injected at runtime, so not present in cleaned.html; matched by host / size / visibility.
+    removeTrackingPixels(element);
+
     // Overlays / widgets that can interfere with block parsing.
     WebImporter.DOMUtils.remove(element, [
       // OneTrust cookie consent banner + preference centre: <div id="onetrust-consent-sdk">
@@ -68,6 +101,9 @@ export default function transform(hookName, element, payload) {
       'script',
       'style',
     ]);
+
+    // Safety net: pixels injected after beforeTransform ran.
+    removeTrackingPixels(element);
 
     // Empty text-core components: <div class="text-core text"><div class="cmp-text"><p>&nbsp;</p></div></div>
     element.querySelectorAll('.text-core').forEach((tc) => {

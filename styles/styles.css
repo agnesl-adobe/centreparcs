@@ -21,8 +21,8 @@
 
   /* heading sizes (mobile) */
   --heading-font-size-xxl: 36px;
-  --heading-font-size-xl: 28px;
-  --heading-font-size-l: 24px;
+  --heading-font-size-xl: 32px;
+  --heading-font-size-l: 34px;
   --heading-font-size-m: 20px;
   --heading-font-size-s: 18px;
   --heading-font-size-xs: 16px;
@@ -174,7 +174,6 @@ a:any-link {
   color: var(--link-color);
   font-weight: 700;
   text-decoration: none;
-  overflow-wrap: break-word;
   transition: color 0.2s ease;
 }
 
@@ -186,6 +185,11 @@ a:hover {
 a:focus-visible {
   outline: 2px solid var(--brand-blue);
   outline-offset: 2px;
+}
+
+/* long URLs in running text may wrap; buttons and block CTAs keep whole words */
+main .default-content-wrapper a:any-link {
+  overflow-wrap: break-word;
 }
 
 /* buttons */
@@ -315,6 +319,16 @@ main > .section > div {
 
 main > .section:first-of-type {
   padding-top: 0;
+}
+
+/* the notification bar carries its own bottom margin */
+main > .section.hero-notification-container {
+  padding-bottom: 0;
+}
+
+/* the footer provides its own top spacing */
+main > .section:last-of-type {
+  padding-bottom: 0;
 }
 
 /* section metadata */

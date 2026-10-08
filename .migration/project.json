@@ -7,7 +7,11 @@
       "previewSite": "centreparcs",
       "contentHostUrl": "author-p179457-e1900808.adobeaemcloud.com",
       "baseUrl": "https://www.centerparcs.co.uk/",
-      "botProtected": true
+      "botProtected": true,
+      "aemSitePath": "/content/centreparcs",
+      "aemAssetsFolderPath": "/content/dam/centreparcs",
+      "aemSiteName": "centreparcs",
+      "aemSiteTitle": "Center Parcs UK"
     }
   },
   "features": [

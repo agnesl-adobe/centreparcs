@@ -22,9 +22,11 @@ let groupCounter = 0;
  * @returns {Promise<HTMLElement|null>} container holding the fragment sections
  */
 async function fetchFooterFragment() {
-  // metadata-independent: /content first (localhost), then root (DA/EDS prod)
-  let resp = await fetch('/content/footer.plain.html');
-  if (!resp.ok) resp = await fetch('/footer.plain.html');
+  // metadata-independent: pages in the local content tree (/content/..., aem up) try
+  // /content first; published pages (aem.page / aem.live) try the root first
+  const local = window.location.pathname.startsWith('/content/');
+  let resp = local ? await fetch('/content/footer.plain.html') : await fetch('/footer.plain.html');
+  if (!resp.ok) resp = local ? await fetch('/footer.plain.html') : await fetch('/content/footer.plain.html');
   if (!resp.ok) return null;
 
   const container = document.createElement('div');

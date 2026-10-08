@@ -4,13 +4,15 @@ const isDesktop = window.matchMedia('(width >= 900px)');
 let panelCounter = 0;
 
 /**
- * Fetches the nav fragment. Metadata-independent dual fetch:
- * /content/nav.plain.html (local / aem up) first, then /nav.plain.html (DA/EDS).
+ * Fetches the nav fragment. Metadata-independent dual fetch: pages served from the
+ * local content tree (/content/..., aem up) try /content/nav.plain.html first; published
+ * pages (aem.page / aem.live) try /nav.plain.html first. Each falls back to the other.
  * @returns {Promise<{doc: Element, baseUrl: string}|null>}
  */
 async function fetchNavFragment() {
-  let resp = await fetch('/content/nav.plain.html');
-  if (!resp.ok) resp = await fetch('/nav.plain.html');
+  const local = window.location.pathname.startsWith('/content/');
+  let resp = local ? await fetch('/content/nav.plain.html') : await fetch('/nav.plain.html');
+  if (!resp.ok) resp = local ? await fetch('/nav.plain.html') : await fetch('/content/nav.plain.html');
   if (!resp.ok) return null;
   const html = await resp.text();
   const doc = document.createElement('div');

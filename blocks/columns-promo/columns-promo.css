@@ -1,8 +1,19 @@
 /* columns-promo: image | heading | text + link on a rounded olive panel */
 
+/* source teaser is followed by a two-line empty text spacer (2 x 24px) */
+.columns-promo {
+  margin-bottom: 48px;
+}
+
 /* source teaser keeps 25px between it and the preceding block in the section */
 :not(:first-child) > .columns-promo {
   margin-top: var(--section-spacing);
+}
+
+/* source teaser has 25px bottom padding (supplied by section padding when the block
+ * ends its section) */
+:not(:last-child) > .columns-promo {
+  padding-bottom: var(--section-spacing);
 }
 
 .columns-promo .columns-promo-panel {

@@ -167,6 +167,19 @@ main .columns-offer a.button:any-link {
   line-height: 24px;
 }
 
+/* source .btn--secondary: focus dims to 0.92, hover also darkens the fill (border stays brand green) */
+main .columns-offer a.button.primary:focus-visible {
+  border-color: var(--brand-green);
+  background-color: var(--brand-green);
+  opacity: 0.92;
+}
+
+main .columns-offer a.button.primary:hover {
+  border-color: var(--brand-green);
+  background-color: #495c14;
+  opacity: 0.92;
+}
+
 /* T&Cs text link */
 .columns-offer .columns-offer-card p.columns-offer-terms {
   margin: 8px 0 0;

@@ -17,15 +17,12 @@
       "columns",
       "fragment",
       "hero-notification",
-      "columns-offer",
       "hero-video",
       "tabs-village",
       "carousel-lodges",
-      "columns-intro",
       "cards-expand",
       "cards-feature",
       "carousel-activity",
-      "columns-promo",
       "accordion-faq"
     ]
   },
@@ -63,24 +60,6 @@
     "id": "carousel-lodges",
     "components": [
       "carousel-lodges-item"
-    ]
-  },
-  {
-    "id": "columns-intro",
-    "components": [
-      "column"
-    ]
-  },
-  {
-    "id": "columns-offer",
-    "components": [
-      "column"
-    ]
-  },
-  {
-    "id": "columns-promo",
-    "components": [
-      "column"
     ]
   },
   {

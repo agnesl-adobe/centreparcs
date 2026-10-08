@@ -29,6 +29,26 @@ function isTrackingPixel(img) {
   return isTiny || styleTiny || (isHidden && /^https?:/i.test(src) && !/scene7\.com|centerparcs\.co\.uk/i.test(src));
 }
 
+// AEM (md2jcr) stores some headings as Title components, which hold plain text only:
+// default-content h1/h2, and headings in a Columns cell whose only content is one
+// formatted run (e.g. <h3><strong>..</strong></h3>). Inline <strong>/<em> there would be
+// escaped and shown as literal tags, so flatten those headings to plain text.
+function flattenTitleHeadings(element) {
+  element.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => {
+    if (h.querySelector('a, img, picture')) return;
+    const table = h.closest('table');
+    const level = Number(h.tagName[1]);
+    const runs = [...h.childNodes].filter((n) => n.nodeType === 1 || n.textContent.trim());
+    const singleRun = runs.length === 1 && runs[0].nodeType === 1
+      && /^(STRONG|B|EM|I|SPAN)$/.test(runs[0].tagName);
+    const blockName = table ? (table.querySelector('tr')?.textContent || '').trim() : '';
+    const inColumns = /^columns\b/i.test(blockName);
+    if ((!table && level <= 2) || (inColumns && singleRun)) {
+      h.textContent = h.textContent.replace(/\s+/g, ' ').trim();
+    }
+  });
+}
+
 function removeTrackingPixels(element) {
   element.querySelectorAll('img').forEach((img) => {
     if (!isTrackingPixel(img)) return;
@@ -104,6 +124,9 @@ export default function transform(hookName, element, payload) {
 
     // Safety net: pixels injected after beforeTransform ran.
     removeTrackingPixels(element);
+
+    // Headings that AEM stores as plain-text Title components.
+    flattenTitleHeadings(element);
 
     // Empty text-core components: <div class="text-core text"><div class="cmp-text"><p>&nbsp;</p></div></div>
     element.querySelectorAll('.text-core').forEach((tc) => {

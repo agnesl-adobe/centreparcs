@@ -161,7 +161,7 @@ var CustomImportScript = (() => {
       return;
     }
     const cells = [[col1, col2]];
-    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-offer", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "Columns", variants: ["offer"], cells });
     element.replaceWith(block);
   }
 
@@ -503,7 +503,7 @@ var CustomImportScript = (() => {
       return;
     }
     const cells = [[col1, col2]];
-    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-intro", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "Columns", variants: ["intro"], cells });
     element.replaceWith(block);
   }
 
@@ -710,7 +710,7 @@ var CustomImportScript = (() => {
       return;
     }
     const cells = [[imageCol, headingCol, textCol.length ? textCol : ""]];
-    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-promo", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "Columns", variants: ["promo"], cells });
     element.replaceWith(block);
   }
 
@@ -799,6 +799,21 @@ var CustomImportScript = (() => {
     const styleTiny = /(^|;)width:[01]px/.test(style) && /(^|;)height:[01]px/.test(style);
     return isTiny || styleTiny || isHidden && /^https?:/i.test(src) && !/scene7\.com|centerparcs\.co\.uk/i.test(src);
   }
+  function flattenTitleHeadings(element) {
+    element.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((h) => {
+      var _a;
+      if (h.querySelector("a, img, picture")) return;
+      const table = h.closest("table");
+      const level = Number(h.tagName[1]);
+      const runs = [...h.childNodes].filter((n) => n.nodeType === 1 || n.textContent.trim());
+      const singleRun = runs.length === 1 && runs[0].nodeType === 1 && /^(STRONG|B|EM|I|SPAN)$/.test(runs[0].tagName);
+      const blockName = table ? (((_a = table.querySelector("tr")) == null ? void 0 : _a.textContent) || "").trim() : "";
+      const inColumns = /^columns\b/i.test(blockName);
+      if (!table && level <= 2 || inColumns && singleRun) {
+        h.textContent = h.textContent.replace(/\s+/g, " ").trim();
+      }
+    });
+  }
   function removeTrackingPixels(element) {
     element.querySelectorAll("img").forEach((img) => {
       if (!isTrackingPixel(img)) return;
@@ -863,6 +878,7 @@ var CustomImportScript = (() => {
         "style"
       ]);
       removeTrackingPixels(element);
+      flattenTitleHeadings(element);
       element.querySelectorAll(".text-core").forEach((tc) => {
         if (isBlank8(tc)) tc.remove();
       });

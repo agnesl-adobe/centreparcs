@@ -52,6 +52,7 @@ export default function parse(element, { document }) {
   }
 
   const cells = [[imageCol, headingCol, textCol.length ? textCol : '']];
-  const block = WebImporter.Blocks.createBlock(document, { name: 'columns-promo', cells });
+  // Columns block with the "promo" style option -> "Columns (promo)"
+  const block = WebImporter.Blocks.createBlock(document, { name: 'Columns', variants: ['promo'], cells });
   element.replaceWith(block);
 }

@@ -30,7 +30,7 @@ function scrollThumbIntoView(block, index) {
   }
 }
 
-function showSlide(block, slideIndex = 0) {
+function showSlide(block, slideIndex = 0, scrollThumb = true) {
   const slides = [...block.querySelectorAll('.carousel-lodges-slide')];
   if (!slides.length) return;
   const index = Math.min(Math.max(slideIndex, 0), slides.length - 1);
@@ -65,7 +65,8 @@ function showSlide(block, slideIndex = 0) {
   const fill = block.querySelector('.carousel-lodges-progress-fill');
   if (fill) fill.style.transform = `scaleX(${(index + 1) / slides.length})`;
 
-  scrollThumbIntoView(block, index);
+  // reads layout: skipped for the initial slide, whose thumbnail is already in view
+  if (scrollThumb) scrollThumbIntoView(block, index);
 }
 
 function bindEvents(block) {
@@ -270,7 +271,7 @@ export default async function decorate(block) {
   block.replaceChildren(container);
 
   if (isSingleSlide) {
-    showSlide(block, 0);
+    showSlide(block, 0, false);
     return;
   }
 
@@ -299,6 +300,6 @@ export default async function decorate(block) {
   container.append(thumbsNav);
   thumbs.children[1].querySelector('button').append(hint);
 
-  showSlide(block, 0);
+  showSlide(block, 0, false);
   bindEvents(block);
 }

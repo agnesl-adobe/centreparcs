@@ -28,17 +28,38 @@
   --heading-font-size-xs: 16px;
 }
 
-/* fallback fonts */
+/* fallback fonts, size-adjusted to the Adobe Fonts faces so the swap barely reflows text.
+   Arial-metric fonts (Arial, Liberation Sans, Arimo) first; DejaVu Sans (Linux) next. A
+   face whose local font is missing is skipped, so each platform gets a calibrated fallback. */
 @font-face {
   font-family: tisa-fallback;
   size-adjust: 96%;
-  src: local('Arial');
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('Arimo');
+}
+
+@font-face {
+  font-family: tisa-fallback-dejavu;
+  size-adjust: 84.6%;
+  src: local('DejaVu Sans');
 }
 
 @font-face {
   font-family: open-sans-fallback;
   size-adjust: 105%;
-  src: local('Arial');
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('Arimo');
+}
+
+@font-face {
+  font-family: open-sans-fallback-dejavu;
+  size-adjust: 92%;
+  src: local('DejaVu Sans');
+}
+
+@font-face {
+  font-family: open-sans-fallback-dejavu;
+  font-weight: 600 900;
+  size-adjust: 87%;
+  src: local('DejaVu Sans Bold');
 }
 
 @media (width >= 900px) {

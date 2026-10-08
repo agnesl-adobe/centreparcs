@@ -1,4 +1,6 @@
 /*
- * Brand fonts (ff-tisa-sans-web-pro, open-sans) are delivered by the
- * Adobe Fonts kit linked in head.html. No self-hosted font faces needed.
+ * Brand fonts (ff-tisa-sans-web-pro, open-sans) come from the Adobe Fonts kit.
+ * Loaded via fonts.css (not head.html) so the kit stylesheet doesn't block the
+ * first paint; size-adjusted fallbacks in styles.css cover the swap.
  */
+@import url('https://use.typekit.net/nip2bez.css');

@@ -367,20 +367,23 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  // brand fonts: start loading right away on every viewport (non-blocking); the
+  // size-adjusted fallbacks in styles.css keep the later swap from shifting the layout
+  loadFonts().catch(() => {});
+
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    await loadSection(main.querySelector('.section'), waitForFirstImage);
-  }
-
-  try {
-    /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
-    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
-      loadFonts();
+    // load eagerly up to the section holding the page heading (max. 2 sections), so a
+    // short first section (e.g. a notification bar) doesn't push the LCP into lazy loading
+    const sections = [...main.querySelectorAll(':scope > .section')];
+    const headingIndex = sections.findIndex((section) => section.querySelector('h1'));
+    const eagerCount = Math.min(Math.max(headingIndex + 1, 1), 2);
+    for (let i = 0; i < eagerCount; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await loadSection(sections[i], waitForFirstImage);
     }
-  } catch (e) {
-    // do nothing
   }
 }
 

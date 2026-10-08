@@ -8,9 +8,11 @@
  * Output: 2 columns, one row per slide (7 lodge types on the homepage):
  *   [ <!-- field:media_image --> img , <!-- field:content_text --> h2, pretitle, amenities ul, description, CTA links ]
  * Iteration keyed on .cmp-carousel__item (block wrapper); swiper duplicates and the
- * thumbnail strip are excluded. Each amenity becomes an <li> carrying its 20x20 icon
- * (<img>, real Scene7 src, alt = amenity label) followed by the label, inside the
- * content_text richtext.
+ * thumbnail strip are excluded. Each amenity becomes an <li> inside the content_text
+ * richtext. Its 20x20 Scene7 icon (/is/content/, not a DAM asset) is carried as a
+ * link: <li><a href="ICON-URL">label</a></li> - richtext fields must not contain inline
+ * <img>; the block JS rebuilds icon + label at render time. Amenities without an icon
+ * are plain text <li>.
  */
 function clean(t) {
   return (t || '').replace(/[\s ]+/g, ' ').trim();
@@ -61,16 +63,17 @@ export default function parse(element, { document }) {
         const label = clean((t.querySelector('.cmp-teaser__tags-title, .cp-feature-icons__title') || t).textContent);
         if (!label) return;
         const li = document.createElement('li');
-        // 20x20 amenity icon (Scene7 /is/content/centerparcs/...), kept inline before the label
+        // 20x20 amenity icon (Scene7 /is/content/centerparcs/...) carried as a link
         const icon = t.querySelector('img.cmp-teaser__tags-icon, img.cp-feature-icons__img, img');
         const iconSrc = icon && (icon.getAttribute('src') || icon.getAttribute('data-src'));
         if (iconSrc) {
-          const iconImg = document.createElement('img');
-          iconImg.src = iconSrc;
-          iconImg.alt = label;
-          li.append(iconImg, ' ');
+          const iconLink = document.createElement('a');
+          iconLink.href = iconSrc;
+          iconLink.textContent = label;
+          li.append(iconLink);
+        } else {
+          li.append(label);
         }
-        li.append(label);
         ul.append(li);
       });
       if (ul.children.length) content.push(ul);

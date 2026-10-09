@@ -17,7 +17,7 @@ import {
 // https://www.aem.live/developer/target-integration (legacy at.js approach)
 // Only pages with "Target: on" metadata load at.js (it adds ~0.5-1.3s to the LCP).
 const TARGET_CONFIG = {
-  clientCode: '', // Target client code (Target > Administration > Implementation)
+  clientCode: 'adobedemoemea143', // Target client code (Target > Administration > Implementation)
   imsOrgId: '3310BEDB5AC489F20A495D2A@AdobeOrg', // Adobe IMS Organization ID
 };
 

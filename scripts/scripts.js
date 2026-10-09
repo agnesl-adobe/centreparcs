@@ -13,37 +13,26 @@ import {
   createOptimizedPicture as createOptimizedPictureBase,
 } from './aem.js';
 
-// --- Adobe Target via Adobe Experience Platform Web SDK ---
-// https://www.aem.live/developer/target-integration
-// Only pages with "Target: on" metadata load the Web SDK (it adds ~0.5-1.3s to the LCP).
+// --- Adobe Target via at.js ---
+// https://www.aem.live/developer/target-integration (legacy at.js approach)
+// Only pages with "Target: on" metadata load at.js (it adds ~0.5-1.3s to the LCP).
 const TARGET_CONFIG = {
-  orgId: '', // Adobe IMS Organization ID, e.g. 'XXXXXXXXXXXXXXXXXXXXXXXX@AdobeOrg'
-  datastreamId: '', // Adobe Experience Platform datastream ID (formerly edgeConfigId)
+  clientCode: '', // Target client code (Target > Administration > Implementation)
+  imsOrgId: '3310BEDB5AC489F20A495D2A@AdobeOrg', // Adobe IMS Organization ID
 };
 
 function isTargetEnabled() {
-  return Boolean(TARGET_CONFIG.orgId && TARGET_CONFIG.datastreamId
+  return Boolean(TARGET_CONFIG.clientCode && TARGET_CONFIG.imsOrgId
     && getMetadata('target').toLowerCase() === 'on');
 }
 
-function initWebSDK(path, config) {
-  // Preparing the alloy queue
-  if (!window.alloy) {
-    // eslint-disable-next-line no-underscore-dangle
-    (window.__alloyNS ||= []).push('alloy');
-    window.alloy = (...args) => new Promise((resolve, reject) => {
-      window.setTimeout(() => {
-        window.alloy.q.push([resolve, reject, args]);
-      });
-    });
-    window.alloy.q = [];
-  }
-  // Loading and configuring the websdk
-  return import(path).then(() => window.alloy('configure', config));
+function initATJS(path, config) {
+  window.targetGlobalSettings = config;
+  return import(path);
 }
 
 function onDecoratedElement(fn) {
-  // Apply propositions to all already decorated blocks/sections
+  // Apply offers to all already decorated blocks/sections
   if (document.querySelector('[data-block-status="loaded"],[data-section-status="loaded"]')) {
     fn();
   }
@@ -69,45 +58,45 @@ function toCssSelector(selector) {
   return selector.replace(/(\.\S+)?:eq\((\d+)\)/g, (_, clss, i) => `:nth-child(${Number(i) + 1}${clss ? ` of ${clss})` : ''}`);
 }
 
-function getElementForProposition(item) {
-  const selector = item.data.prehidingSelector || toCssSelector(item.data.selector);
+function getElementForOffer(offer) {
+  const selector = offer.cssSelector || toCssSelector(offer.selector);
   return document.querySelector(selector);
 }
 
-async function getAndApplyRenderDecisions() {
-  // Get the decisions, but don't render them automatically
-  // so we can hook up into the AEM EDS page load sequence
-  const response = await window.alloy('sendEvent', { renderDecisions: false });
-  const { propositions = [] } = response;
-  onDecoratedElement(async () => {
-    await window.alloy('applyPropositions', { propositions });
-    // keep track of propositions that were applied (their target element exists)
-    propositions.forEach((p) => {
-      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
-    });
-  });
+function getElementForMetric(metric) {
+  const selector = toCssSelector(metric.selector);
+  return document.querySelector(selector);
+}
 
-  // Reporting is deferred to avoid long tasks
-  window.setTimeout(() => {
-    // Report shown decisions
-    window.alloy('sendEvent', {
-      xdm: {
-        eventType: 'decisioning.propositionDisplay',
-        _experience: {
-          decisioning: { propositions },
-        },
-      },
-    });
+async function getAndApplyOffers() {
+  const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
+  const { options = [], metrics = [] } = response.execute.pageLoad;
+  onDecoratedElement(() => {
+    window.adobe.target.applyOffers({ response });
+    // keep track of offers that were already applied (their target element exists)
+    options.forEach((o) => { o.content = o.content.filter((c) => !getElementForOffer(c)); });
+    // keep track of metrics that were already applied
+    metrics.map((m, i) => (getElementForMetric(m) ? i : -1))
+      .filter((i) => i >= 0)
+      .reverse()
+      .forEach((i) => metrics.splice(i, 1));
   });
 }
 
-let alloyLoadedPromise = Promise.resolve();
+let atjsPromise = Promise.resolve();
 if (isTargetEnabled()) {
-  alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`, {
-    datastreamId: TARGET_CONFIG.datastreamId,
-    orgId: TARGET_CONFIG.orgId,
+  document.addEventListener('at-library-loaded', () => getAndApplyOffers().catch(() => {}));
+  atjsPromise = initATJS(`${window.hlx.codeBasePath}/scripts/at.min.js`, {
+    clientCode: TARGET_CONFIG.clientCode,
+    serverDomain: `${TARGET_CONFIG.clientCode}.tt.omtrdc.net`,
+    imsOrgId: TARGET_CONFIG.imsOrgId,
+    bodyHidingEnabled: false,
+    cookieDomain: window.location.hostname,
+    pageLoadEnabled: false,
+    secureOnly: true,
+    viewsEnabled: false,
+    withWebGLRenderer: false,
   }).catch(() => {});
-  alloyLoadedPromise.then(() => getAndApplyRenderDecisions()).catch(() => {});
 }
 // --- END Adobe Target ---
 
@@ -474,9 +463,9 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    // Adobe Target pages: wait for the Web SDK, then yield to break up long tasks
+    // Adobe Target pages: wait for at.js, then yield to break up long tasks
     if (isTargetEnabled()) {
-      await alloyLoadedPromise;
+      await atjsPromise;
       await new Promise((resolve) => { window.setTimeout(resolve, 0); });
     }
     // load eagerly up to the section holding the page heading (max. 2 sections), so a

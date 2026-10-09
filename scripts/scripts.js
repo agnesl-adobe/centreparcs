@@ -9,8 +9,96 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  getMetadata,
   createOptimizedPicture as createOptimizedPictureBase,
 } from './aem.js';
+
+// --- Adobe Target via at.js ---
+// https://www.aem.live/developer/target-integration (legacy at.js approach)
+// Only pages with "Target: on" metadata load at.js (it adds ~0.5-1.3s to the LCP).
+const TARGET_CONFIG = {
+  clientCode: 'adobedemoemea143', // Target client code (Target > Administration > Implementation)
+  imsOrgId: '3310BEDB5AC489F20A495D2A@AdobeOrg', // Adobe IMS Organization ID
+};
+
+function isTargetEnabled() {
+  return Boolean(TARGET_CONFIG.clientCode && TARGET_CONFIG.imsOrgId
+    && getMetadata('target').toLowerCase() === 'on');
+}
+
+function initATJS(path, config) {
+  window.targetGlobalSettings = config;
+  return import(path);
+}
+
+function onDecoratedElement(fn) {
+  // Apply offers to all already decorated blocks/sections
+  if (document.querySelector('[data-block-status="loaded"],[data-section-status="loaded"]')) {
+    fn();
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((m) => m.target.tagName === 'BODY'
+      || m.target.dataset.sectionStatus === 'loaded'
+      || m.target.dataset.blockStatus === 'loaded')) {
+      fn();
+    }
+  });
+  // Watch sections and blocks being decorated async
+  observer.observe(document.querySelector('main'), {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-block-status', 'data-section-status'],
+  });
+  // Watch anything else added to the body
+  observer.observe(document.querySelector('body'), { childList: true });
+}
+
+function toCssSelector(selector) {
+  return selector.replace(/(\.\S+)?:eq\((\d+)\)/g, (_, clss, i) => `:nth-child(${Number(i) + 1}${clss ? ` of ${clss})` : ''}`);
+}
+
+function getElementForOffer(offer) {
+  const selector = offer.cssSelector || toCssSelector(offer.selector);
+  return document.querySelector(selector);
+}
+
+function getElementForMetric(metric) {
+  const selector = toCssSelector(metric.selector);
+  return document.querySelector(selector);
+}
+
+async function getAndApplyOffers() {
+  const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
+  const { options = [], metrics = [] } = response.execute.pageLoad;
+  onDecoratedElement(() => {
+    window.adobe.target.applyOffers({ response });
+    // keep track of offers that were already applied (their target element exists)
+    options.forEach((o) => { o.content = o.content.filter((c) => !getElementForOffer(c)); });
+    // keep track of metrics that were already applied
+    metrics.map((m, i) => (getElementForMetric(m) ? i : -1))
+      .filter((i) => i >= 0)
+      .reverse()
+      .forEach((i) => metrics.splice(i, 1));
+  });
+}
+
+let atjsPromise = Promise.resolve();
+if (isTargetEnabled()) {
+  document.addEventListener('at-library-loaded', () => getAndApplyOffers().catch(() => {}));
+  atjsPromise = initATJS(`${window.hlx.codeBasePath}/scripts/at.min.js`, {
+    clientCode: TARGET_CONFIG.clientCode,
+    serverDomain: `${TARGET_CONFIG.clientCode}.tt.omtrdc.net`,
+    imsOrgId: TARGET_CONFIG.imsOrgId,
+    bodyHidingEnabled: false,
+    cookieDomain: window.location.hostname,
+    pageLoadEnabled: false,
+    secureOnly: true,
+    viewsEnabled: false,
+    withWebGLRenderer: false,
+  }).catch(() => {});
+}
+// --- END Adobe Target ---
 
 // --- BEGIN DM/Scene7 auto-block (excat-generated) ---
 
@@ -375,6 +463,11 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
+    // Adobe Target pages: wait for at.js, then yield to break up long tasks
+    if (isTargetEnabled()) {
+      await atjsPromise;
+      await new Promise((resolve) => { window.setTimeout(resolve, 0); });
+    }
     // load eagerly up to the section holding the page heading (max. 2 sections), so a
     // short first section (e.g. a notification bar) doesn't push the LCP into lazy loading
     const sections = [...main.querySelectorAll(':scope > .section')];

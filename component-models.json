@@ -20,6 +20,23 @@
         "name": "keywords",
         "multi": true,
         "label": "Keywords"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "target",
+        "label": "Adobe Target personalization",
+        "value": "",
+        "options": [
+          {
+            "name": "Off",
+            "value": ""
+          },
+          {
+            "name": "On",
+            "value": "on"
+          }
+        ]
       }
     ]
   },

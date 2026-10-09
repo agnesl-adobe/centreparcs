@@ -9,8 +9,107 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  getMetadata,
   createOptimizedPicture as createOptimizedPictureBase,
 } from './aem.js';
+
+// --- Adobe Target via Adobe Experience Platform Web SDK ---
+// https://www.aem.live/developer/target-integration
+// Only pages with "Target: on" metadata load the Web SDK (it adds ~0.5-1.3s to the LCP).
+const TARGET_CONFIG = {
+  orgId: '', // Adobe IMS Organization ID, e.g. 'XXXXXXXXXXXXXXXXXXXXXXXX@AdobeOrg'
+  datastreamId: '', // Adobe Experience Platform datastream ID (formerly edgeConfigId)
+};
+
+function isTargetEnabled() {
+  return Boolean(TARGET_CONFIG.orgId && TARGET_CONFIG.datastreamId
+    && getMetadata('target').toLowerCase() === 'on');
+}
+
+function initWebSDK(path, config) {
+  // Preparing the alloy queue
+  if (!window.alloy) {
+    // eslint-disable-next-line no-underscore-dangle
+    (window.__alloyNS ||= []).push('alloy');
+    window.alloy = (...args) => new Promise((resolve, reject) => {
+      window.setTimeout(() => {
+        window.alloy.q.push([resolve, reject, args]);
+      });
+    });
+    window.alloy.q = [];
+  }
+  // Loading and configuring the websdk
+  return import(path).then(() => window.alloy('configure', config));
+}
+
+function onDecoratedElement(fn) {
+  // Apply propositions to all already decorated blocks/sections
+  if (document.querySelector('[data-block-status="loaded"],[data-section-status="loaded"]')) {
+    fn();
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((m) => m.target.tagName === 'BODY'
+      || m.target.dataset.sectionStatus === 'loaded'
+      || m.target.dataset.blockStatus === 'loaded')) {
+      fn();
+    }
+  });
+  // Watch sections and blocks being decorated async
+  observer.observe(document.querySelector('main'), {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-block-status', 'data-section-status'],
+  });
+  // Watch anything else added to the body
+  observer.observe(document.querySelector('body'), { childList: true });
+}
+
+function toCssSelector(selector) {
+  return selector.replace(/(\.\S+)?:eq\((\d+)\)/g, (_, clss, i) => `:nth-child(${Number(i) + 1}${clss ? ` of ${clss})` : ''}`);
+}
+
+function getElementForProposition(item) {
+  const selector = item.data.prehidingSelector || toCssSelector(item.data.selector);
+  return document.querySelector(selector);
+}
+
+async function getAndApplyRenderDecisions() {
+  // Get the decisions, but don't render them automatically
+  // so we can hook up into the AEM EDS page load sequence
+  const response = await window.alloy('sendEvent', { renderDecisions: false });
+  const { propositions = [] } = response;
+  onDecoratedElement(async () => {
+    await window.alloy('applyPropositions', { propositions });
+    // keep track of propositions that were applied (their target element exists)
+    propositions.forEach((p) => {
+      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
+    });
+  });
+
+  // Reporting is deferred to avoid long tasks
+  window.setTimeout(() => {
+    // Report shown decisions
+    window.alloy('sendEvent', {
+      xdm: {
+        eventType: 'decisioning.propositionDisplay',
+        _experience: {
+          decisioning: { propositions },
+        },
+      },
+    });
+  });
+}
+
+let alloyLoadedPromise = Promise.resolve();
+if (isTargetEnabled()) {
+  alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`, {
+    datastreamId: TARGET_CONFIG.datastreamId,
+    orgId: TARGET_CONFIG.orgId,
+  }).catch(() => {});
+  alloyLoadedPromise.then(() => getAndApplyRenderDecisions()).catch(() => {});
+}
+// --- END Adobe Target ---
 
 // --- BEGIN DM/Scene7 auto-block (excat-generated) ---
 
@@ -375,6 +474,11 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
+    // Adobe Target pages: wait for the Web SDK, then yield to break up long tasks
+    if (isTargetEnabled()) {
+      await alloyLoadedPromise;
+      await new Promise((resolve) => { window.setTimeout(resolve, 0); });
+    }
     // load eagerly up to the section holding the page heading (max. 2 sections), so a
     // short first section (e.g. a notification bar) doesn't push the LCP into lazy loading
     const sections = [...main.querySelectorAll(':scope > .section')];

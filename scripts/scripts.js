@@ -481,7 +481,11 @@ async function loadEager(doc) {
     // short first section (e.g. a notification bar) doesn't push the LCP into lazy loading
     const sections = [...main.querySelectorAll(':scope > .section')];
     const headingIndex = sections.findIndex((section) => section.querySelector('h1'));
-    const eagerCount = Math.min(Math.max(headingIndex + 1, 1), 2);
+    let eagerCount = Math.min(Math.max(headingIndex + 1, 1), 2);
+    // a text-only first section followed by a media hero (e.g. intro + video hero):
+    // the hero image is the LCP, so load it eagerly too
+    if (eagerCount === 1 && sections[1] && !sections[0].querySelector('picture')
+      && sections[1].querySelector('picture')) eagerCount = 2;
     for (let i = 0; i < eagerCount; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       await loadSection(sections[i], waitForFirstImage);

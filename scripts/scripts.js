@@ -218,6 +218,15 @@ function renderScene7Picture(src, alt) {
   img.alt = alt;
   img.loading = 'lazy';
   picture.append(img);
+  // AEM rich text can store a Scene7 asset name like "Chips,-Buddha" as "Chips,%20-Buddha",
+  // which Scene7 rejects (403). If the image fails, retry once without the inserted space.
+  if (/,(%20|\s)/.test(src.split('?')[0])) {
+    img.addEventListener('error', () => {
+      const fix = (url) => url.replace(/^[^?]*/, (path) => path.replace(/,(%20|\s)+/g, ','));
+      picture.querySelectorAll('source').forEach((s) => { s.srcset = fix(s.srcset); });
+      img.src = fix(img.src);
+    }, { once: true });
+  }
   return picture;
 }
 

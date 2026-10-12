@@ -8,10 +8,15 @@
   },
   "contentPattern": "One row per tile (6). Cell 1: portrait image. Cell 2: link (label shown as overlay button).",
   "usage": {
-    "pagesUsing": ["https://www.centerparcs.co.uk/"],
-    "reuseCount": 1,
-    "lastUsed": "2026-10-07"
+    "pagesUsing": [
+      "https://www.centerparcs.co.uk/",
+      "https://www.centerparcs.co.uk/discover-center-parcs/activities/outdoor-activities.html"
+    ],
+    "reuseCount": 2,
+    "lastUsed": "2026-10-12T09:18:28.401Z"
   },
   "options": [],
-  "memberVariantIds": ["carousel-activity"]
+  "memberVariantIds": [
+    "carousel-activity"
+  ]
 }

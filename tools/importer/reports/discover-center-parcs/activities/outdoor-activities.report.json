@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "url": "https://www.centerparcs.co.uk/discover-center-parcs/activities/outdoor-activities.html",
+  "path": "discover-center-parcs/activities/outdoor-activities",
+  "timestamp": "2026-10-12T09:33:55.752Z",
+  "title": "Outdoor Activities | Center Parcs",
+  "template": "activities",
+  "blocks": [
+    "columns-intro",
+    "columns-intro",
+    "columns-intro",
+    "hero-video",
+    "cards-feature",
+    "cards-feature",
+    "cards-feature",
+    "carousel-activity",
+    "columns-promo",
+    "carousel-spotlight"
+  ]
+}

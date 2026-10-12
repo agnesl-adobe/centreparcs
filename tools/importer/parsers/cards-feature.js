@@ -15,7 +15,23 @@ function isBlank(el) {
 }
 
 export default function parse(element, { document }) {
-  let teasers = Array.from(element.querySelectorAll('.cmp-teaser'));
+  // Cards are the signpost teasers. A section heading teaser (.teaser-text) can sit in the
+  // same container (e.g. "Included at no extra cost" on outdoor-activities) - keep it as
+  // default content before the block instead of turning it into a card.
+  const signposts = Array.from(element.querySelectorAll('.cmp-signpost'));
+  const headings = [];
+  if (signposts.length) {
+    element.querySelectorAll('.teaser.teaser-text').forEach((t) => {
+      if (t.closest('.cmp-signpost')) return;
+      const h = t.querySelector('h1, h2, h3, h4, h5, h6');
+      if (h) headings.push(h);
+      t.remove();
+    });
+  }
+
+  let teasers = signposts.length
+    ? signposts.map((s) => s.querySelector('.cmp-teaser') || s)
+    : Array.from(element.querySelectorAll('.cmp-teaser'));
   if (!teasers.length) teasers = Array.from(element.querySelectorAll('.cmp-signpost, .teaser'));
 
   const cells = [];
@@ -66,10 +82,10 @@ export default function parse(element, { document }) {
   });
 
   if (!cells.length) {
-    element.replaceWith(...element.childNodes);
+    element.replaceWith(...headings, ...element.childNodes);
     return;
   }
 
   const block = WebImporter.Blocks.createBlock(document, { name: 'cards-feature', cells });
-  element.replaceWith(block);
+  element.replaceWith(...headings, block);
 }

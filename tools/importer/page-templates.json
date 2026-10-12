@@ -6,7 +6,7 @@
         "https://www.centerparcs.co.uk/"
       ],
       "representativeUrl": "https://www.centerparcs.co.uk/",
-      "description": "Center Parcs UK homepage",
+      "description": "To be named in naming step",
       "blocks": [
         {
           "name": "hero-notification",
@@ -75,7 +75,6 @@
           ]
         }
       ],
-      "urlPattern": "/",
       "sections": [
         {
           "id": "1",
@@ -220,6 +219,270 @@
           "defaultContent": [
             ".aem-GridColumn > .cmp-container > .text-core.text:has(+ .tabs-container) .cmp-text"
           ]
+        }
+      ],
+      "urlPattern": "/"
+    },
+    {
+      "name": "breaks-we-offer",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/book-early.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/last-minute-holidays/view-breaks.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/bank-holiday-breaks.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/christmas-holidays.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/easter-holidays.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/february-half-term-holidays.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/may-half-term-holidays.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/new-year-holidays.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/october-half-term-holidays.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/autumn-holidays/halloween-breaks-center-parcs.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/christmas-new-year-breaks.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/book-now-and-save/book-now-and-save-terms-and-conditions.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/book-now-and-save/price-point-terms-and-conditions.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/early-bird-offer/early-bird-offer-t-cs.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/housekeeping-service.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/little-ones-offer/little-ones-offer-terms-and-conditions.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/may-half-term-offer.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/repeat-guest-offer/repeat-guest-offer-extension-2026.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/types-of-break.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/winter-and-festive-breaks.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/book-early.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/*"
+    },
+    {
+      "name": "breaks-we-offer-2",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/prices.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/prices.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/*"
+    },
+    {
+      "name": "breaks-we-offer-3",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks.html",
+        "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/spring-holidays.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/*"
+    },
+    {
+      "name": "school-holiday-breaks",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/summer-school-holidays.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/school-holiday-breaks/summer-school-holidays.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/school-holiday-breaks/*"
+    },
+    {
+      "name": "seasonal-holidays-and-breaks",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/autumn-holidays.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/autumn-holidays.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/seasonal-holidays-and-breaks/*"
+    },
+    {
+      "name": "seasonal-holidays-and-breaks-2",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/winter-forest-lights-breaks.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/winter-forest-lights-breaks.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/seasonal-holidays-and-breaks/*"
+    },
+    {
+      "name": "seasonal-holidays-and-breaks-3",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/winter-wonderland-breaks.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/seasonal-holidays-and-breaks/winter-wonderland-breaks.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/seasonal-holidays-and-breaks/*"
+    },
+    {
+      "name": "special-offers",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/free-early-arrival-terms-and-conditions.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/free-early-arrival-terms-and-conditions.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/special-offers/*"
+    },
+    {
+      "name": "breaks-we-offer-4",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/special-offers.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/*"
+    },
+    {
+      "name": "special-offers-2",
+      "urls": [
+        "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/repeat-guest-offer.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/breaks-we-offer/special-offers/repeat-guest-offer.html",
+      "description": "To be named in naming step",
+      "blocks": [],
+      "urlPattern": "/breaks-we-offer/special-offers/*"
+    },
+    {
+      "name": "activities",
+      "urls": [
+        "https://www.centerparcs.co.uk/discover-center-parcs/activities/outdoor-activities.html"
+      ],
+      "representativeUrl": "https://www.centerparcs.co.uk/discover-center-parcs/activities/outdoor-activities.html",
+      "description": "Activity category landing page (e.g. Outdoor activities): intro, video hero, activity signpost cards, age-group activity carousel, promo panel, spotlight carousel",
+      "blocks": [
+        {
+          "name": "columns-intro",
+          "instances": [
+            ".teaser.teaser-text:not(.cmp-teaser--extras-enabled):has(.cmp-teaser__description)"
+          ]
+        },
+        {
+          "name": "hero-video",
+          "instances": [
+            ".cmp-reservation-hero"
+          ]
+        },
+        {
+          "name": "cards-feature",
+          "instances": [
+            ".layout-container.cmp-centralized"
+          ]
+        },
+        {
+          "name": "carousel-activity",
+          "instances": [
+            ".cp-carousel-v2"
+          ]
+        },
+        {
+          "name": "columns-promo",
+          "instances": [
+            ".teaser.teaser-offer-block"
+          ]
+        },
+        {
+          "name": "carousel-spotlight",
+          "instances": [
+            ".multi-text-image-carousel"
+          ]
+        }
+      ],
+      "urlPattern": "/discover-center-parcs/activities/*",
+      "sections": [
+        {
+          "id": "1",
+          "name": "Page intro",
+          "selector": [
+            ".teaser.teaser-text:has(h1)"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-intro"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "2",
+          "name": "Video hero",
+          "selector": [
+            ".cmp-reservation-hero"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-video"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "3",
+          "name": "Explore popular outdoor activities",
+          "selector": [
+            ".layout-container.responsivegrid:has(> .cmp-container > .teaser.teaser-text + .layout-container.cmp-centralized)",
+            ".aem-GridColumn--default--12 > .cmp-container > .layout-container.responsivegrid:nth-of-type(3)"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-feature"
+          ],
+          "defaultContent": [
+            ".teaser.teaser-text:not(:has(.cmp-teaser__description)) h2"
+          ]
+        },
+        {
+          "id": "4",
+          "name": "Perfect activity by age + activity packages promo",
+          "selector": [
+            ".teaser.teaser-text:has(.cmp-teaser__description):has(h2)"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-intro",
+            "carousel-activity",
+            "columns-promo"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "5",
+          "name": "Included at no extra cost",
+          "selector": [
+            ".layout-container.cmp-centralized:has(.teaser.teaser-text)",
+            ".aem-GridColumn--default--12 > .cmp-container > .layout-container.responsivegrid:nth-of-type(7)"
+          ],
+          "style": null,
+          "blocks": [
+            "cards-feature"
+          ],
+          "defaultContent": [
+            ".cmp-centralized .teaser.teaser-text h2"
+          ]
+        },
+        {
+          "id": "6",
+          "name": "Forest Summer Social feature",
+          "selector": [
+            ".multi-text-image-carousel"
+          ],
+          "style": null,
+          "blocks": [
+            "carousel-spotlight"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "7",
+          "name": "Even more to explore",
+          "selector": [
+            ".aem-GridColumn--default--12 > .cmp-container > .layout-container.responsivegrid:nth-of-type(9)"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-intro",
+            "cards-feature"
+          ],
+          "defaultContent": []
         }
       ]
     }

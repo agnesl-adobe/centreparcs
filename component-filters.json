@@ -23,6 +23,7 @@
       "cards-expand",
       "cards-feature",
       "carousel-activity",
+      "carousel-spotlight",
       "accordion-faq"
     ]
   },
@@ -60,6 +61,12 @@
     "id": "carousel-lodges",
     "components": [
       "carousel-lodges-item"
+    ]
+  },
+  {
+    "id": "carousel-spotlight",
+    "components": [
+      "carousel-spotlight-item"
     ]
   },
   {

@@ -13,3 +13,6 @@ helix-importer-ui
 !AGENTS.md
 migration-work/navigation-validation/
 migration-work/footer-validation/
+
+# Raw source-page snapshots saved during import (not code; would be served publicly)
+tools/importer/bd-snapshots/

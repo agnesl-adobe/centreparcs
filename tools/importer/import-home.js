@@ -375,6 +375,19 @@ export default {
     const hr = document.createElement('hr');
     main.appendChild(hr);
     WebImporter.rules.createMetadata(main, document);
+    // the home page runs Adobe Target (page property "Adobe Target personalization": On);
+    // keep it in the import so re-uploading the page does not switch Target off
+    const metadataTable = [...main.querySelectorAll('table')]
+      .find((t) => t.querySelector('tr')?.textContent.trim().toLowerCase() === 'metadata');
+    if (metadataTable) {
+      const row = document.createElement('tr');
+      ['Target', 'on'].forEach((text) => {
+        const cell = document.createElement('td');
+        cell.textContent = text;
+        row.append(cell);
+      });
+      (metadataTable.querySelector('tbody') || metadataTable).append(row);
+    }
     WebImporter.rules.transformBackgroundImages(main, document);
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
 

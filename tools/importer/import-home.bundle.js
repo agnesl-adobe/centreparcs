@@ -1360,6 +1360,19 @@ var CustomImportScript = (() => {
       const hr = document2.createElement("hr");
       main.appendChild(hr);
       WebImporter.rules.createMetadata(main, document2);
+      const metadataTable = [...main.querySelectorAll("table")].find((t) => {
+        var _a;
+        return ((_a = t.querySelector("tr")) == null ? void 0 : _a.textContent.trim().toLowerCase()) === "metadata";
+      });
+      if (metadataTable) {
+        const row = document2.createElement("tr");
+        ["Target", "on"].forEach((text) => {
+          const cell = document2.createElement("td");
+          cell.textContent = text;
+          row.append(cell);
+        });
+        (metadataTable.querySelector("tbody") || metadataTable).append(row);
+      }
       WebImporter.rules.transformBackgroundImages(main, document2);
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       const rawPath = new URL(params.originalURL).pathname.replace(/\/$/, "").replace(/\.html?$/, "");

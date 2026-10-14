@@ -1,37 +1,179 @@
-.hero-container .hero-wrapper {
-  max-width: unset;
-  padding: 0;
-}
+/* Hero: rounded image inside the content width (as hero-video) with a white content card.
+ * Mobile: card overlaps the bottom of the image. Desktop: card sits on the image, left. */
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
-.hero h1 {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--background-color);
+/* image */
+.hero .hero-media {
+  height: 280px;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  line-height: 0;
 }
 
-.hero picture {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  object-fit: cover;
-  box-sizing: border-box;
+.hero .hero-media > div,
+.hero .hero-media picture {
+  display: block;
+  height: 100%;
 }
 
-.hero img {
-  object-fit: cover;
+.hero .hero-media img {
+  display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+/* content card */
+.hero .hero-content {
+  position: relative;
+  box-sizing: border-box;
+  margin: -48px 16px 0;
+  padding: 24px;
+  border-radius: var(--radius-m);
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 12%);
+}
+
+.hero.hero-no-image .hero-content {
+  margin: 0;
+}
+
+.hero.hero-no-content .hero-content,
+.hero .hero-empty {
+  display: none;
+}
+
+.hero .hero-content > div > div > :first-child {
+  margin-top: 0;
+}
+
+.hero .hero-content > div > div > :last-child {
+  margin-bottom: 0;
+}
+
+.hero .hero-content > div + div {
+  margin-top: 12px;
+}
+
+/* title */
+.hero :is(h1, h2, h3) {
+  margin: 0;
+  color: var(--heading-color);
+  font-family: var(--heading-font-family);
+  font-weight: 350;
+}
+
+.hero :is(h1, h2) {
+  font-size: 32px;
+  line-height: 40px;
+}
+
+.hero h3 {
+  font-size: 26px;
+  line-height: 32px;
+}
+
+.hero :is(h1, h2, h3) :is(strong, b) {
+  font-weight: 500;
+}
+
+/* text */
+.hero .hero-content p {
+  margin: 0 0 12px;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* CTA button (primary / secondary from the global button styles) */
+.hero .hero-content p.button-wrapper {
+  margin: 20px 0 0;
+}
+
+/* CTA text link: green bold link with underline and arrow */
+.hero a.hero-link:any-link {
+  display: inline-block;
+  margin-top: 8px;
+  border-bottom: 1px solid currentcolor;
+  color: var(--link-color);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 26px;
+  text-decoration: none;
+}
+
+.hero a.hero-link::after {
+  content: "";
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0 0 0 5px;
+  background-color: currentcolor;
+  mask: url("data:image/svg+xml,%3csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8.25 1.21875L13.75 6.46875C13.9062 6.625 14 6.8125 14 7.03125C14 7.21875 13.9062 7.40625 13.75 7.5625L8.25 12.8125C7.96875 13.0938 7.46875 13.0938 7.1875 12.7812C6.90625 12.5 6.90625 12 7.21875 11.7188L11.375 7.78125H0.75C0.3125 7.78125 0 7.4375 0 7.03125C0 6.59375 0.3125 6.28125 0.75 6.28125H11.375L7.21875 2.3125C6.90625 2.03125 6.90625 1.53125 7.1875 1.25C7.46875 0.9375 7.9375 0.9375 8.25 1.21875Z' fill='%23000'/%3e%3c/svg%3e") center / contain no-repeat;
+}
+
+.hero a.hero-link:hover {
+  color: #495c14;
+  text-decoration: none;
+}
+
+@media (width >= 600px) {
+  .hero .hero-media {
+    height: 400px;
+  }
+
+  .hero .hero-content {
+    margin: -64px 32px 0;
+    padding: 32px;
+  }
 }
 
 @media (width >= 900px) {
   .hero {
-    padding: 40px 32px;
+    justify-content: center;
+    min-height: 560px;
+    padding: 48px;
+  }
+
+  .hero.hero-no-image {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .hero .hero-media {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+
+  .hero .hero-content {
+    width: 520px;
+    max-width: 100%;
+    margin: 0;
+    padding: 40px;
+  }
+
+  .hero :is(h1, h2) {
+    font-size: 50px;
+    line-height: 62px;
+  }
+
+  .hero h3 {
+    font-size: 34px;
+    line-height: 40px;
+  }
+
+  .hero .hero-content p {
+    font-size: 18px;
+    line-height: 26px;
   }
 }

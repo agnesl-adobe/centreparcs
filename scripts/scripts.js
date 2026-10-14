@@ -58,14 +58,24 @@ function toCssSelector(selector) {
   return selector.replace(/(\.\S+)?:eq\((\d+)\)/g, (_, clss, i) => `:nth-child(${Number(i) + 1}${clss ? ` of ${clss})` : ''}`);
 }
 
+// offers/metrics may come without a selector (e.g. redirects) or with one the page
+// cannot parse: treat those as "no element" instead of throwing on every re-apply
+function queryTargetSelector(selector) {
+  if (!selector) return null;
+  try {
+    return document.querySelector(selector);
+  } catch (e) {
+    return null;
+  }
+}
+
 function getElementForOffer(offer) {
-  const selector = offer.cssSelector || toCssSelector(offer.selector);
-  return document.querySelector(selector);
+  const selector = offer.cssSelector || (offer.selector && toCssSelector(offer.selector));
+  return queryTargetSelector(selector);
 }
 
 function getElementForMetric(metric) {
-  const selector = toCssSelector(metric.selector);
-  return document.querySelector(selector);
+  return queryTargetSelector(metric.selector && toCssSelector(metric.selector));
 }
 
 async function getAndApplyOffers() {
@@ -73,8 +83,11 @@ async function getAndApplyOffers() {
   const { options = [], metrics = [] } = response.execute.pageLoad;
   onDecoratedElement(() => {
     window.adobe.target.applyOffers({ response });
-    // keep track of offers that were already applied (their target element exists)
-    options.forEach((o) => { o.content = o.content.filter((c) => !getElementForOffer(c)); });
+    // keep track of offers that were already applied (their target element exists);
+    // an option without content (e.g. the default experience) has nothing to apply
+    options.forEach((o) => {
+      o.content = (o.content || []).filter((c) => !getElementForOffer(c));
+    });
     // keep track of metrics that were already applied
     metrics.map((m, i) => (getElementForMetric(m) ? i : -1))
       .filter((i) => i >= 0)

@@ -35,11 +35,79 @@
           "value": ""
         },
         {
+          "component": "text",
+          "valueType": "string",
+          "name": "title",
+          "label": "Title",
+          "value": ""
+        },
+        {
+          "component": "select",
+          "name": "titleType",
+          "label": "Title type",
+          "valueType": "string",
+          "value": "h2",
+          "options": [
+            {
+              "name": "H1",
+              "value": "h1"
+            },
+            {
+              "name": "H2",
+              "value": "h2"
+            },
+            {
+              "name": "H3",
+              "value": "h3"
+            }
+          ]
+        },
+        {
           "component": "richtext",
           "name": "text",
           "value": "",
           "label": "Text",
           "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "link",
+          "label": "CTA link"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "linkText",
+          "label": "CTA text",
+          "value": ""
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "linkTitle",
+          "label": "CTA title",
+          "value": ""
+        },
+        {
+          "component": "select",
+          "name": "linkType",
+          "label": "CTA style",
+          "valueType": "string",
+          "value": "primary",
+          "options": [
+            {
+              "name": "Primary (green button)",
+              "value": "primary"
+            },
+            {
+              "name": "Secondary (outline button)",
+              "value": "secondary"
+            },
+            {
+              "name": "Text link",
+              "value": ""
+            }
+          ]
         }
       ]
     }

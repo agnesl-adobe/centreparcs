@@ -589,7 +589,17 @@ var CustomImportScript = (() => {
     return !el.querySelector("img, a[href]") && el.textContent.replace(/[\s ]+/g, "") === "";
   }
   function parse8(element, { document: document2 }) {
-    let teasers = Array.from(element.querySelectorAll(".cmp-teaser"));
+    const signposts = Array.from(element.querySelectorAll(".cmp-signpost"));
+    const headings = [];
+    if (signposts.length) {
+      element.querySelectorAll(".teaser.teaser-text").forEach((t) => {
+        if (t.closest(".cmp-signpost")) return;
+        const h = t.querySelector("h1, h2, h3, h4, h5, h6");
+        if (h) headings.push(h);
+        t.remove();
+      });
+    }
+    let teasers = signposts.length ? signposts.map((s) => s.querySelector(".cmp-teaser") || s) : Array.from(element.querySelectorAll(".cmp-teaser"));
     if (!teasers.length) teasers = Array.from(element.querySelectorAll(".cmp-signpost, .teaser"));
     const cells = [];
     teasers.forEach((teaser) => {
@@ -633,11 +643,11 @@ var CustomImportScript = (() => {
       cells.push([imageCell, textCell]);
     });
     if (!cells.length) {
-      element.replaceWith(...element.childNodes);
+      element.replaceWith(...headings, ...element.childNodes);
       return;
     }
     const block = WebImporter.Blocks.createBlock(document2, { name: "cards-feature", cells });
-    element.replaceWith(block);
+    element.replaceWith(...headings, block);
   }
 
   // tools/importer/parsers/carousel-activity.js
@@ -1127,13 +1137,15 @@ var CustomImportScript = (() => {
       },
       {
         "id": "2",
-        "name": "Page intro + time-limited offer",
+        "name": "Page intro",
         "selector": [
-          ".teaser.cmp-teaser--extras-enabled"
+          ".teaser.cmp-teaser--extras-enabled",
+          ".teaser.teaser-text:has(.cmp-teaser__title h1)"
         ],
-        "style": "grey",
+        "style": null,
         "blocks": [
-          "columns-offer"
+          "columns-offer",
+          "columns-intro"
         ],
         "defaultContent": []
       },

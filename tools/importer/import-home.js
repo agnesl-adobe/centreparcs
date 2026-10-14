@@ -124,13 +124,15 @@ const PAGE_TEMPLATE = {
     },
     {
       "id": "2",
-      "name": "Page intro + time-limited offer",
+      "name": "Page intro",
       "selector": [
-        ".teaser.cmp-teaser--extras-enabled"
+        ".teaser.cmp-teaser--extras-enabled",
+        ".teaser.teaser-text:has(.cmp-teaser__title h1)"
       ],
-      "style": "grey",
+      "style": null,
       "blocks": [
-        "columns-offer"
+        "columns-offer",
+        "columns-intro"
       ],
       "defaultContent": []
     },

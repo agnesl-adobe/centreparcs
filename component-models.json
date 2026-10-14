@@ -442,6 +442,27 @@
     "id": "hero",
     "fields": [
       {
+        "component": "select",
+        "name": "classes",
+        "label": "Layout",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Text on image",
+            "value": ""
+          },
+          {
+            "name": "Text left of image",
+            "value": "text-left"
+          },
+          {
+            "name": "Text right of image",
+            "value": "text-right"
+          }
+        ]
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "image",
@@ -500,13 +521,6 @@
         "valueType": "string",
         "name": "linkText",
         "label": "CTA text",
-        "value": ""
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "linkTitle",
-        "label": "CTA title",
         "value": ""
       },
       {

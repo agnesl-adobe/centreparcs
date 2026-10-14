@@ -1,5 +1,7 @@
 /* Hero: rounded image inside the content width (as hero-video) with a white content card.
- * Mobile: card overlaps the bottom of the image. Desktop: card sits on the image, left. */
+ * Mobile: card overlaps the bottom of the image. Desktop: card sits on the image, left.
+ * Layout options "text-left" / "text-right": plain text beside the image on desktop,
+ * stacked below it on mobile. */
 
 .hero {
   position: relative;
@@ -42,6 +44,15 @@
 
 .hero.hero-no-image .hero-content {
   margin: 0;
+}
+
+/* text beside the image: no card */
+.hero:is(.text-left, .text-right) .hero-content {
+  margin: 24px 0 0;
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .hero.hero-no-content .hero-content,
@@ -135,6 +146,11 @@
     margin: -64px 32px 0;
     padding: 32px;
   }
+
+  .hero:is(.text-left, .text-right) .hero-content {
+    margin: 32px 0 0;
+    padding: 0;
+  }
 }
 
 @media (width >= 900px) {
@@ -160,6 +176,33 @@
     max-width: 100%;
     margin: 0;
     padding: 40px;
+  }
+
+  /* text beside the image: two equal columns, text vertically centred */
+  .hero:is(.text-left, .text-right) {
+    flex-direction: row;
+    align-items: center;
+    gap: 64px;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .hero:is(.text-left, .text-right) .hero-media {
+    position: relative;
+    flex: 1 1 50%;
+    align-self: stretch;
+    min-height: 480px;
+  }
+
+  .hero:is(.text-left, .text-right) .hero-content {
+    flex: 1 1 50%;
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hero.text-left .hero-content {
+    order: -1;
   }
 
   .hero :is(h1, h2) {

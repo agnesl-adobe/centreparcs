@@ -290,8 +290,10 @@ export default async function decorate(block) {
     row.remove();
   });
 
-  slidesWrapper.querySelectorAll('.carousel-lodges-slide-image picture > img').forEach((img, idx) => {
-    const optimizedPic = createOptimizedPicture(img.src, img.alt, idx === 0, [{ media: '(min-width: 900px)', width: '2000' }, { width: '900' }]);
+  // the carousel sits below the fold: lazy-load every slide image (incl. the first) so it
+  // doesn't compete with the hero for bandwidth
+  slidesWrapper.querySelectorAll('.carousel-lodges-slide-image picture > img').forEach((img) => {
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ media: '(min-width: 900px)', width: '2000' }, { width: '900' }]);
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
   });

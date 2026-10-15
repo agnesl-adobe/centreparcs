@@ -508,6 +508,25 @@ export function decorateMain(main) {
 }
 
 /**
+ * Columns style options (e.g. "Columns (intro)") load their own JS/CSS only after
+ * columns.js has loaded: two round trips in a row. For the sections loaded eagerly,
+ * start those downloads up front so they come from the cache when columns.js asks.
+ * (CSS is fetched, not <link rel=preload>ed: loadCSS skips hrefs that already have a link.)
+ * @param {Element[]} sections the eagerly loaded sections
+ */
+function prefetchColumnsStyles(sections) {
+  const styles = new Set();
+  sections.forEach((section) => section.querySelectorAll('.columns').forEach((block) => {
+    ['offer', 'intro', 'promo'].forEach((s) => { if (block.classList.contains(s)) styles.add(s); });
+  }));
+  styles.forEach((style) => {
+    const base = `${window.hlx.codeBasePath}/blocks/columns/columns-${style}`;
+    import(`${base}.js`).catch(() => {});
+    fetch(`${base}.css`, { priority: 'high' }).catch(() => {});
+  });
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -522,11 +541,6 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    // Adobe Target pages: wait for at.js, then yield to break up long tasks
-    if (isTargetEnabled()) {
-      await atjsPromise;
-      await new Promise((resolve) => { window.setTimeout(resolve, 0); });
-    }
     // load eagerly up to the section holding the page heading (max. 2 sections), so a
     // short first section (e.g. a notification bar) doesn't push the LCP into lazy loading
     const sections = [...main.querySelectorAll(':scope > .section')];
@@ -536,10 +550,17 @@ async function loadEager(doc) {
     // fragment that holds one): the hero image is the LCP, so load it eagerly too
     if (eagerCount === 1 && sections[1] && !sections[0].querySelector('picture')
       && sections[1].querySelector('picture, .fragment')) eagerCount = 2;
-    for (let i = 0; i < eagerCount; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      await loadSection(sections[i], waitForFirstImage);
+    const eagerSections = sections.slice(0, eagerCount);
+    // start style-option downloads now, in parallel with the at.js wait below
+    prefetchColumnsStyles(eagerSections);
+    // Adobe Target pages: wait for at.js, then yield to break up long tasks
+    if (isTargetEnabled()) {
+      await atjsPromise;
+      await new Promise((resolve) => { window.setTimeout(resolve, 0); });
     }
+    // load the eager sections in parallel: each is shown as soon as it is ready, and a
+    // short first section no longer delays the requests of the one holding the LCP
+    await Promise.all(eagerSections.map((section) => loadSection(section, waitForFirstImage)));
   }
 }
 

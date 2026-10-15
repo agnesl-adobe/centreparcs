@@ -1,18 +1,33 @@
-@import url('brand.css');
-
-/*
- * Copyright 2020 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-
+/* Center Parcs UK brand tokens (extracted from https://www.centerparcs.co.uk/) */
 :root {
+  /* fonts (Adobe Fonts kit nip2bez) */
+  --heading-font-family: ff-tisa-sans-web-pro, tisa-fallback, tisa-fallback-dejavu, arial, sans-serif;
+  --body-font-family: open-sans, "Open Sans", open-sans-fallback, open-sans-fallback-dejavu, arial, sans-serif;
+
+  /* colors */
+  --background-color: #fff;
+  --text-color: #4c4e4b;
+  --heading-color: #1d1d1d;
+  --paragraph-color: #333;
+  --link-color: #647e1b;
+  --link-hover-color: #884e06;
+  --brand-green: #647e1b;
+  --brand-blue: #367e9b;
+  --brand-orange: #af6408;
+  --brand-bronze: #8b7346;
+  --brand-grey: #f5f5f5;
+  --brand-charcoal: #333;
+  --light-color: #f5f5f5;
+  --dark-color: #333;
+
+  /* spacing */
+  --content-max-width: 1344px;
+  --content-gutter: 16px;
+  --section-spacing: 25px;
+  --radius-m: 12px;
+  --radius-s: 8px;
+  --nav-height: 80px;
+
   /* body sizes */
   --body-font-size-l: 18px;
   --body-font-size-m: 16px;
@@ -27,6 +42,31 @@
   --heading-font-size-s: 18px;
   --heading-font-size-xs: 16px;
 }
+
+@media (width >= 600px) {
+  :root {
+    --nav-height: 90px;
+  }
+}
+
+@media (width >= 900px) {
+  :root {
+    --content-gutter: 48px;
+    --nav-height: 147px;
+  }
+}
+
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 
 /* fallback fonts, size-adjusted to the Adobe Fonts faces so the swap barely reflows text.
    Arial-metric fonts (Arial, Liberation Sans, Arimo) first; DejaVu Sans (Linux) next. A

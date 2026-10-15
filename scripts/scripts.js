@@ -1,4 +1,5 @@
 import {
+  buildBlock,
   loadHeader,
   loadFooter,
   decorateIcons,
@@ -409,8 +410,44 @@ async function loadFonts() {
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
+/**
+ * Returns the site path of a fragment link (e.g. "/fragments/promo"), or null.
+ * Accepts relative links and absolute links to this site or an aem.page / aem.live
+ * preview of it (the DA Fragment Picker inserts full aem.page URLs).
+ * @param {string} href link href
+ * @returns {string|null} fragment path
+ */
+export function getFragmentPath(href) {
+  try {
+    const url = new URL(href, window.location);
+    const sameSite = url.origin === window.location.origin
+      || /\.aem\.(page|live)$/.test(url.hostname);
+    return sameSite && url.pathname.includes('/fragments/') ? url.pathname : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Embeds fragment links: a link to a /fragments/ page alone in a paragraph of default
+ * content becomes a fragment block.
+ * @param {Element} main The container element
+ */
+function buildFragmentBlocks(main) {
+  main.querySelectorAll(':scope > div > p > a[href]').forEach((a) => {
+    const p = a.parentElement;
+    const path = getFragmentPath(a.getAttribute('href'));
+    if (!path || p.textContent.trim() !== a.textContent.trim()) return;
+    const link = document.createElement('a');
+    link.href = path;
+    link.textContent = path;
+    p.replaceWith(buildBlock('fragment', [[link]]));
+  });
+}
+
 function buildAutoBlocks(main) {
   try {
+    buildFragmentBlocks(main);
     buildDynamicMediaImages(main);
   } catch (error) {
     // eslint-disable-next-line no-console

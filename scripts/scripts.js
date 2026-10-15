@@ -532,10 +532,10 @@ async function loadEager(doc) {
     const sections = [...main.querySelectorAll(':scope > .section')];
     const headingIndex = sections.findIndex((section) => section.querySelector('h1'));
     let eagerCount = Math.min(Math.max(headingIndex + 1, 1), 2);
-    // a text-only first section followed by a media hero (e.g. intro + video hero):
-    // the hero image is the LCP, so load it eagerly too
+    // a text-only first section followed by a media hero (e.g. intro + video hero, or a
+    // fragment that holds one): the hero image is the LCP, so load it eagerly too
     if (eagerCount === 1 && sections[1] && !sections[0].querySelector('picture')
-      && sections[1].querySelector('picture')) eagerCount = 2;
+      && sections[1].querySelector('picture, .fragment')) eagerCount = 2;
     for (let i = 0; i < eagerCount; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       await loadSection(sections[i], waitForFirstImage);

@@ -1,0 +1,9 @@
+{
+  "variantName": "fragment",
+  "baseBlock": "fragment",
+  "version": "1.0.0",
+  "created": "2026-10-15T07:52:46.000Z",
+  "contentPattern": {
+    "structure": "single cell with a link to the fragment page"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "variantName": "hero",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-10-15T07:52:46.000Z",
+  "visualCharacteristics": {
+    "purpose": "hero with content card",
+    "imagePattern": "background-image"
+  },
+  "contentPattern": {
+    "structure": "rows: image | title | text | CTA",
+    "imageCount": 1,
+    "buttonCount": 1
+  },
+  "options": [
+    {
+      "class": "text-left",
+      "label": "Text left of image"
+    },
+    {
+      "class": "text-right",
+      "label": "Text right of image"
+    }
+  ]
+}

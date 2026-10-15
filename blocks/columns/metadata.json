@@ -1,0 +1,34 @@
+{
+  "variantName": "columns",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-10-15T07:52:46.000Z",
+  "visualCharacteristics": {
+    "purpose": "side-by-side content"
+  },
+  "contentPattern": {
+    "structure": "one row, two or more cells (image and/or text per cell)"
+  },
+  "options": [
+    {
+      "class": "intro",
+      "label": "Intro"
+    },
+    {
+      "class": "promo",
+      "label": "Promo"
+    },
+    {
+      "class": "offer",
+      "label": "Offer"
+    }
+  ],
+  "usage": {
+    "pagesUsing": [
+      "https://www.centerparcs.co.uk/",
+      "https://www.centerparcs.co.uk/discover-center-parcs/activities/outdoor-activities.html"
+    ],
+    "reuseCount": 2,
+    "lastUsed": "2026-10-15T07:52:46.000Z"
+  }
+}

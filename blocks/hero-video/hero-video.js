@@ -101,14 +101,23 @@ export default function decorate(block) {
   video.preload = 'none';
   if (posterSrc) video.poster = posterSrc;
 
-  const source = document.createElement('source');
-  source.src = videoSrc;
-  source.type = 'video/mp4';
-  video.append(source);
+  // Scene7 renditions are named <set>-<w>x<h>-<bitrate>: below desktop, try the 540p
+  // rendition first (about half the bytes) and fall back to the authored one
+  const sources = [videoSrc];
+  const smaller = videoSrc.replace(/-0x720-4000k(?=$|[?#])/, '-0x540-2000k');
+  if (smaller !== videoSrc && !window.matchMedia('(min-width: 900px)').matches) sources.unshift(smaller);
+  sources.forEach((src) => {
+    const source = document.createElement('source');
+    source.src = src;
+    source.type = 'video/mp4';
+    video.append(source);
+  });
 
   const toggle = buildToggle(video);
 
-  // load the video after the poster has been painted to protect LCP
+  // load the video once the page has settled (the poster is shown until then): the
+  // download is several MB, and starting it at "load" competes with the rest of the page
+  const VIDEO_DELAY = 3000;
   const start = () => {
     media.append(video);
     block.append(toggle);
@@ -116,6 +125,6 @@ export default function decorate(block) {
     if (!prefersReducedMotion()) video.play().catch(() => {});
   };
 
-  if (document.readyState === 'complete') setTimeout(start, 0);
-  else window.addEventListener('load', () => setTimeout(start, 0), { once: true });
+  if (document.readyState === 'complete') setTimeout(start, VIDEO_DELAY);
+  else window.addEventListener('load', () => setTimeout(start, VIDEO_DELAY), { once: true });
 }

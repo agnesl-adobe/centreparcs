@@ -558,9 +558,18 @@ async function loadEager(doc) {
       await atjsPromise;
       await new Promise((resolve) => { window.setTimeout(resolve, 0); });
     }
-    // load the eager sections in parallel: each is shown as soon as it is ready, and a
-    // short first section no longer delays the requests of the one holding the LCP
-    await Promise.all(eagerSections.map((section) => loadSection(section, waitForFirstImage)));
+    // load the eager sections in parallel, so a short first section doesn't delay the
+    // requests of the one holding the LCP; but show them in page order: a section that is
+    // ready first (e.g. a text intro) would be pushed down when the hero above it appears
+    let above = Promise.resolve();
+    await Promise.all(eagerSections.map((section) => {
+      const previous = above;
+      above = loadSection(section, async (s) => {
+        await waitForFirstImage(s);
+        await previous;
+      });
+      return above;
+    }));
   }
 }
 

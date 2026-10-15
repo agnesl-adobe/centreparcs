@@ -605,3 +605,12 @@ async function loadPage() {
 }
 
 loadPage();
+
+// DA Live Preview (document editor Preview panel, with mobile/laptop/desktop views):
+// only runs when the editor loads the page with ?dapreview
+// https://www.aem.live/docs/ew/authoring/live-preview
+(async function loadDa() {
+  if (!new URL(window.location.href).searchParams.get('dapreview')) return;
+  // eslint-disable-next-line import/no-unresolved
+  import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadPage));
+}());

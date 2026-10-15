@@ -51,5 +51,17 @@ export default async function decorate(block) {
   // full aem.page / aem.live URLs (e.g. from the DA Fragment Picker) resolve to this site
   const path = getFragmentPath(href) || href;
   const fragment = await loadFragment(path);
-  if (fragment) block.replaceChildren(...fragment.childNodes);
+  if (!fragment) return;
+
+  // a fragment in the first two sections of the page is likely to hold the LCP image:
+  // load its first image eagerly instead of waiting for lazy loading to kick in
+  const section = block.closest('main > .section');
+  const sections = section ? [...section.parentElement.querySelectorAll(':scope > .section')] : [];
+  const firstImg = fragment.querySelector('img');
+  if (firstImg && sections.indexOf(section) > -1 && sections.indexOf(section) < 2) {
+    firstImg.loading = 'eager';
+    firstImg.fetchPriority = 'high';
+  }
+
+  block.replaceChildren(...fragment.childNodes);
 }
